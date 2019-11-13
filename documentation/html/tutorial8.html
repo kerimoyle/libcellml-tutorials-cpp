@@ -1,0 +1,533 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tutorial 8: Encapsulating components and working with parents &#8212; libCellML Tutorials  documentation</title>
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Hodgkin-Huxley model background information" href="hh_background.html" />
+    <link rel="prev" title="Tutorial 7: Creating the sodium channel" href="tutorial7.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="hh_background.html" title="Hodgkin-Huxley model background information"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial7.html" title="Tutorial 7: Creating the sodium channel"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tutorial 8: Encapsulating components and working with parents</a><ul>
+<li><a class="reference internal" href="#background">Background</a></li>
+<li><a class="reference internal" href="#set-the-stage">0: Set the stage</a></li>
+<li><a class="reference internal" href="#read-the-membrane-component">1: Read the membrane component</a></li>
+<li><a class="reference internal" href="#read-the-sodium-channel-component">2: Read the sodium channel component</a></li>
+<li><a class="reference internal" href="#import-the-potassium-channel-component">3: Import the potassium channel component</a></li>
+<li><a class="reference internal" href="#read-the-current-leakage-component">4: Read the current leakage component</a></li>
+<li><a class="reference internal" href="#create-the-environment-component">5: Create the environment component</a></li>
+<li><a class="reference internal" href="#connect-the-equivalent-variables">6: Connect the equivalent variables</a></li>
+<li><a class="reference internal" href="#define-the-driving-function">7: Define the driving function</a></li>
+<li><a class="reference internal" href="#output-the-model">8: Output the model</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial7.html"
+                        title="previous chapter">Tutorial 7: Creating the sodium channel</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="hh_background.html"
+                        title="next chapter">Hodgkin-Huxley model background information</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tutorial8.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tutorial-8-encapsulating-components-and-working-with-parents">
+<span id="tutorial8"></span><h1>Tutorial 8: Encapsulating components and working with parents<a class="headerlink" href="#tutorial-8-encapsulating-components-and-working-with-parents" title="Permalink to this headline">¶</a></h1>
+<p>Getting started:  If you’re reading this it’s presumed that you’re already
+comfortable with the deserlialisation and debugging functionality
+available in the libCellML library.</p>
+<p>By the end of this tutorial you will be able to:</p>
+<ul class="simple">
+<li><p>create complicated encapsulation structures to allow interdependency between
+modelling components,</p></li>
+<li><p>design and create files which allow easy reuse of components,</p></li>
+<li><p>appreciate the consistency needed throughout the imports to avoid renaming
+units.</p></li>
+</ul>
+<div class="section" id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
+<p>TODO Add the references to the cable equation and leakage stuff here …</p>
+</div>
+<div class="section" id="set-the-stage">
+<h2>0: Set the stage<a class="headerlink" href="#set-the-stage" title="Permalink to this headline">¶</a></h2>
+<p>We’ll start by creating the utilities that we’ll use later on.</p>
+<div class="dothis docutils container">
+<p><strong>0.a</strong> As previously, create:</p>
+<ul class="simple">
+<li><p>a <code class="code docutils literal notranslate"><span class="pre">Parser</span></code> instance to deserialise the models</p></li>
+<li><p>a <code class="code docutils literal notranslate"><span class="pre">Validator</span></code> instance for debugging purposes</p></li>
+<li><p>a <code class="code docutils literal notranslate"><span class="pre">ModelPtr</span></code> model to attach everything into</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="read-the-membrane-component">
+<h2>1: Read the membrane component<a class="headerlink" href="#read-the-membrane-component" title="Permalink to this headline">¶</a></h2>
+<div class="dothis docutils container">
+<p><strong>1.a</strong> Just as you did in <a class="reference internal" href="tutorial6.html#tutorial6"><span class="std std-ref">Tutorial 6</span></a> for the potassium
+channel, parse the <code class="code docutils literal notranslate"><span class="pre">Tutorial8_MembraneModel.cellml</span></code> file and save the
+deserialised model to a new model instance (<em>not</em> the one you’ve already
+created above - a new one). If you’d like, use the
+<code class="code docutils literal notranslate"><span class="pre">printModelToTerminal</span></code> utility function to check it has been read
+correctly, and the validator to make sure that it is valid on its own.</p>
+</div>
+<p>At this stage you will have two <code class="code docutils literal notranslate"><span class="pre">ModelPtr</span></code> items - an empty one you
+created in 0.a which will become your combined model,
+and the one you’ve just read from the file.</p>
+<div class="dothis docutils container">
+<p><strong>1.b</strong> Since you’ll want to reuse the membrane component from the imported
+potassium channel model within your combined model, you need to retrieve it
+from the imported model and add it to the combined one.  Note that you will
+need to retrieve the membrane component from the model and use the
+<code class="code docutils literal notranslate"><span class="pre">clearParent()</span></code> function to detach it from
+the membrane model <em>before</em> you add it to your combined model.</p>
+</div>
+<div class="nb docutils container">
+<p><strong>Note</strong> that the <code class="code docutils literal notranslate"><span class="pre">addComponent</span></code> and <code class="code docutils literal notranslate"><span class="pre">addVariable</span></code> functions
+have a built-in check which will prevent them from having one parent:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>if a <code class="code docutils literal notranslate"><span class="pre">VariablePtr</span></code> or <code class="code docutils literal notranslate"><span class="pre">ComponentPtr</span></code> has a <code class="code docutils literal notranslate"><span class="pre">nullptr</span></code>
+parent, then calling an <code class="code docutils literal notranslate"><span class="pre">addComponent</span></code> or <code class="code docutils literal notranslate"><span class="pre">addVariable</span></code>
+function will insert that item into the parent component.</p></li>
+<li><p>if a <code class="code docutils literal notranslate"><span class="pre">VariablePtr</span></code> or <code class="code docutils literal notranslate"><span class="pre">ComponentPtr</span></code> already has a
+<code class="code docutils literal notranslate"><span class="pre">parent()</span></code> component, then nothing will be changed.</p></li>
+<li><p>if you need to move parent ownership of a variable or a component
+you need to first call the <code class="code docutils literal notranslate"><span class="pre">clearParent()</span></code> function <strong>before</strong>
+adding it to the new parent.</p></li>
+</ul>
+</div></blockquote>
+</div>
+<p>Before going much further it’s probably a good idea to understand what it is
+that you’ve just imported.  For a full description of the biological theory,
+please see the <a class="reference internal" href="hh_background.html#hh-background"><span class="std std-ref">Hodgkin-Huxley background</span></a> document. You
+should be able to see the variables and maths inside the imported component
+by simply printing the combined model to the screen.</p>
+<div class="dothis docutils container">
+<p><strong>1.c</strong> Print the MathML2 string from the <code class="code docutils literal notranslate"><span class="pre">membrane</span></code>
+component in your combined model and check it represents the equations
+below.  You can check back to the earlier
+<a class="reference internal" href="tutorial4.html#tutorial4"><span class="std std-ref">Tutorial 4, step 2</span></a> if need be.</p>
+</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}i_{tot} = i_{stim} + i_{Na} + i_{K} + i_{L}\\\frac {dV} {dt} = \frac {-i_{tot}} {Cm}\end{aligned}\end{align} \]</div>
+<div class="dothis docutils container">
+<p><strong>1.c</strong> Call the validator to check the combined model.  At this stage we
+expect to see errors related to missing units: we have imported a component
+containing maths and variables, both of which reference units that we haven’t
+yet included in the combined model:</p>
+</div>
+<div class="terminal docutils container">
+<div class="line-block">
+<div class="line">The validator has found 13 errors!</div>
+<div class="line">Validator error[0]:</div>
+<div class="line-block">
+<div class="line-block">
+<div class="line">Description: Variable ‘V’ has an invalid units reference ‘mV’ that does not correspond with a standard unit or units in the variable’s parent component or model.</div>
+<div class="line">See section 11.1.1.2 in the CellML specification.</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">…</div>
+<div class="line"><br /></div>
+</div>
+<div class="line">Validator error[8]:</div>
+<div class="line-block">
+<div class="line">Description: Math has a cn element with a cellml:units attribute ‘microA_per_cm2’ that is not a valid reference to units in the model ‘Tutorial8_HHModel’ or a standard unit.</div>
+<div class="line"><br /></div>
+</div>
+</div>
+</div>
+<div class="dothis docutils container">
+<p><strong>1.d</strong> Use a loop to import all of the units from the the potassium
+channel model into the combined model.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>1.e</strong> Validate the combined model once more and check that it is now free
+of errors.</p>
+</div>
+</div>
+<div class="section" id="read-the-sodium-channel-component">
+<h2>2: Read the sodium channel component<a class="headerlink" href="#read-the-sodium-channel-component" title="Permalink to this headline">¶</a></h2>
+<p>In <a class="reference internal" href="tutorial7.html#tutorial7"><span class="std std-ref">Tutorial 7</span></a> you created a component to represent the
+behaviour of a gated sodium gate and stored it inside a model.</p>
+<div class="dothis docutils container">
+<p><strong>2.a</strong> As in step 1.a, retrieve the sodium channel <em>model</em> from the
+file you created in Tutorial 7, or use the
+<code class="code docutils literal notranslate"><span class="pre">Tutorial7_SodiumChannelModel.cellml</span></code> file from the
+<code class="code docutils literal notranslate"><span class="pre">resources/tutorial7</span></code> folder.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.b</strong> As in step 1.b, retrieve the sodium channel <em>component</em> and add it to
+the membrane component created in step 1.  Remember to clear its parent first!
+Print the combined model to the terminal using the condensed function
+<code class="code docutils literal notranslate"><span class="pre">printEncapsulationStructureToTerminal</span></code> and notice that the “child”
+components encapsulated by the <code class="code docutils literal notranslate"><span class="pre">sodiumChannel</span></code> component - the <code class="code docutils literal notranslate"><span class="pre">mGate</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">hGate</span></code> components - are imported as well.</p>
+</div>
+<div class="terminal docutils container">
+<div class="line-block">
+<div class="line">Model ‘Tutorial8_HHModel’ has 1 components</div>
+<div class="line-block">
+<div class="line">- Component ‘membrane’ has 1 child components</div>
+<div class="line-block">
+<div class="line">- Component ‘sodiumChannel’ has 2 child components</div>
+<div class="line-block">
+<div class="line">- Component ‘mGate’ has 0 child components</div>
+<div class="line">- Component ‘hGate’ has 0 child components</div>
+<div class="line"><br /></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.c</strong> Call the validator to check the combined model so far.  At this
+stage we expect to see two kinds of errors:</p>
+<ul class="simple">
+<li><p>errors related to units missing from the combined model, as before.</p></li>
+<li><p><strong>TODO</strong> errors related to the equivalent variables connections between the
+<code class="code docutils literal notranslate"><span class="pre">sodiumChannel</span></code> component (which is now in the combined model) and the
+<code class="code docutils literal notranslate"><span class="pre">environment</span></code> component (which is still in the <code class="code docutils literal notranslate"><span class="pre">sodiumChannelModel</span></code>).  Since
+the components are no longer adjacent in the encapsulation hierarchy, they
+cannot be connected.</p></li>
+</ul>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.d</strong> Import the missing units into the combined model from the sodium
+channel model.  Revalidate the combined model and pay attention to errors
+related to the units.</p>
+</div>
+<div class="nb docutils container">
+<p><strong>Note</strong> that you cannot have units with duplicate names in a model: if
+you have simply imported <em>all</em> of the units from the
+<code class="code docutils literal notranslate"><span class="pre">sodiumChannelModel</span></code>, then there will be double-ups.  You can use
+the <code class="code docutils literal notranslate"><span class="pre">model-&gt;hasUnits</span></code> function to check whether a <code class="code docutils literal notranslate"><span class="pre">Units</span></code> item
+with the same name exists in the model before importing it.</p>
+</div>
+<p>After validation you should see that there are no more errors
+related to units, but you will still need to address the illegal connections
+between variables in the newly-moved sodiumChannel component and the old
+environment component in the sodiumChannelModel.</p>
+<div class="terminal docutils container">
+<p><strong>PUT ERRORS HERE WHEN VALIDATOR IS WORKING</strong></p>
+</div>
+<p>Recall the idiom you used in <a class="reference internal" href="tutorial5.html#tutorial5"><span class="std std-ref">Tutorial 5</span></a> to <em>create</em> the
+connections between equivalent variables:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Retrieving the pointers to the variables via their names and adding an equivalence</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">Variable</span><span class="o">::</span><span class="n">addEquivalence</span><span class="p">(</span><span class="n">environment</span><span class="o">-&gt;</span><span class="n">variable</span><span class="p">(</span><span class="s">&quot;t&quot;</span><span class="p">),</span> <span class="n">potassiumChannel</span><span class="o">-&gt;</span><span class="n">variable</span><span class="p">(</span><span class="s">&quot;t&quot;</span><span class="p">));</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">Variable</span><span class="o">::</span><span class="n">addEquivalence</span><span class="p">(</span><span class="n">environment</span><span class="o">-&gt;</span><span class="n">variable</span><span class="p">(</span><span class="s">&quot;t&quot;</span><span class="p">),</span> <span class="n">nGate</span><span class="o">-&gt;</span><span class="n">variable</span><span class="p">(</span><span class="s">&quot;t&quot;</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>The same can be done in reverse here to <em>remove</em> the equivalence between two
+variables:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Retrieving the pointers to the variables via their names and removing an equivalence</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">Variable</span><span class="o">::</span><span class="n">removeEquivalence</span><span class="p">(</span>
+    <span class="n">sodiumChannelModel</span><span class="o">-&gt;</span><span class="n">component</span><span class="p">(</span><span class="s">&quot;environment&quot;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">variable</span><span class="p">(</span><span class="s">&quot;t&quot;</span><span class="p">),</span>
+    <span class="n">sodiumChannel</span><span class="o">-&gt;</span><span class="n">variable</span><span class="p">(</span><span class="s">&quot;t&quot;</span><span class="p">)</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.e</strong> Disconnect any equivalences between variables in the
+<code class="code docutils literal notranslate"><span class="pre">environment</span></code> component of the
+<code class="code docutils literal notranslate"><span class="pre">sodiumChannelModel</span></code> model, from those inside the newly-moved
+<code class="code docutils literal notranslate"><span class="pre">sodiumChannel</span></code> component in the combined model.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.f</strong> Validate the combined model to see that it is now free of errors.</p>
+</div>
+</div>
+<div class="section" id="import-the-potassium-channel-component">
+<h2>3: Import the potassium channel component<a class="headerlink" href="#import-the-potassium-channel-component" title="Permalink to this headline">¶</a></h2>
+<p>Now we simply need to repeat the same process for our potassium channel
+component and add it to the combined model.</p>
+<div class="dothis docutils container">
+<p><strong>3.a-b</strong> Repeat the process above to import the potassium channel
+component that was created in <a class="reference internal" href="tutorial5.html#tutorial5"><span class="std std-ref">Tutorial 5</span></a> into the
+membrane component.  Note that if you did not complete that tutorial
+you can simply copy the <code class="code docutils literal notranslate"><span class="pre">Tutorial5_PotassiumComponentModel.cellml</span></code>
+file from the <code class="code docutils literal notranslate"><span class="pre">resources/tutorial8</span></code> folder.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>3.c</strong> Use the validator to alert you to the errors at this stage.</p>
+</div>
+<p>If you have used the files provided in the <code class="code docutils literal notranslate"><span class="pre">resources</span></code> folder, you
+can expect to see errors at this point relating to missing units.
+This is because even though both the sodium and potassium channel components
+require the same set of units, each of them has used different names for them.
+At this stage you have a choice:</p>
+<ul class="simple">
+<li><p>either import all the units under their original names from the
+potassium channel as well,</p></li>
+<li><p>or rename the units throughout the <code class="code docutils literal notranslate"><span class="pre">potassiumChannel</span></code>
+component’s variables and maths.</p></li>
+</ul>
+<p>Here we’ll go with the latter to illustrate the process, and to create a more
+compact model description.</p>
+<div class="dothis docutils container">
+<p><strong>3.d</strong>  Use the examples below to rename the units referenced by variables
+inside this component.  This is straightforward:</p>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Setting the names of units to be consistent with those in the combined model</span>
+<span class="n">potassiumChannel</span><span class="o">-&gt;</span><span class="n">variable</span><span class="p">(</span><span class="s">&quot;t&quot;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">setUnits</span><span class="p">(</span><span class="s">&quot;ms&quot;</span><span class="p">);</span>
+<span class="n">potassiumChannel</span><span class="o">-&gt;</span><span class="n">component</span><span class="p">(</span><span class="s">&quot;nGate&quot;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">variable</span><span class="p">(</span><span class="s">&quot;t&quot;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">setUnits</span><span class="p">(</span><span class="s">&quot;ms&quot;</span><span class="p">);</span>
+<span class="p">...</span> <span class="n">etc</span> <span class="p">...</span>
+</pre></div>
+</div>
+<p>You’ll also need to replace the units of any constants in the
+MathML blocks of the components as well.  This is not quite as
+straightforward, but we’ve provided a utility function
+<code class="code docutils literal notranslate"><span class="pre">switchUnitsInMaths</span></code> which does a string replacement for
+the unit names.  The function can be used like this:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// The switchUnitsInMaths function&#39;s definition in tutorial_utilities.h:</span>
+<span class="kt">void</span> <span class="nf">switchUnitsInMaths</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">maths</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">in</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">out</span><span class="p">);</span>
+
+<span class="c1">// Switch the name of the units referred to in a MathML string</span>
+<span class="c1">// Retrieve the MathML string from the component</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">nGateMaths</span> <span class="o">=</span> <span class="n">potassiumChannel</span><span class="o">-&gt;</span><span class="n">component</span><span class="p">(</span><span class="s">&quot;nGate&quot;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">math</span><span class="p">();</span>
+
+<span class="c1">// Switch the unit names in the string</span>
+<span class="n">switchUnitsInMaths</span><span class="p">(</span><span class="n">nGateMaths</span><span class="p">,</span> <span class="s">&quot;millivolt&quot;</span><span class="p">,</span> <span class="s">&quot;mV&quot;</span><span class="p">);</span>
+
+<span class="c1">// Repeat for all units ...</span>
+
+<span class="c1">// Remember to add the corrected string back into the component when you&#39;re done</span>
+</pre></div>
+</div>
+<div class="nb docutils container">
+<p><strong>Note</strong> that a simple string replacement for any and all occurrences of the <code class="code docutils literal notranslate"><span class="pre">in</span></code>
+string within the <code class="code docutils literal notranslate"><span class="pre">maths</span></code> string with the <code class="code docutils literal notranslate"><span class="pre">out</span></code> string could cause problems
+when the <code class="code docutils literal notranslate"><span class="pre">in</span></code> string is a substring of another unit name.  In order to be
+sure that <strong>only</strong> full name matches for units are replaced, we exploit
+the fact that the units names in the MathML string will be in quotation marks, and include
+<code class="code docutils literal notranslate"><span class="pre">\&quot;</span></code> blocks on either side of the <code class="code docutils literal notranslate"><span class="pre">in</span></code> and <code class="code docutils literal notranslate"><span class="pre">out</span></code>
+strings for safety.  <strong>You will therefore need to substitute whole names only for this
+function to work.</strong></p>
+</div>
+<div class="dothis docutils container">
+<p><strong>3.e</strong> Rename the units in the MathML strings as needed.  Remember
+that you’ll need to re-add the corrected MathML string to the
+component when you’re done:</p>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">potassiumChannel</span><span class="o">-&gt;</span><span class="n">component</span><span class="p">(</span><span class="s">&quot;nGate&quot;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">setMath</span><span class="p">(</span><span class="n">nGateMaths</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="terminal docutils container">
+<div class="line-block">
+<div class="line">Switched units ‘millivolt’ for units ‘mV’</div>
+<div class="line">Switched units ‘millisecond’ for units ‘ms’</div>
+<div class="line">Switched units ‘per_millisecond’ for units ‘per_ms’</div>
+<div class="line">Switched units ‘per_millivolt_millisecond’ for units ‘per_mV_ms’</div>
+<div class="line">Switched units ‘milliS_per_cm2’ for units ‘mS_per_cm2’</div>
+<div class="line"><br /></div>
+</div>
+</div>
+<div class="dothis docutils container">
+<p><strong>3.f</strong> As you did in step 2.e, disconnect the variable equivalences which
+link the imported component to the old environment in the
+<code class="code docutils literal notranslate"><span class="pre">potassiumChannelModel</span></code>, and validate that the combined model
+is now free of errors.</p>
+</div>
+</div>
+<div class="section" id="read-the-current-leakage-component">
+<h2>4: Read the current leakage component<a class="headerlink" href="#read-the-current-leakage-component" title="Permalink to this headline">¶</a></h2>
+<div class="dothis docutils container">
+<p><strong>4.a</strong> If you know the tune, sing along!  Import the leakage component
+from the model in
+<code class="code docutils literal notranslate"><span class="pre">resources/tutorial8/Tutorial8_LeakageModel.cellml</span></code>
+and add it to the <code class="code docutils literal notranslate"><span class="pre">membrane</span></code> component.  Use the validator to debug
+and make any adjustments you need to until your combined model is free of
+errors.</p>
+</div>
+</div>
+<div class="section" id="create-the-environment-component">
+<h2>5: Create the environment component<a class="headerlink" href="#create-the-environment-component" title="Permalink to this headline">¶</a></h2>
+<p>Now your model should have the encapsulation structure shown below.  You can
+check this in the same way as you did in step 2.b.</p>
+<div class="terminal docutils container">
+<div class="line-block">
+<div class="line">Model ‘Tutorial8_HHModel’ has 1 components</div>
+<div class="line">- Component ‘membrane’ has 3 child components</div>
+<div class="line-block">
+<div class="line">- Component ‘sodiumChannel’ has 2 child components</div>
+<div class="line-block">
+<div class="line">- Component ‘mGate’ has 0 child components</div>
+<div class="line">- Component ‘hGate’ has 0 child components</div>
+</div>
+<div class="line">- Component ‘potassiumChannel’ has 1 child components</div>
+<div class="line-block">
+<div class="line">- Component ‘nGate’ has 0 child components</div>
+</div>
+<div class="line">- Component ‘leakageCurrent’ has 0 child components</div>
+<div class="line"><br /></div>
+</div>
+</div>
+</div>
+<p>The final component you need to add is an <code class="code docutils literal notranslate"><span class="pre">environment</span></code> component for
+this combined model.  This contains the time <span class="math notranslate nohighlight">\(t\)</span> of
+the simulation as well as the membrane voltage <span class="math notranslate nohighlight">\(V\)</span>.</p>
+<div class="dothis docutils container">
+<p><strong>5.a</strong> Create a new <code class="code docutils literal notranslate"><span class="pre">ComponentPtr</span></code> to represent the environment,
+and add it to your combined model as a top-level component.</p>
+<p><strong>5.b</strong> Include the local environment variables that you’ll need, including
+their units, and validate that your model is free of errors.</p>
+</div>
+</div>
+<div class="section" id="connect-the-equivalent-variables">
+<h2>6: Connect the equivalent variables<a class="headerlink" href="#connect-the-equivalent-variables" title="Permalink to this headline">¶</a></h2>
+<p>The encapsulation structure for this model has several tiers, as shown in the
+diagram below:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>____ HodgkinHuxleyModel
+        |
+        |____ environment (V, t)
+        |
+        |____ membrane (V, t)
+                |
+                |____ sodiumChannel (V, t, h, m)
+                |       |
+                |       |____ hGate (h, V, t)
+                |       |
+                |       |____ mGate (m, V, t)
+                |
+                |____ potassiumChannel (n, V, t)
+                |       |
+                |       |____ nGate (n, V, t)
+                |
+                |____ leakageCurrent (V)
+</pre></div>
+</div>
+<p>The encapsulation structure above includes the variables in each component
+which are shared with an adjacent component.</p>
+<div class="dothis docutils container">
+<p><strong>6.a</strong> Set the equivalent variables according to the diagram above.  Note
+that the gates remain connected to the sodium and potassium channels and don’t
+need to be added again.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>6.b</strong> Using the same interface type rules as in Tutorial 7, set the
+interface type for the missing interfaces.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>6.c</strong> Validate that the final model is free of errors.</p>
+</div>
+</div>
+<div class="section" id="define-the-driving-function">
+<h2>7: Define the driving function<a class="headerlink" href="#define-the-driving-function" title="Permalink to this headline">¶</a></h2>
+<p>In contrast to earlier tutorials, this simulation will not be a voltage clamp
+experiment, but will model instead the response to a stimulus current in the
+membrane. You’ve already got some maths inside the <code class="code docutils literal notranslate"><span class="pre">membrane</span></code>
+component which you imported in step 1.b which defined the influence of the
+total membrane current <span class="math notranslate nohighlight">\(i_{tot}\)</span> on the voltage, <span class="math notranslate nohighlight">\(V\)</span>.  It also
+defined the total current as the sum of currents in the potassium channel
+<span class="math notranslate nohighlight">\(i_K\)</span>, the sodium channel <span class="math notranslate nohighlight">\(i_{Na}\)</span>, the leakage current
+<span class="math notranslate nohighlight">\(i_L\)</span>, as well as an as-yet unused variable, the stimulus current
+<span class="math notranslate nohighlight">\(i_{stim}\)</span>.  To constrain the mathematics completely, you’ll need to
+add a definition for this stimulus current.</p>
+<div class="dothis docutils container">
+<p><strong>7.a</strong> Create a <a class="reference external" href="https://www.w3.org/TR/MathML2/chapter4.html#id.4.2.1.3">MathML2</a> equation to represent the stimulus
+current having a value of 100 mA/cm^2 between 1ms &lt; t &lt; 1.2ms and zero
+otherwise.</p>
+<p><strong>7.b</strong> Because there is already a maths block (with
+<code class="code docutils literal notranslate"><span class="pre">&lt;math&gt;...&lt;/math&gt;</span></code> tags at both ends) you can’t just add new equation
+on the end of what’s there - it needs to be added before the final
+<code class="code docutils literal notranslate"><span class="pre">&lt;/math&gt;</span></code> tag.  There’s a utility function to help with this called
+<code class="code docutils literal notranslate"><span class="pre">void</span> <span class="pre">insertIntoMathMLString(std::string</span> <span class="pre">&amp;insertInto,</span> <span class="pre">std::string</span> <span class="pre">&amp;stringToInsert)</span></code></p>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Inserting the new MathML string before the closing &lt;/math&gt; tag</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">membraneMathML</span> <span class="o">=</span> <span class="n">membrane</span><span class="o">-&gt;</span><span class="n">math</span><span class="p">();</span>
+<span class="n">insertIntoMathMLString</span><span class="p">(</span><span class="n">membraneMathML</span><span class="p">,</span> <span class="n">stimulusEquation</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="output-the-model">
+<h2>8: Output the model<a class="headerlink" href="#output-the-model" title="Permalink to this headline">¶</a></h2>
+<p>Finally you’re ready to write the model ready for simulation.  You know the
+drill.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="hh_background.html" title="Hodgkin-Huxley model background information"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial7.html" title="Tutorial 7: Creating the sodium channel"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, libCellML group, ABI.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

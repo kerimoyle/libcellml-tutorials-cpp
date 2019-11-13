@@ -1,0 +1,312 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tutorial 0: Installing and testing the libCellML libraries &#8212; libCellML Tutorials  documentation</title>
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tutorial 0: Installing and testing the libCellML libraries</a><ul>
+<li><a class="reference internal" href="#create-the-libcellml-library">1: Create the libCellML library</a></li>
+<li><a class="reference internal" href="#build-and-install-the-library">2: Build and install the library</a></li>
+<li><a class="reference internal" href="#create-the-tutorials">3: Create the tutorials</a></li>
+<li><a class="reference internal" href="#test-the-installation-by-running-your-first-tutorial">4: Test the installation by running your first tutorial</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tutorial0.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tutorial-0-installing-and-testing-the-libcellml-libraries">
+<h1>Tutorial 0: Installing and testing the libCellML libraries<a class="headerlink" href="#tutorial-0-installing-and-testing-the-libcellml-libraries" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="create-the-libcellml-library">
+<h2>1: Create the libCellML library<a class="headerlink" href="#create-the-libcellml-library" title="Permalink to this headline">¶</a></h2>
+<div class="dothis docutils container">
+<p><strong>1.a</strong> Create an empty folder and navigate into it, then create a further empty
+folder called <code class="code docutils literal notranslate"><span class="pre">libcellml</span></code>, and navigate into that one.</p>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">mkdir MyLibCellMLDirectory</span>
+<span class="go">cd MyLibCellMLDirectory</span>
+<span class="go">mkdir libcellml</span>
+<span class="go">cd libcellml</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>1.b</strong> Clone the branch from the libCellML library github repository.  This will
+create and populate a folder called <code class="code docutils literal notranslate"><span class="pre">libcellml</span></code>.</p>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone -b develop --single-branch https://github.com/cellml/libcellml.git</span>
+</pre></div>
+</div>
+<p>Your folder structure is now:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-- MyLibCellMLDirectory
+    +--libcellml
+        +--libcellml
+            +-- ( ... contains the files you cloned )
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>1.c</strong> Rename the cloned <code class="code docutils literal notranslate"><span class="pre">libcellml</span></code> folder to be <code class="code docutils literal notranslate"><span class="pre">source</span></code>, and create
+two sibling folders called <code class="code docutils literal notranslate"><span class="pre">build</span></code> and <code class="code docutils literal notranslate"><span class="pre">install</span></code>:</p>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">mv libcellml source</span>
+<span class="go">mkdir build</span>
+<span class="go">mkdir install</span>
+</pre></div>
+</div>
+<p>Your folder structure should now look like this:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-- MyLibCellMLDirectory
+    +--libcellml
+        +--build
+            +-- ( ... empty )
+        +--install
+            +-- ( ... empty )
+        +--source
+            +-- ( ... contains the files you cloned )
+</pre></div>
+</div>
+</div>
+<div class="section" id="build-and-install-the-library">
+<h2>2: Build and install the library<a class="headerlink" href="#build-and-install-the-library" title="Permalink to this headline">¶</a></h2>
+<div class="dothis docutils container">
+<p><strong>2.a</strong> Navigate into the <code class="code docutils literal notranslate"><span class="pre">MyLibCellMLDirectory/libcellml/build</span></code> directory
+to make the library:</p>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd build</span>
+<span class="go">cmake -DINSTALL_PREFIX=../install ../source</span>
+<span class="go">make -j</span>
+</pre></div>
+</div>
+<p>You should see output which runs through some checks (make sure they all pass),
+and finishes with a message like this:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">   ( ... lots of checks ... )</span>
+<span class="go">-- Configuring done</span>
+<span class="go">-- Generating done</span>
+<span class="go">-- Build files have been written to: /Users/YourName/MyLibCellMLDirectory/libcellml/build</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.b</strong> From the same location, install the library:</p>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make -j install</span>
+</pre></div>
+</div>
+<p>You should see output which finishes with a list of library and include files
+like this:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Install the project...</span>
+<span class="go">-- Install configuration: &quot;Debug&quot;</span>
+<span class="go">-- Installing: /Users/YourName/MyLibCellMLDirectory/libcellml/build/../install/lib/libcellmld.0.2.0.dylib</span>
+<span class="go">-- Installing: /Users/kmoy001/MyLibCellMLDirectory/libcellml/build/../install/lib/libcellmld.dylib</span>
+<span class="go">    ...</span>
+</pre></div>
+</div>
+<p>Your directory structure should now look like:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-- MyLibCellMLDirectory
+        +--libcellml
+            +--build
+                +-- ( ... lots of files from the build )
+            +--install
+                +--include
+                +--lib
+            +--source
+                +-- ( ... the files you cloned in step 1.b )
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-the-tutorials">
+<h2>3: Create the tutorials<a class="headerlink" href="#create-the-tutorials" title="Permalink to this headline">¶</a></h2>
+<div class="dothis docutils container">
+<p><strong>3.a</strong> Change back into the top directory (<code class="code docutils literal notranslate"><span class="pre">MyLibCellMLDirectory</span></code>),
+and create a directory for the tutorials.</p>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd ../../</span>
+<span class="go">mkdir tutorials</span>
+</pre></div>
+</div>
+<p>Your directory structure should now look like:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-- MyLibCellMLDirectory
+        +--libcellml
+            ( ... all the files created in steps 1 and 2 )
+        +--tutorials
+            ( ... empty )
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>3.b</strong> Change into the new <code class="code docutils literal notranslate"><span class="pre">tutorials</span></code> directory and clone the
+flavour of tutorials that you’re interested in.</p>
+</div>
+<p>For C++:
+.. code-block:: console</p>
+<blockquote>
+<div><p>cd tutorials
+git clone <a class="reference external" href="https://github.com/kerimoyle/libcellml-tutorials-cpp.git">https://github.com/kerimoyle/libcellml-tutorials-cpp.git</a></p>
+</div></blockquote>
+<p>For Python:
+.. code-block:: console</p>
+<blockquote>
+<div><p>cd tutorials
+git clone <a class="reference external" href="https://github.com/kerimoyle/libcellml-tutorials-python.git">https://github.com/kerimoyle/libcellml-tutorials-python.git</a></p>
+</div></blockquote>
+<p>Your folder structure should now look like what’s shown below.  Note that
+whichever flavour of tutorial you have cloned does not alter the structure,
+only the folder name inside your <code class="code docutils literal notranslate"><span class="pre">tutorials</span></code> folder:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-- MyLibCellMLDirectory
+    +--libcellml
+        +--build
+            +-- ( ... lots of files from your earlier make command )
+        +--install
+            +-- include
+            +-- lib
+        +--source
+            +-- ( ... lots of files from your first git clone )
+ +--tutorials
+    +--libcellml-tutorials-yourCodeFlavour
+        +--documentation
+        +--resources
+        +--tutorials
+        +--tutorials_complete
+        +--utilities
+</pre></div>
+</div>
+</div>
+<div class="section" id="test-the-installation-by-running-your-first-tutorial">
+<h2>4: Test the installation by running your first tutorial<a class="headerlink" href="#test-the-installation-by-running-your-first-tutorial" title="Permalink to this headline">¶</a></h2>
+<p>If all has gone well so far you should see four folders:</p>
+<ul class="simple">
+<li><p>The <code class="code docutils literal notranslate"><span class="pre">documentation</span></code> folder contains an offline copy of the tutorials’
+documentation.  This is also available online at <strong>TODO</strong>.  To use your
+offline copy, simply open the <code class="code docutils literal notranslate"><span class="pre">index.html</span></code> file in your favourite
+web browser.</p></li>
+<li><p>The <code class="code docutils literal notranslate"><span class="pre">resources</span></code> folder contains files and code snippets that will
+help you out as you go through the tutorials.  They have been designed
+so that they will build from one to another, but if you’ve missed an
+earlier tutorial you can always copy the required files from this folder
+instead.</p></li>
+<li><p>The <code class="code docutils literal notranslate"><span class="pre">tutorials</span></code> folder contains skeleton code for each of the
+tutorials.  This code has comments which mimic the instructions so will
+take you through it all one step at a time.</p></li>
+<li><p>The <code class="code docutils literal notranslate"><span class="pre">tutorials_complete</span></code> folder contains a working version of each
+of the tutorials.  If you’re short on time, or struggling with any of the
+steps you can just check the code provided here.</p></li>
+<li><p>The <code class="code docutils literal notranslate"><span class="pre">utilities</span></code> folder has files with a few simple routines which
+will help you with the tutorials.</p></li>
+</ul>
+<p>Finally, let’s test that the installation has worked by building and running
+Tutorial 0.</p>
+<div class="dothis docutils container">
+<p><strong>4.a</strong> Navigate into the <code class="code docutils literal notranslate"><span class="pre">tutorials/tutorial0</span></code> directory to run CMake to
+create the Makefile.</p>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd tutorials/tutorial0</span>
+<span class="go">cmake .</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>4.b</strong>  If this is correct you should see an output ending similar to this:</p>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">-- Configuring done</span>
+<span class="go">-- Generating done</span>
+<span class="go">-- Build files have been written to: /Users/YourName/MyLibCellMLDirectory/tutorials/libcellml-tutorials-cpp/tutorials/tutorial0</span>
+</pre></div>
+</div>
+<p>If this isn’t what you see then please see the Troubleshooting section TODO</p>
+<div class="dothis docutils container">
+<p><strong>4.c</strong> Now build the <code class="code docutils literal notranslate"><span class="pre">tutorial0</span></code> example</p>
+</div>
+<p>..code-block:: console</p>
+<blockquote>
+<div><p>make -j</p>
+</div></blockquote>
+<div class="dothis docutils container">
+<p><strong>4.d</strong> Finally, run the program to give the following output:</p>
+</div>
+<p>..code-block:: console</p>
+<blockquote>
+<div><p>./tutorial0</p>
+</div></blockquote>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">-----------------------------------------------</span>
+<span class="go">    Welcome to libCellML!</span>
+<span class="go">    This version number is 0.2.0</span>
+<span class="go">-----------------------------------------------</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>4.e</strong> Go and have a cuppa, you’re done!</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, libCellML group, ABI.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,333 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tutorial 7: Creating the sodium channel &#8212; libCellML Tutorials  documentation</title>
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorial 8: Encapsulating components and working with parents" href="tutorial8.html" />
+    <link rel="prev" title="Tutorial 6: Generating code TODO" href="tutorial6.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tutorial8.html" title="Tutorial 8: Encapsulating components and working with parents"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial6.html" title="Tutorial 6: Generating code TODO"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tutorial 7: Creating the sodium channel</a><ul>
+<li><a class="reference internal" href="#setup">0: Setup</a></li>
+<li><a class="reference internal" href="#create-the-sodium-channel-component">1: Create the sodium channel component</a></li>
+<li><a class="reference internal" href="#create-the-m-gate-component">2: Create the m-gate component</a></li>
+<li><a class="reference internal" href="#create-the-h-gate-component">3: Create the h-gate component</a></li>
+<li><a class="reference internal" href="#create-the-environment-component">4: Create the environment component</a></li>
+<li><a class="reference internal" href="#connect-the-components">5: Connect the components</a></li>
+<li><a class="reference internal" href="#set-the-driving-function">6: Set the driving function</a></li>
+<li><a class="reference internal" href="#write-the-model-to-a-cellml-file">7: Write the model to a CellML file</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial6.html"
+                        title="previous chapter">Tutorial 6: Generating code <strong>TODO</strong></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorial8.html"
+                        title="next chapter">Tutorial 8: Encapsulating components and working with parents</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tutorial7.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tutorial-7-creating-the-sodium-channel">
+<span id="tutorial7"></span><h1>Tutorial 7: Creating the sodium channel<a class="headerlink" href="#tutorial-7-creating-the-sodium-channel" title="Permalink to this headline">¶</a></h1>
+<p>This tutorial is a companion to Tutorial 5 which walked you through the
+creation of a gated potassium channel model.  It follows the same basic recipe
+steps as previously, but provides only a little guidance in terms of <em>how</em>
+you will use the API to create the model and its components.  In general:</p>
+<ul>
+<li><p>create a model, a component, a validator, and the header and footer MathML</p></li>
+<li><p>add the governing equations in MathML to the component</p></li>
+<li><p>validate the model</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>this returns a list of variables to add</p></li>
+<li><p>add the variables, their units and initial conditions (interfaces come
+later)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>validate the model again</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>this returns a list of units to add to the model</p></li>
+<li><p>add the units</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>validate the model yet again - it should be error free.</p></li>
+<li><p>repeat for all components</p></li>
+<li><p>define the equivalent variable connections</p></li>
+<li><p>define the equivalent variable interfaces (this is better done after all of
+the connections are made, so that you can be sure of the kind of interface
+which is needed for each variable)</p></li>
+<li><p>define the driving function MathML inside the environment component</p></li>
+<li><p>validate and output the model.</p></li>
+</ul>
+<div class="section" id="setup">
+<h2>0: Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<div class="dothis docutils container">
+<p><strong>0.a</strong> Create a model instance and name it appropriately.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>0.b</strong> Create a validator for later use.</p>
+</div>
+</div>
+<div class="section" id="create-the-sodium-channel-component">
+<h2>1: Create the sodium channel component<a class="headerlink" href="#create-the-sodium-channel-component" title="Permalink to this headline">¶</a></h2>
+<div class="dothis docutils container">
+<p><strong>1.a</strong> Create a component instance for the sodium channel and name it
+appropriately.  Add the component to the model.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>1.b</strong> Add the mathematics to this component according to:</p>
+</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}E_{Na} = RTF \: \log(\frac{Nao}{Nai})\\Na_{conductance} = g_{Na} \: m^{3h}\\i_{Na} = Na_{conductance} (V-E_{Na})\end{aligned}\end{align} \]</div>
+<div class="dothis docutils container">
+<p><strong>1.c</strong> Call the validator and print its debugging information.  This will
+help to summarise the variables which you need to add:</p>
+</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(V\)</span> voltage, mV</p></li>
+<li><p><span class="math notranslate nohighlight">\(t\)</span> time, ms</p></li>
+<li><p><span class="math notranslate nohighlight">\(h\)</span> h-gate status, dimensionless</p></li>
+<li><p><span class="math notranslate nohighlight">\(m\)</span> m-gate status, dimensionless</p></li>
+<li><p><span class="math notranslate nohighlight">\(g_{Na} \;\; mS/cm^2\)</span>, (ie: milli-Siemens per square centimetre),
+initially 120</p></li>
+<li><p><span class="math notranslate nohighlight">\(E_{Na} \;\; mV\)</span>, initially 35</p></li>
+<li><p><span class="math notranslate nohighlight">\(i_{Na} \;\; \mu A/cm^2\)</span>, (ie: micro-Amperes per square centimetre)</p></li>
+<li><p><span class="math notranslate nohighlight">\(Nao \;\; mM\)</span>, (ie: milli-moles), initially 140</p></li>
+<li><p><span class="math notranslate nohighlight">\(Nai \;\; mM\)</span>, initially 30</p></li>
+<li><p><span class="math notranslate nohighlight">\(RTF  \;\; mV\)</span>, initially 25</p></li>
+<li><p><span class="math notranslate nohighlight">\(Na_{conductance}  \;\;  mS/cm^2\)</span></p></li>
+</ul>
+<div class="dothis docutils container">
+<p><strong>1.d</strong> Again call the validator to list the units you will need to add to
+the parent model.  Remember that these will include the units of any constant
+values present in the MathML block too.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>1.e</strong> Validate that the model is now free of errors.</p>
+</div>
+</div>
+<div class="section" id="create-the-m-gate-component">
+<h2>2: Create the m-gate component<a class="headerlink" href="#create-the-m-gate-component" title="Permalink to this headline">¶</a></h2>
+<div class="dothis docutils container">
+<p><strong>2.a</strong> Create a new component for the m-gate and name it appropriately.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.b</strong> Create the MathML required to represent the mathematics governing
+the m-gate, as in three equations shown below, and add to the component.
+Remember that you will need to add the appropriate units to the constants to
+ensure consistency throughout.</p>
+</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\alpha_m = \frac {0.1(V+25)}{e^{0.1(V+25)}-1}\\\beta_m=e^{\frac {V}{18}}\\\dot m = \frac {dm}{dt} = \alpha_m(1-m)-m\beta_m\end{aligned}\end{align} \]</div>
+<div class="dothis docutils container">
+<p><strong>2.c</strong> Call the validator and use it to summarise the variables you need
+to add into this component, along with their units and initial conditions.</p>
+</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(V\)</span> voltage, mV</p></li>
+<li><p><span class="math notranslate nohighlight">\(t\)</span> time, ms</p></li>
+<li><p><span class="math notranslate nohighlight">\(\alpha_m\)</span> rate constant, 1/ms</p></li>
+<li><p><span class="math notranslate nohighlight">\(\beta_m\)</span> rate constant, 1/ms</p></li>
+<li><p><span class="math notranslate nohighlight">\(m\)</span> gate status, dimensionless, initially 0.05</p></li>
+</ul>
+<div class="dothis docutils container">
+<p><strong>2.d</strong> Call the validator and use it to list any remaining units which
+are not yet defined in the model.  Add them in as needed.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.e</strong> Validate that the model is now free of errors.</p>
+</div>
+</div>
+<div class="section" id="create-the-h-gate-component">
+<h2>3: Create the h-gate component<a class="headerlink" href="#create-the-h-gate-component" title="Permalink to this headline">¶</a></h2>
+<div class="dothis docutils container">
+<p><strong>3.a-c</strong> Repeat the procedure above to create the h-gate component and add
+it to the model.  Its governing equations are:</p>
+</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\alpha_h = 0.07 e^{0.05V}\\\beta_h = \frac {1} {e^{0.1(V+30)} + 1}\\\dot {h} = \frac {dh} {dt} = \alpha_h (1-h) - h\beta_h\end{aligned}\end{align} \]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\alpha_h\)</span> rate constant, 1/ms</p></li>
+<li><p><span class="math notranslate nohighlight">\(\beta_h\)</span> rate constant, 1/ms</p></li>
+<li><p><span class="math notranslate nohighlight">\(V\)</span> voltage, mV</p></li>
+<li><p><span class="math notranslate nohighlight">\(t\)</span> time, ms</p></li>
+<li><p><span class="math notranslate nohighlight">\(h\)</span> gate status, dimensionless, initially 0.6</p></li>
+</ul>
+<div class="dothis docutils container">
+<p><strong>3.d</strong> Check that the model is valid to this point.</p>
+</div>
+</div>
+<div class="section" id="create-the-environment-component">
+<h2>4: Create the environment component<a class="headerlink" href="#create-the-environment-component" title="Permalink to this headline">¶</a></h2>
+<p>As in the previous Tutorial 5 we need to create an environment component which
+we’ll use to control the time and voltage in which the channels operate.  As
+before we define two variables:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(V\)</span> voltage, mV</p></li>
+<li><p><span class="math notranslate nohighlight">\(t\)</span> time, ms</p></li>
+</ul>
+<p>We will add the driving function later.</p>
+<div class="dothis docutils container">
+<p><strong>4.a</strong> Define the environment component, including its variables, and add
+to the model.  Call the validator to check that the model is still free of
+errors.</p>
+</div>
+</div>
+<div class="section" id="connect-the-components">
+<h2>5: Connect the components<a class="headerlink" href="#connect-the-components" title="Permalink to this headline">¶</a></h2>
+<p>At this stage we should have three components in the hierarchy below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">|---</span> <span class="n">the</span> <span class="n">model</span>
+   <span class="o">|---</span> <span class="n">the</span> <span class="n">environment</span> <span class="n">component</span>
+   <span class="o">|---</span> <span class="n">the</span> <span class="n">sodium</span> <span class="n">channel</span> <span class="n">component</span>
+      <span class="o">|---</span> <span class="n">the</span> <span class="n">m</span><span class="o">-</span><span class="n">gate</span> <span class="n">component</span>
+      <span class="o">|---</span> <span class="n">the</span> <span class="n">h</span><span class="o">-</span><span class="n">gate</span> <span class="n">component</span>
+</pre></div>
+</div>
+<p>You can use the <code class="code docutils literal notranslate"><span class="pre">printModelToTerminal</span></code> utility function to check that
+this is indeed the structure that you have.</p>
+<p>Just as we did before, we need to connect the environment variables throughout
+the rest of the components.  Recall from <a class="reference internal" href="tutorial5.html#tutorial5"><span class="std std-ref">Tutorial 5</span></a> that:</p>
+<ul class="simple">
+<li><p>only immediate siblings, children, and parents can be connected</p></li>
+<li><p>the kind of interface depends on the relationship between components.</p></li>
+</ul>
+<div class="dothis docutils container">
+<p><strong>5.a</strong> This model involves sharing several variables between components.
+For each of them, create the appriopriate variable equivalence using the
+<code class="code docutils literal notranslate"><span class="pre">libcellml::Variable::setVariableEquivalence</span></code> function.  The shared
+variables are:</p>
+</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(V\)</span> voltage</p></li>
+<li><p><span class="math notranslate nohighlight">\(t\)</span> time</p></li>
+<li><p><span class="math notranslate nohighlight">\(h\)</span> h-gate status</p></li>
+<li><p><span class="math notranslate nohighlight">\(m\)</span> m-gate status</p></li>
+</ul>
+<div class="dothis docutils container">
+<p><strong>5.b</strong> For each of the variables you connected in 5.a, set their
+appropriate interface type using the <code class="code docutils literal notranslate"><span class="pre">setInterfaceType</span></code> function.</p>
+</div>
+</div>
+<div class="section" id="set-the-driving-function">
+<h2>6: Set the driving function<a class="headerlink" href="#set-the-driving-function" title="Permalink to this headline">¶</a></h2>
+<p>The last step in defining your model behaviour is the driving function.  As in
+the other tutorials, this is a voltage clamp such that the voltage is held at
+a value of -20mV in the interval 5ms &lt; t &lt; 15 ms and -85mV otherwise.
+Recall that this driving function applies to the variables in the environment
+component: the variable connections you have established in 5.a will propagate
+these values throughout the model.</p>
+<div class="dothis docutils container">
+<p><strong>6.a</strong> Write the MathML required for the driving function behaviour above.
+You will need to use the <code class="code docutils literal notranslate"><span class="pre">&lt;piecewise&gt;</span></code> function.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>6.b</strong> Validate the final model and confirm that it is error free.</p>
+</div>
+</div>
+<div class="section" id="write-the-model-to-a-cellml-file">
+<h2>7: Write the model to a CellML file<a class="headerlink" href="#write-the-model-to-a-cellml-file" title="Permalink to this headline">¶</a></h2>
+<p>Finally - provided your model is valid - you can serialise it and output to a
+file.  This file will be used in later tutorials when we combine it with the
+potassium channel model to simulate a neuron <strong>TODO??</strong>.</p>
+<div class="dothis docutils container">
+<p><strong>7.a</strong> Use the <code class="code docutils literal notranslate"><span class="pre">Printer</span></code> functionality to serialise your model, and
+output it to a file.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>7.b</strong> Go and have a cuppa - you’re done!</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tutorial8.html" title="Tutorial 8: Encapsulating components and working with parents"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial6.html" title="Tutorial 6: Generating code TODO"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, libCellML group, ABI.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

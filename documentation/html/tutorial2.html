@@ -1,0 +1,425 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tutorial 2: Debugging, error checking and validating &#8212; libCellML Tutorials  documentation</title>
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorial 3: Creating a model using the API" href="tutorial3.html" />
+    <link rel="prev" title="Tutorial 1: Reading, writing, ‘rithmetic" href="tutorial1.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tutorial3.html" title="Tutorial 3: Creating a model using the API"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial1.html" title="Tutorial 1: Reading, writing, ‘rithmetic"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tutorial 2: Debugging, error checking and validating</a><ul>
+<li><a class="reference internal" href="#step-0-setup">Step 0: Setup</a></li>
+<li><a class="reference internal" href="#step-1-create-a-model-from-the-contents-of-a-cellml-file">Step 1: Create a Model from the contents of a CellML file</a></li>
+<li><a class="reference internal" href="#step-2-print-the-contents-of-the-file-to-the-screen">Step 2: Print the contents of the file to the screen</a></li>
+<li><a class="reference internal" href="#step-3-fix-the-errors-that-were-reported">Step 3: Fix the errors that were reported</a></li>
+<li><a class="reference internal" href="#step-4-have-a-look-at-the-corrected-model">Step 4: Have a look at the corrected model</a></li>
+<li><a class="reference internal" href="#step-5-serialise-and-output-the-model-to-a-file">Step 5: Serialise and output the model to a file</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial1.html"
+                        title="previous chapter">Tutorial 1: Reading, writing, ‘rithmetic</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorial3.html"
+                        title="next chapter">Tutorial 3: Creating a model using the API</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tutorial2.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tutorial-2-debugging-error-checking-and-validating">
+<span id="tutorial2"></span><h1>Tutorial 2: Debugging, error checking and validating<a class="headerlink" href="#tutorial-2-debugging-error-checking-and-validating" title="Permalink to this headline">¶</a></h1>
+<p>In this tutorial you’ll explore how the <code class="code docutils literal notranslate"><span class="pre">Validator</span></code> object can be put to
+use as you create and interact with your models to help you debug and find
+issues ahead of submitting it for simulation.  You’ll be taking a CellML2.0
+file which has some mistakes in it, using the validation functionality to
+identify them, and then using the access and editing functions to fix them.</p>
+<p>By the time you have worked through Tutorial 2 you will be able to:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>use the <code class="code docutils literal notranslate"><span class="pre">Parser</span></code> to report errors enountered when reading a file or
+deserialising a string</p></li>
+<li><p>use the <code class="code docutils literal notranslate"><span class="pre">Validator</span></code> to check for errors related to a model’s
+description as compared to the CellML2.0 specifications</p></li>
+</ul>
+</div></blockquote>
+<p>This tutorial assumes that you can already:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>read and deserialise a CellML model from a file</p></li>
+<li><p>retrieve the name and id of models, components, and variables,</p></li>
+<li><p>navigate through the hierarchy of the model (model contains component(s)
+contain(s) variable(s) and maths)</p></li>
+<li><p>serialise and print a Model structure to a CellML file.</p></li>
+</ul>
+</div></blockquote>
+<div class="section" id="step-0-setup">
+<h2>Step 0: Setup<a class="headerlink" href="#step-0-setup" title="Permalink to this headline">¶</a></h2>
+<p>Navigate into the <code class="code docutils literal notranslate"><span class="pre">tutorial2</span></code> folder and check that you can build the
+template against the libCellML library successfully:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make</span>
+</pre></div>
+</div>
+<p>Running the template:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">tutorial2</span>
+</pre></div>
+</div>
+<p>… should give the output:</p>
+<div class="terminal docutils container">
+<div class="line-block">
+<div class="line">———————————————–</div>
+<div class="line-block">
+<div class="line">TUTORIAL 2: ERROR CHECKING AND VALIDATION</div>
+</div>
+<div class="line">———————————————–</div>
+</div>
+</div>
+</div>
+<div class="section" id="step-1-create-a-model-from-the-contents-of-a-cellml-file">
+<h2>Step 1: Create a Model from the contents of a CellML file<a class="headerlink" href="#step-1-create-a-model-from-the-contents-of-a-cellml-file" title="Permalink to this headline">¶</a></h2>
+<div class="dothis docutils container">
+<p><strong>1.a</strong>
+As you did in Tutorial 1, use the <code class="code docutils literal notranslate"><span class="pre">Parser</span></code> to create a model
+from the “Tutorial2.cellml” file provided.</p>
+</div>
+</div>
+<div class="section" id="step-2-print-the-contents-of-the-file-to-the-screen">
+<h2>Step 2: Print the contents of the file to the screen<a class="headerlink" href="#step-2-print-the-contents-of-the-file-to-the-screen" title="Permalink to this headline">¶</a></h2>
+<p>Instead of duplicating the work you did throughout the middle steps of Tutorial
+1, we’ve provided you with a set of utility functions in the
+<code class="code docutils literal notranslate"><span class="pre">utility/tutorial_utilities.[cpp,h]</span></code> files which will help with some of
+the repeated bits of these tutorials.</p>
+<div class="dothis docutils container">
+<p><strong>2.a</strong>
+Use the utility function <code class="code docutils literal notranslate"><span class="pre">printModelToTerminal(yourModelHere)</span></code>
+to output the contents of the model you just created to the terminal so that
+you can see it properly.</p>
+</div>
+<p>Within the libCellML library is the <code class="code docutils literal notranslate"><span class="pre">Validator</span></code> class.  This has one
+job - to make sure that what you give it is <em>valid</em> in terms of its CellML2.0
+compliance.  Does it mean that your simulations will work the way you expect?
+Nope, you can still write rubbish!  You can think of the validation being the
+spell-checker for your model.  It doesn’t judge the meaning of <em>what</em> you’ve
+written, just the nitty-gritty of <em>how</em> you’ve written it.</p>
+<p>The validator can also help you as you create and edit models by pointing out
+what’s missing or incorrect as you go.  This is really easy:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">libcellml</span><span class="o">::</span><span class="n">Validator</span> <span class="n">validator</span><span class="p">;</span>
+<span class="n">validator</span><span class="p">.</span><span class="n">validateModel</span><span class="p">(</span><span class="n">yourModelHere</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.b</strong>
+Create a validator instance and pass your model to it, as above.</p>
+</div>
+<p>When you’ve created a <code class="code docutils literal notranslate"><span class="pre">Validator</span></code> object and called it to check a model,
+a record of any errors is stored inside the validator.  To figure out what’s
+going on, you need to retrieve the pointers to these <code class="code docutils literal notranslate"><span class="pre">Error</span></code> objects.</p>
+<p>As in Tutorial 1, we can call a <code class="code docutils literal notranslate"><span class="pre">count</span></code> function (in the case of a
+validator, this is the <code class="code docutils literal notranslate"><span class="pre">errorCount()</span></code> function to determine whether any
+errors have been raised.</p>
+<div class="dothis docutils container">
+<p><strong>2.c</strong>
+Retrieve the number of errors from the validator, and print it to
+the terminal.</p>
+</div>
+<p>Now we need to create an iterative loop to retrieve all (and there should be a
+few in this particular model!) from the validator.  Again following the same
+retrieval idiom as in Tutorial 1 for items in sets, we can access the errors
+using an index:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">libcellml</span><span class="o">::</span><span class="n">ErrorPtr</span> <span class="n">theFifteenthError</span> <span class="o">=</span> <span class="n">validator</span><span class="p">.</span><span class="n">error</span><span class="p">(</span><span class="mi">14</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Inside an <code class="code docutils literal notranslate"><span class="pre">Error</span></code> structure are two fields which are really useful.
+These are the <code class="code docutils literal notranslate"><span class="pre">description</span></code> (which does what you’d think) and the
+<code class="code docutils literal notranslate"><span class="pre">specificationHeading</span></code>, which points you to the section in the CellML2.0
+specification document for reference.</p>
+<div class="dothis docutils container">
+<p><strong>2.d</strong>
+Create a loop (to the number of errors found in 2.c), retrieve each
+error pointer, and print the description and specification reference to the
+screen.  This is what we’ve used:</p>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">e</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">e</span> <span class="o">&lt;</span> <span class="n">validator</span><span class="p">.</span><span class="n">errorCount</span><span class="p">();</span> <span class="o">++</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// Retrieving the e&#39;th error as a pointer:</span>
+    <span class="n">libcellml</span><span class="o">::</span><span class="n">ErrorPtr</span> <span class="n">validatorError</span> <span class="o">=</span> <span class="n">validator</span><span class="p">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;  Validator error[&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">e</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;]:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="c1">// Printing the description to the screen:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;     Description: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">validatorError</span><span class="o">-&gt;</span><span class="n">description</span><span class="p">()</span>
+              <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="c1">// Printing the specification reference to the screen:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;    See section &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">validatorError</span><span class="o">-&gt;</span><span class="n">specificationHeading</span><span class="p">()</span>
+                <span class="o">&lt;&lt;</span> <span class="s">&quot; in the CellML specification.&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-3-fix-the-errors-that-were-reported">
+<h2>Step 3: Fix the errors that were reported<a class="headerlink" href="#step-3-fix-the-errors-that-were-reported" title="Permalink to this headline">¶</a></h2>
+<p>As you go through these tutorials you should be able to compile and run your
+code at any stage.  If you haven’t been doing so already, then do it now, and
+take a look at what you’ve printed.  This section works through each of the
+errors found and shows you how to fix them.</p>
+<div class="terminal docutils container">
+<dl class="simple">
+<dt>Validator error[0]:</dt><dd><p>Description: CellML identifiers must not begin with a European numeric character [0-9].
+See section 3.1.4 in the CellML specification.</p>
+</dd>
+<dt>Validator error[1]:</dt><dd><p>Description: Variable does not have a valid name attribute.
+See section 11.1.1.1 in the CellML specification.</p>
+</dd>
+</dl>
+</div>
+<p>These errors refer to the same thing, but are better read in reverse order.
+Variables (and everything else in CellML which specifies a name attribute)
+must have the correct format.  Comparing the error to the names of
+entities printed in the terminal we can see that <code class="code docutils literal notranslate"><span class="pre">variable[0]</span></code> in
+<code class="code docutils literal notranslate"><span class="pre">component[0]</span></code> doesn’t have a valid name (because it starts with a
+European numeric character).  Let’s fix that.</p>
+<p>Remembering from the last tutorial that we can access items through their
+indices, now we can use the <code class="code docutils literal notranslate"><span class="pre">setSomething(someValue)</span></code> idiom to fix
+the variable name:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// access the 0th variable of the 0th component and set its name to &quot;A&quot;</span>
+<span class="n">yourModelHere</span><span class="o">-&gt;</span><span class="n">component</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">variable</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">setName</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>3.a</strong>
+Add the fix above and check that it has indeed removed those errors
+from the list reported.</p>
+</div>
+<hr class="docutils" />
+<p>On to the next error.</p>
+<div class="terminal docutils container">
+<div class="line-block">
+<div class="line">Validator error[2]:</div>
+<div class="line-block">
+<div class="line">Description: Variable ‘b’ has an invalid units reference ‘i_am_not_a_unit’</div>
+<div class="line">that does not correspond with a standard unit or units in the variable’s</div>
+<div class="line">parent component or model.</div>
+<div class="line">See section 11.1.1.2 in the CellML specification.</div>
+</div>
+</div>
+</div>
+<p>Variables must have a unit defined.  These can be either something from
+the built-in list within libCellML (which you can read in the
+specifications document), or something you define yourself.  We’ll look at
+user defined units in Tutorial 3, but for now it’s enough to see that the
+units which are associated with variable <code class="code docutils literal notranslate"><span class="pre">b</span></code> are not valid.  We’ll change
+it to be <code class="code docutils literal notranslate"><span class="pre">&quot;dimensionless&quot;</span></code> instead.</p>
+<div class="nb docutils container">
+<p><strong>Remember</strong> that items can be accessed through their name (as below) or their
+index (as above).</p>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Access the variable named &quot;b&quot; inside the &quot;i_am_a_component&quot; component</span>
+<span class="c1">// and set its units to be &quot;dimensionless&quot;.</span>
+<span class="n">yourModelHere</span><span class="o">-&gt;</span><span class="n">component</span><span class="p">(</span><span class="s">&quot;i_am_a_component&quot;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">variable</span><span class="p">(</span><span class="s">&quot;b&quot;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">setUnits</span><span class="p">(</span><span class="s">&quot;dimensionless&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>3.b</strong>
+Add the fix for this error and check that it’s worked by running
+your code.</p>
+</div>
+<hr class="docutils" />
+<div class="terminal docutils container">
+<dl class="simple">
+<dt>Validator error[3]:</dt><dd><p>Description: Variable ‘c’ has an invalid initial value
+‘this_variable_doesnt_exist’. Initial values must be a real number
+string or a variable reference.
+See section 11.1.2.2 in the CellML specification.</p>
+</dd>
+</dl>
+</div>
+<p>We can either access members by their index or their name, as shown above,
+or we can create a pointer to them instead (as below). Initial values (if set)
+must be a valid variable name in the same component, or a real number.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Retrieving a pointer for the problem variable with a combo of names and index</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">VariablePtr</span> <span class="n">variableC</span> <span class="o">=</span> <span class="n">model</span><span class="o">-&gt;</span><span class="n">component</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">variable</span><span class="p">(</span><span class="s">&quot;c&quot;</span><span class="p">);</span>
+
+<span class="c1">// Fixing the initial value of the variable.  Note that this could also be a</span>
+<span class="c1">// variable name in the same component.</span>
+<span class="n">variableC</span><span class="o">-&gt;</span><span class="n">setInitialValue</span><span class="p">(</span><span class="mf">20.0</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>3.c</strong>
+Add the fix for this error and check that it’s worked by running
+your code.</p>
+</div>
+<hr class="docutils" />
+<div class="terminal docutils container">
+<dl class="simple">
+<dt>Validator error[4]:</dt><dd><p>Description: CellML identifiers must contain one or more basic Latin
+alphabetic characters.
+See section 3.1.3 in the CellML specification.</p>
+</dd>
+<dt>Validator error[5]:</dt><dd><p>Description: Variable ‘d’ does not have a valid units attribute.
+See section 11.1.1.2 in the CellML specification.</p>
+</dd>
+</dl>
+</div>
+<p>These two errors go together too.  Because we haven’t defined a <code class="code docutils literal notranslate"><span class="pre">units</span></code>
+attribute for variable <code class="code docutils literal notranslate"><span class="pre">d</span></code>, it effectively has a blank name, which is not
+allowed.  Simply assigning units to the variable will fix both errors.</p>
+<div class="dothis docutils container">
+<p><strong>3.d</strong>
+You already know how to add units to a variable (as in step 3.a) so
+go ahead and fix this error any way you see fit.</p>
+</div>
+<hr class="docutils" />
+<div class="terminal docutils container">
+<dl class="simple">
+<dt>Description: MathML ci element has the child text ‘a’ which does not</dt><dd><p>correspond with any variable names present in component
+‘i_am_a_component’ and is not a variable defined within a bvar element.</p>
+</dd>
+</dl>
+</div>
+<p>The maths block is complaining that it is being asked to compute
+<span class="math notranslate nohighlight">\(a = b + c\)</span> but in the component there is no variable called <code class="code docutils literal notranslate"><span class="pre">&quot;a&quot;</span></code>.
+Since we corrected - or tried to - this earlier by naming the first variable
+in component[0] <code class="code docutils literal notranslate"><span class="pre">&quot;A&quot;</span></code>, you need to go back and change it to lower-case
+instead.</p>
+<div class="dothis docutils container">
+<p><strong>3.e</strong>
+Fix up this last error, and check for yourself that your corrected
+model is now error-free.</p>
+</div>
+</div>
+<div class="section" id="step-4-have-a-look-at-the-corrected-model">
+<h2>Step 4: Have a look at the corrected model<a class="headerlink" href="#step-4-have-a-look-at-the-corrected-model" title="Permalink to this headline">¶</a></h2>
+<p>Let’s have a look at our corrected model by calling that same utility function
+which we used earlier to print it to the screen.  You should see something like
+this:</p>
+<div class="terminal docutils container">
+<div class="line-block">
+<div class="line">The model name is: ‘tutorial_2_model’</div>
+<div class="line">The model id is: ‘tutorial 2 id has spaces’</div>
+<div class="line">The model defines 0 custom units:</div>
+<div class="line">The model has 1 components:</div>
+<div class="line-block">
+<div class="line">Component[0] has name: ‘i_am_a_component’</div>
+<div class="line">Component[0] has id: ‘my_component_id’</div>
+<div class="line">Component[0] has 4 variables:</div>
+<div class="line-block">
+<div class="line">Variable[0] has name: ‘a’</div>
+<div class="line">Variable[0] has units: ‘dimensionless’</div>
+<div class="line">Variable[1] has name: ‘b’</div>
+<div class="line">Variable[1] has units: ‘dimensionless’</div>
+<div class="line">Variable[2] has name: ‘c’</div>
+<div class="line">Variable[2] has initial_value: ‘20’</div>
+<div class="line">Variable[2] has units: ‘dimensionless’</div>
+<div class="line">Variable[3] has name: ‘d’</div>
+<div class="line">Variable[3] has units: ‘dimensionless’</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="step-5-serialise-and-output-the-model-to-a-file">
+<h2>Step 5: Serialise and output the model to a file<a class="headerlink" href="#step-5-serialise-and-output-the-model-to-a-file" title="Permalink to this headline">¶</a></h2>
+<div class="dothis docutils container">
+<p><strong>5.a</strong>
+Just as you did in Tutorial 1, create a <code class="code docutils literal notranslate"><span class="pre">Printer</span></code> and use it
+to serialise your model to a string.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>5.b</strong>
+Finally, write your model string to a <code class="code docutils literal notranslate"><span class="pre">*.cellml</span></code> file.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>5.c</strong>
+Go and have a cuppa, you’re done!</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tutorial3.html" title="Tutorial 3: Creating a model using the API"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial1.html" title="Tutorial 1: Reading, writing, ‘rithmetic"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, libCellML group, ABI.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

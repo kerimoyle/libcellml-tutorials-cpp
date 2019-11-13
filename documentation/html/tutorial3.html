@@ -1,0 +1,687 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tutorial 3: Creating a model using the API &#8212; libCellML Tutorials  documentation</title>
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorial 4: Modelling a gated ion channel" href="tutorial4.html" />
+    <link rel="prev" title="Tutorial 2: Debugging, error checking and validating" href="tutorial2.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tutorial4.html" title="Tutorial 4: Modelling a gated ion channel"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial2.html" title="Tutorial 2: Debugging, error checking and validating"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tutorial 3: Creating a model using the API</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#setup">0: Setup</a></li>
+<li><a class="reference internal" href="#set-up-the-governing-equations">1: Set up the governing equations</a></li>
+<li><a class="reference internal" href="#built-in-and-customised-units">2: Built-in and customised units</a></li>
+<li><a class="reference internal" href="#use-code-generation-to-change-the-output-langauge">3: Use code generation to change the output langauge</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial2.html"
+                        title="previous chapter">Tutorial 2: Debugging, error checking and validating</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorial4.html"
+                        title="next chapter">Tutorial 4: Modelling a gated ion channel</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tutorial3.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tutorial-3-creating-a-model-using-the-api">
+<span id="tutorial3"></span><h1>Tutorial 3: Creating a model using the API<a class="headerlink" href="#tutorial-3-creating-a-model-using-the-api" title="Permalink to this headline">¶</a></h1>
+<p>By the time you have worked through Tutorial 3 you will be able to:</p>
+<ul class="simple">
+<li><p>create a new model and its child entities from scratch using the API</p></li>
+<li><p>write your own MathML syntax to construct governing equations</p></li>
+<li><p>define custom combinations of built-in units</p></li>
+<li><p>define your own custom units independent from the built-in units</p></li>
+<li><p>use the <code class="code docutils literal notranslate"><span class="pre">Generator</span></code> functionality to transform the model into other
+languages.</p></li>
+</ul>
+<p>This tutorial assumes that you are comfortable with:</p>
+<ul class="simple">
+<li><p>accessing and adjusting names of items inside a model hierarchy
+(see <a class="reference internal" href="tutorial2.html#tutorial2"><span class="std std-ref">Tutorial 2</span></a>)</p></li>
+<li><p>creating a validator and using it to check a model for errors
+(see <a class="reference internal" href="tutorial2.html#tutorial2"><span class="std std-ref">Tutorial 2</span></a>)</p></li>
+<li><p>accessing the errors produced by a validator and using them to correct
+the model (see <a class="reference internal" href="tutorial2.html#tutorial2"><span class="std std-ref">Tutorial 2</span></a>)</p></li>
+<li><p>serialising and printing a model to a CellML2 file (see
+<a class="reference internal" href="tutorial1.html#tutorial1"><span class="std std-ref">Tutorial 1</span></a>)</p></li>
+</ul>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>During this tutorial you will create a simple model representing the
+exponential decay of speed for a sled sliding on ice.  You will use
+both built-in and create your own user-defined units.</p>
+</div>
+<div class="section" id="setup">
+<h2>0: Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<p>Navigate into the <code class="code docutils literal notranslate"><span class="pre">tutorial3</span></code> folder and check that you can build the
+template against the libCellML library successfully:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make</span>
+</pre></div>
+</div>
+<p>Running the template:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">tutorial3</span>
+</pre></div>
+</div>
+<p>… should give the output:</p>
+<div class="terminal docutils container">
+<div class="line-block">
+<div class="line">———————————————–</div>
+<div class="line-block">
+<div class="line">TUTORIAL 3: CREATE A MODEL USING THE API</div>
+</div>
+<div class="line">———————————————–</div>
+<div class="line"><br /></div>
+</div>
+</div>
+</div>
+<div class="section" id="set-up-the-governing-equations">
+<h2>1: Set up the governing equations<a class="headerlink" href="#set-up-the-governing-equations" title="Permalink to this headline">¶</a></h2>
+<p>TODO Need something here about when to use shared pointers and when to use
+concrete instances?</p>
+<p>Just as you did in <a class="reference internal" href="tutorial2.html#tutorial2"><span class="std std-ref">Tutorial 2</span></a>, we need to start by setting
+up a <code class="code docutils literal notranslate"><span class="pre">ModelPtr</span></code> model instance, and creating a component inside it.</p>
+<div class="dothis docutils container">
+<p><strong>1.a</strong>
+Allocate a shared pointer for a new Model instance.
+Set the name and id attributes of the model you created, and print them to
+the terminal to check them.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>1.b</strong>
+Allocate a shared pointer for a new Component instance.  Name it and add it
+to the model you created above.</p>
+</div>
+<p>Now for the real bit.  In order to actually model anything, we need to include
+the mathematical equations which represent the phyiscal situation of interest.
+As you saw in <a class="reference internal" href="tutorial2.html#tutorial2"><span class="std std-ref">Tutorial 2</span></a>, the maths and the
+<code class="code docutils literal notranslate"><span class="pre">Variable</span></code> items which it references live inside a parent
+<code class="code docutils literal notranslate"><span class="pre">Component</span></code> item.  At this point it should be noted that the order in
+which you add your components, or models, or variables (or anything) is not
+important to the final product, but it <em>can</em> affect how quickly you’re able to
+find and fix bugs along the way.  In these tutorials, we have suggested that
+you add the mathematics first and use a <code class="code docutils literal notranslate"><span class="pre">Validator</span></code> to notify you of the
+outstanding items, but you can really do this in any order you choose.</p>
+<p>The governing equation describes the motion of the sled as a
+function of time, as shown below:</p>
+<div class="math notranslate nohighlight">
+\[\frac{dx}{dt}=-ax+b\]</div>
+<p>where <span class="math notranslate nohighlight">\(x\)</span> is the sled’s position, <span class="math notranslate nohighlight">\(t\)</span> is time, and <span class="math notranslate nohighlight">\(a\)</span> an
+<span class="math notranslate nohighlight">\(b\)</span> are constants representing the time constant and initial conditions.
+In order to use this in our model we need to write it as a
+MathML2 string.  The basic structure for these is described in the
+<a class="reference external" href="https://www.w3.org/TR/MathML2/chapter4.html#id.4.2.1.3">W3 resource pages regarding MathML2</a>.</p>
+<div class="nb docutils container">
+<p><strong>Note</strong> that libCellML will <strong>only</strong> accept MathML2 markup, even though
+later versions (3 and 4) are now available.</p>
+</div>
+<p>Looking at the right hand side first, the MathML2 representation of
+<span class="math notranslate nohighlight">\(ax+b\)</span> is</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;apply&gt;&lt;plus/&gt;</span>
+    <span class="nt">&lt;apply&gt;&lt;times/&gt;</span>
+        <span class="nt">&lt;ci&gt;</span>a<span class="nt">&lt;/ci&gt;</span>
+        <span class="nt">&lt;ci&gt;</span>x<span class="nt">&lt;/ci&gt;</span>
+    <span class="nt">&lt;/apply&gt;</span>
+    <span class="nt">&lt;ci&gt;</span>b<span class="nt">&lt;/ci&gt;</span>
+<span class="nt">&lt;/apply&gt;</span>
+</pre></div>
+</div>
+<p>Three things can be seen here:</p>
+<ul class="simple">
+<li><p>the <code class="code docutils literal notranslate"><span class="pre">&lt;apply&gt;</span></code> opening and <code class="code docutils literal notranslate"><span class="pre">&lt;/apply&gt;</span></code> closing tags which surround
+the <em>operations</em>,</p></li>
+<li><p>the <em>operations</em> tags like <code class="code docutils literal notranslate"><span class="pre">&lt;times/&gt;</span></code> and <code class="code docutils literal notranslate"><span class="pre">&lt;plus/&gt;</span></code> which stand
+alone rather than in an open/close pair,</p></li>
+<li><p>the <code class="code docutils literal notranslate"><span class="pre">&lt;ci&gt;</span></code> opening and <code class="code docutils literal notranslate"><span class="pre">&lt;/ci&gt;</span></code> closing tags which surround the
+variable names.</p></li>
+</ul>
+<p>The left-hand side, <span class="math notranslate nohighlight">\(\frac{dx}{dt}\)</span> becomes:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;apply&gt;&lt;diff/&gt;</span>
+    <span class="nt">&lt;bvar&gt;</span>
+        <span class="nt">&lt;ci&gt;</span>t<span class="nt">&lt;/ci&gt;</span>
+    <span class="nt">&lt;/bvar&gt;</span>
+    <span class="nt">&lt;ci&gt;</span>x<span class="nt">&lt;/ci&gt;</span>
+<span class="nt">&lt;/apply&gt;</span>
+</pre></div>
+</div>
+<p>Two further items to note:</p>
+<ul class="simple">
+<li><p>the base variable for the integration identified by the
+<code class="code docutils literal notranslate"><span class="pre">&lt;bvar&gt;</span> <span class="pre">...</span> <span class="pre">&lt;/bvar&gt;</span></code> tags,</p></li>
+<li><p>the <code class="code docutils literal notranslate"><span class="pre">&lt;diff/&gt;</span></code> operation signifying differentiation with respect to the
+base variable.</p></li>
+</ul>
+<p>When both sides are defined we need to equate them by <code class="code docutils literal notranslate"><span class="pre">&lt;apply&gt;</span></code> -ing the
+<code class="code docutils literal notranslate"><span class="pre">&lt;eq/&gt;</span></code> equals operator, and create a string so that we end up with:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">equation</span> <span class="o">=</span> <span class="s">&quot;&lt;apply&gt;&lt;eq/&gt;\</span>
+<span class="s">                            &lt;apply&gt;&lt;diff/&gt;\</span>
+<span class="s">                                &lt;bvar&gt;\</span>
+<span class="s">                                    &lt;ci&gt;t&lt;/ci&gt;\</span>
+<span class="s">                                &lt;/bvar&gt;\</span>
+<span class="s">                                &lt;ci&gt;x&lt;/ci&gt;\</span>
+<span class="s">                            &lt;/apply&gt;\</span>
+<span class="s">                            &lt;apply&gt;&lt;plus/&gt;\</span>
+<span class="s">                                &lt;apply&gt;&lt;times/&gt;\</span>
+<span class="s">                                    &lt;ci&gt;a&lt;/ci&gt;\</span>
+<span class="s">                                    &lt;ci&gt;x&lt;/ci&gt;\</span>
+<span class="s">                                &lt;/apply&gt;\</span>
+<span class="s">                                &lt;ci&gt;b&lt;/ci&gt;\</span>
+<span class="s">                            &lt;/apply&gt;\</span>
+<span class="s">                        &lt;/apply&gt;&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>1.c</strong>
+Copy the string above into your code.  We will complete the inclusion of the
+maths in the next step.</p>
+</div>
+<p>Next you need to define the namespace in which the maths will be applied
+by enclosing it in the <code class="code docutils literal notranslate"><span class="pre">&lt;math&gt;</span> <span class="pre">...</span> <span class="pre">&lt;/math&gt;</span></code> tags with the two namespaces:</p>
+<ul class="simple">
+<li><p>the XML namespace <code class="code docutils literal notranslate"><span class="pre">xmlns</span></code> at <a class="reference external" href="http://www.w3.org/1998/Math/MathML">http://www.w3.org/1998/Math/MathML</a></p></li>
+<li><p>the CellML2 namespace <code class="code docutils literal notranslate"><span class="pre">xmlns:cellml</span></code> at <a class="reference external" href="http://www.cellml.org/cellml/2">http://www.cellml.org/cellml/2</a>.0#</p></li>
+</ul>
+<p>It’s simple to do this once in your code using a string to represent the
+opening attributes and namespaces; this string can be reused easily
+throughout your code as needed later:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">mathHeader</span> <span class="o">=</span> <span class="s">&quot;&lt;math xmlns=</span><span class="se">\&quot;</span><span class="s">http://www.w3.org/1998/Math/MathML</span><span class="se">\&quot;</span><span class="s">\</span>
+<span class="s">                                xmlns:cellml=</span><span class="se">\&quot;</span><span class="s">http://www.cellml.org/cellml/2.0#</span><span class="se">\&quot;</span><span class="s">&gt;&quot;</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">mathFooter</span> <span class="o">=</span> <span class="s">&quot;&lt;/math&gt;&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>1.d</strong>
+Copy the opening and closing math strings above into your code.</p>
+</div>
+<p>Our last step in defining the mathematics is to link it into the component. The
+functions available to manipulate maths are:</p>
+<ul class="simple">
+<li><p>a <code class="code docutils literal notranslate"><span class="pre">setMath</span></code> function, which overwrites any existing MathML strings
+stored in the <code class="code docutils literal notranslate"><span class="pre">Component</span></code> item.</p></li>
+<li><p>an <code class="code docutils literal notranslate"><span class="pre">appendMath</span></code> function, which performs a straightforward string
+concatenation with the current contents of the maths string in the
+<code class="code docutils literal notranslate"><span class="pre">Component</span></code>.</p></li>
+<li><p>a <code class="code docutils literal notranslate"><span class="pre">clearMath</span></code> function to remove all maths contents.</p></li>
+</ul>
+<div class="dothis docutils container">
+<p><strong>1.e</strong>
+Use the functions above to include the <code class="code docutils literal notranslate"><span class="pre">mathHeader</span></code>,
+<code class="code docutils literal notranslate"><span class="pre">equation</span></code>, and <code class="code docutils literal notranslate"><span class="pre">mathFooter</span></code> strings into your component.
+Note that the order in which these are added is important, as they are
+stored as a single string.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>1.f</strong>
+Create a <code class="code docutils literal notranslate"><span class="pre">Validator</span></code> instance and use it to check for errors in the
+model at this point.  Use the utility function
+<code class="code docutils literal notranslate"><span class="pre">printErrorsToTerminal</span></code> to output the messages to the
+terminal.</p>
+</div>
+<p>You should see an output similar to that shown below:</p>
+<div class="terminal docutils container">
+<div class="line-block">
+<div class="line">The validator has found 5 errors!</div>
+<div class="line">Validator error[0]:</div>
+<div class="line-block">
+<div class="line">Description: MathML ci element has the child text ‘t’ which does not correspond with any variable names present in component ‘distance_finder’.</div>
+</div>
+<div class="line">Validator error[1]:</div>
+<div class="line-block">
+<div class="line">Description: MathML ci element has the child text ‘x’ which does not correspond with any variable names present in component ‘distance_finder’.</div>
+</div>
+<div class="line">Validator error[2]:</div>
+<div class="line-block">
+<div class="line">Description: MathML ci element has the child text ‘a’ which does not correspond with any variable names present in component ‘distance_finder’.</div>
+</div>
+<div class="line">Validator error[3]:</div>
+<div class="line-block">
+<div class="line">Description: MathML ci element has the child text ‘x’ which does not correspond with any variable names present in component ‘distance_finder’.</div>
+</div>
+<div class="line">Validator error[4]:</div>
+<div class="line-block">
+<div class="line">Description: MathML ci element has the child text ‘b’ which does not correspond with any variable names present in component ‘distance_finder’.</div>
+</div>
+</div>
+</div>
+<p>Running the validator will alert you variables in the MathML that don’t (yet)
+exist in your component.  This was explained in <a class="reference internal" href="tutorial2.html#tutorial2"><span class="std std-ref">Tutorial 2</span></a>.</p>
+<div class="dothis docutils container">
+<p><strong>1.g</strong> Create <code class="code docutils literal notranslate"><span class="pre">VariablePtr</span></code> instances for each of the missing
+variables discovered above.  Remember that:</p>
+<ul class="simple">
+<li><p>you will need to give each a name using the <code class="code docutils literal notranslate"><span class="pre">setName</span></code> function,
+where the name must match that inside your MathML string.</p></li>
+<li><p>you will need to add each variable to the component using the
+<code class="code docutils literal notranslate"><span class="pre">addVariable</span></code> function.</p></li>
+</ul>
+</div>
+<p>At this stage you’ll realise that you haven’t yet added the <code class="code docutils literal notranslate"><span class="pre">Units</span></code> for
+any of the variables.  Roll on Step 2 …</p>
+</div>
+<div class="section" id="built-in-and-customised-units">
+<h2>2: Built-in and customised units<a class="headerlink" href="#built-in-and-customised-units" title="Permalink to this headline">¶</a></h2>
+<p>Linking variables to the <em>name</em> of their units is straightforward, but in
+order to be able to use them we need to also define what the name actually
+<em>means</em> by creating the units themselves.  Some basic units have been defined
+and built into libCellML, others you can define by combining the built-in
+ones using scaling factors and exponents, or you can define your own from
+scratch if need be.</p>
+<p>There are four different kinds of units used here.  The first are called
+<em>irreducible</em> because they represent the physical base quantities which cannot
+be further simplified:</p>
+<ul class="simple">
+<li><p>length (<code class="code docutils literal notranslate"><span class="pre">metre</span></code>)</p></li>
+<li><p>time (<code class="code docutils literal notranslate"><span class="pre">second</span></code>)</p></li>
+<li><p>amount of a substance (<code class="code docutils literal notranslate"><span class="pre">mole</span></code>)</p></li>
+<li><p>temperature (<code class="code docutils literal notranslate"><span class="pre">kelvin</span></code>)</p></li>
+<li><p>mass (<code class="code docutils literal notranslate"><span class="pre">kilogram</span></code>)</p></li>
+<li><p>current (<code class="code docutils literal notranslate"><span class="pre">ampere</span></code>)</p></li>
+<li><p>luminous intensity (<code class="code docutils literal notranslate"><span class="pre">candela</span></code>)</p></li>
+<li><p>non-dimensional (<code class="code docutils literal notranslate"><span class="pre">dimensionless</span></code>)</p></li>
+</ul>
+<p>These <em>irreducible</em> units can be used to create all other physically-based
+units by combining them using different exponents, multipliers, and prefixes.
+Some of these combinations form our second type of units, the <em>built-in units</em>,
+these being common relationships which have been constructed from combinations
+of the irreducible units.  The combinations can involve:</p>
+<ul class="simple">
+<li><p>a scaling factor (the units <code class="code docutils literal notranslate"><span class="pre">millisecond</span></code> is equivalent to
+<code class="code docutils literal notranslate"><span class="pre">second</span></code> and a factor of 0.001)</p></li>
+<li><p>a combination of units (a <code class="code docutils literal notranslate"><span class="pre">coulomb</span></code> is a <code class="code docutils literal notranslate"><span class="pre">second</span></code> multiplied by
+an <code class="code docutils literal notranslate"><span class="pre">ampere</span></code>)</p></li>
+<li><p>powers of units (a <code class="code docutils literal notranslate"><span class="pre">Hertz</span></code> has a base of <code class="code docutils literal notranslate"><span class="pre">second</span></code> with an
+exponent of -1)</p></li>
+<li><p>any combination of the above.</p></li>
+</ul>
+<p>A list of pre-existing <em>built-in</em> convenience units is shown in the
+<a class="reference internal" href="builtinunits.html#builtinunits"><span class="std std-ref">Built-in Units page</span></a>, along with
+their relationships to the irreducible units.</p>
+<p>The third type of units are those <em>combinations</em> which users can define for
+themselves based on the built-in units, the irreducible units, any other units
+already created, or (see below) their own custom irreducible units.</p>
+<p>For example, let’s say that you want to simulate the time variable,
+<span class="math notranslate nohighlight">\(t\)</span>, in units of milliseconds.  This isn’t one of the built-in units, so
+you’ll need to define it, but it’s easy to see that it’s based on the built-in
+<code class="code docutils literal notranslate"><span class="pre">second</span></code>, but needs a scaling factor.</p>
+<p>For convenience libCellML gives a variety of options for defining such scaling
+factors:</p>
+<ul>
+<li><div class="line-block">
+<div class="line">either through the use of named prefixes which are listed on the
+<a class="reference internal" href="prefixes.html#prefixes"><span class="std std-ref">Prefix page</span></a>:</div>
+<div class="line-block">
+<div class="line">eg: <code class="code docutils literal notranslate"><span class="pre">millisecond</span></code> is <code class="code docutils literal notranslate"><span class="pre">second</span></code> with <code class="code docutils literal notranslate"><span class="pre">prefix=&quot;milli&quot;</span></code></div>
+</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">by defining an integer or integer string as a prefix which represents the
+<span class="math notranslate nohighlight">\(log_{10}\)</span> of the scaling factor:</div>
+<div class="line-block">
+<div class="line">eg: <code class="code docutils literal notranslate"><span class="pre">millisecond</span></code> is <code class="code docutils literal notranslate"><span class="pre">second</span></code> with <code class="code docutils literal notranslate"><span class="pre">prefix=-3</span></code>
+gives a scaling factor of <span class="math notranslate nohighlight">\(10^{-3}=0.001\)</span></div>
+<div class="line">NB: using an integer string like <code class="code docutils literal notranslate"><span class="pre">prefix=&quot;-3&quot;</span></code> gives the same
+result</div>
+</div>
+</div>
+</li>
+<li><div class="line-block">
+<div class="line">by defining the scaling factor directly, as a multiplier:</div>
+<div class="line-block">
+<div class="line">eg: <code class="code docutils literal notranslate"><span class="pre">millisecond</span></code> is <code class="code docutils literal notranslate"><span class="pre">second</span></code> with <code class="code docutils literal notranslate"><span class="pre">multiplier=0.001</span></code></div>
+</div>
+</div>
+</li>
+</ul>
+<p>The overloaded argument option list is shown below:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">addUnit</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">reference</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">prefix</span><span class="p">,</span> <span class="kt">double</span> <span class="n">exponent</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+             <span class="kt">double</span> <span class="n">multiplier</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">id</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="nf">addUnit</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">reference</span><span class="p">,</span> <span class="n">Prefix</span> <span class="n">prefix</span><span class="p">,</span> <span class="kt">double</span> <span class="n">exponent</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+             <span class="kt">double</span> <span class="n">multiplier</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">id</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="nf">addUnit</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">reference</span><span class="p">,</span> <span class="kt">int</span> <span class="n">prefix</span><span class="p">,</span> <span class="kt">double</span> <span class="n">exponent</span><span class="p">,</span>
+             <span class="kt">double</span> <span class="n">multiplier</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">id</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="nf">addUnit</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">reference</span><span class="p">,</span> <span class="kt">double</span> <span class="n">exponent</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">id</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="nf">addUnit</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="o">&amp;</span><span class="n">reference</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The creation of the <code class="code docutils literal notranslate"><span class="pre">millisecond</span></code> unit you need will
+follow the same basic steps as other entities: declare it, name it, define
+it, and then add it in.  For example:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Declaring, naming, and defining the &quot;millisecond&quot; unit pointer</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">UnitsPtr</span> <span class="n">ms</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">libcellml</span><span class="o">::</span><span class="n">Units</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="n">ms</span><span class="o">-&gt;</span><span class="n">setName</span><span class="p">(</span><span class="s">&quot;millisecond&quot;</span><span class="p">);</span>
+
+<span class="c1">// The manner of specification here is agnostic: all three definitions are identical.</span>
+<span class="n">ms</span><span class="o">-&gt;</span><span class="n">addUnit</span><span class="p">(</span><span class="s">&quot;second&quot;</span><span class="p">,</span> <span class="s">&quot;milli&quot;</span><span class="p">);</span>  <span class="c1">// reference unit and built-in prefix</span>
+<span class="c1">// OR</span>
+<span class="n">ms</span><span class="o">-&gt;</span><span class="n">addUnit</span><span class="p">(</span><span class="s">&quot;second&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">);</span>  <span class="c1">// reference unit, multiplier, exponent</span>
+<span class="c1">// OR</span>
+<span class="n">ms</span><span class="o">-&gt;</span><span class="n">addUnit</span><span class="p">(</span><span class="s">&quot;second&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">);</span>  <span class="c1">// reference unit, multiplier, exponent</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.a</strong> Use the example above to create, name and define two units:
+milliseconds and leagues (a league is 5556 metres).</p>
+</div>
+<div class="nb docutils container">
+<p><strong>Note:</strong></p>
+<ul class="simple">
+<li><p>When you add different sub-unit parts into a <code class="code docutils literal notranslate"><span class="pre">Units</span></code> item, the function
+is <code class="code docutils literal notranslate"><span class="pre">addUnit</span></code> (singular), and it takes as argument the <em>name</em> of the
+sub-unit as a string (eg: <code class="code docutils literal notranslate"><span class="pre">&quot;second&quot;</span></code> used above)</p></li>
+<li><p>When you add the final created combination into the <code class="code docutils literal notranslate"><span class="pre">Model</span></code> item,
+the function is <code class="code docutils literal notranslate"><span class="pre">addUnits</span></code> (plural), and it takes as argument the
+<em>reference</em> of the combined units (eg: <code class="code docutils literal notranslate"><span class="pre">ms</span></code> used below)</p></li>
+</ul>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.b</strong> Add the units which you’ve just created into your model, as
+in the example below.</p>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Add the millisecond unit to the model</span>
+<span class="n">model</span><span class="o">-&gt;</span><span class="n">addUnits</span><span class="p">(</span><span class="n">ms</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Units can be defined based on one another as well.  For example, after defining
+our <code class="code docutils literal notranslate"><span class="pre">millisecond</span></code> units, we could then use this definition to define the
+<code class="code docutils literal notranslate"><span class="pre">per_millisecond</span></code> units by simply including it with an exponent of -1:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Defining a per_millisecond unit based on millisecond^-1</span>
+<span class="n">per_ms</span><span class="o">-&gt;</span><span class="n">addUnit</span><span class="p">(</span><span class="n">ms</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This will be useful later in <a class="reference internal" href="tutorial4.html#tutorial4"><span class="std std-ref">Tutorial 4</span></a>.</p>
+<p>For completeness, the final type of unit is a custom irreducible unit.
+While this is not common (all of the seven physical attriubutes are already
+included), for those rare occasions where you might need to model something
+not physically based, you’re able to define your own.  Here’s an example.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Create a custom irreducible unit named &quot;banana&quot;</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">UnitsPtr</span> <span class="n">uBanana</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">libcellml</span><span class="o">::</span><span class="n">Units</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="n">uBanana</span><span class="o">-&gt;</span><span class="n">setName</span><span class="p">(</span><span class="s">&quot;banana&quot;</span><span class="p">);</span>
+
+<span class="c1">// Note that when a UnitsPtr is defined with a name only, it is effectively</span>
+<span class="c1">// irreducible.</span>
+
+<span class="c1">// Create a new compound unit based on the &quot;banana&quot; unit above</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">UnitsPtr</span> <span class="n">uBunchOfBananas</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">libcellml</span><span class="o">::</span><span class="n">Units</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="n">u2</span><span class="o">-&gt;</span><span class="n">setName</span><span class="p">(</span><span class="s">&quot;bunch_of_bananas&quot;</span><span class="p">);</span>
+<span class="n">u2</span><span class="o">-&gt;</span><span class="n">addUnit</span><span class="p">(</span><span class="s">&quot;banana&quot;</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">);</span>  <span class="c1">// include bananas^5 in the bunch_of_bananas unit</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.c</strong> Now that you’ve created the units for each of your variables,
+call the validator to check your model for errors.  You should see an
+output similar to that shown below.</p>
+</div>
+<div class="terminal docutils container">
+<div class="line-block">
+<div class="line">The validator has found 2 errors!</div>
+<div class="line-block">
+<div class="line">Validator error[0]:</div>
+</div>
+<div class="line">Description: MathML ci element has the child text ‘a’ which does not correspond with any variable names present in component ‘distance_finder’.</div>
+<div class="line-block">
+<div class="line">Validator error[1]:</div>
+</div>
+<div class="line">Description: MathML ci element has the child text ‘b’ which does not correspond with any variable names present in component ‘distance_finder’.</div>
+</div>
+</div>
+<p>These are referring to the two constants <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span> that were
+included in the MathML block which have not yet been defined.  At this point
+there are two options:</p>
+<ul class="simple">
+<li><p>include the constants as real numbers within the MathML string directly, or</p></li>
+<li><p>create them as variables as above, defining their names, units and values.</p></li>
+</ul>
+<p>We’ll do one of each to demonstrate the process.</p>
+<p>Because the dimensionality of the equation needs to be valid, all constants
+must be associated with units.  These are defined within the tags, and must
+also refer to the <code class="code docutils literal notranslate"><span class="pre">cellml</span></code> namespace:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">cn</span> <span class="n">cellml</span><span class="p">:</span><span class="n">units</span><span class="o">=</span><span class="s2">&quot;bunch_of_bananas&quot;</span><span class="o">&gt;</span><span class="mi">1</span><span class="o">&lt;/</span><span class="n">cn</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>… which gives us one bunch of bananas, without needing to create a
+corresponding <code class="code docutils literal notranslate"><span class="pre">Variable</span></code> item.  Of course, you may need to create the
+corresponding <code class="code docutils literal notranslate"><span class="pre">Units</span></code> item and add it to the model, if not already
+present.</p>
+<div class="dothis docutils container">
+<p><strong>2.d</strong>  Create a copy of the MathML statement from step 1.c and change
+the value of <span class="math notranslate nohighlight">\(b\)</span> to be a value of 2.0. You will
+need to deduce the appropriate units and include them in the MathML too.
+Recall that using the <code class="code docutils literal notranslate"><span class="pre">setMath()</span></code> function will overwrite the
+existing maths, and repeat the process you did in step 1.e to
+include the new MathML instead.  Remember that you will need to reinclude
+the opening and closing <code class="code docutils literal notranslate"><span class="pre">&lt;math&gt;</span></code> tags too.  Call the validator to
+check that the error related to <span class="math notranslate nohighlight">\(b\)</span> has gone.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.e</strong>  At this stage you should have just one validation error remaining.
+Since you already know how to create and add variables, go ahead and make
+one which represents <span class="math notranslate nohighlight">\(a\)</span> in the governing equation.  Use the
+<code class="code docutils literal notranslate"><span class="pre">setInitialValue</span></code> function to set its value to <span class="math notranslate nohighlight">\(1.0\)</span>.  Note
+that even though you’re not going to change its value during the solution
+process, this is the only way in which the value of any variable can be set
+directly.  Check that the model is now free of validation errors.</p>
+</div>
+</div>
+<div class="section" id="use-code-generation-to-change-the-output-langauge">
+<h2>3: Use code generation to change the output langauge<a class="headerlink" href="#use-code-generation-to-change-the-output-langauge" title="Permalink to this headline">¶</a></h2>
+<p>Some exciting new functionality of libCellML is its ability to generate a
+runable file from a model description.  This means that if you already have
+a solver in either C or Python, you can simply translate your model from here
+into that language.  Let’s give it a go.</p>
+<p>The generator is instantiated in the same way as the other items:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Instantiate the generator and submit the model to it for processing</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">Generator</span> <span class="n">generator</span><span class="p">;</span>
+<span class="n">generator</span><span class="p">.</span><span class="n">processModel</span><span class="p">(</span><span class="n">model</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>3.a</strong>  Create a <code class="code docutils literal notranslate"><span class="pre">Generator</span></code> instance and follow the example above
+to process your model.  Call the utility function
+<code class="code docutils literal notranslate"><span class="pre">printErrorsToTerminal</span></code> for your generator to check it.  You should
+see an output similar to that shown below.</p>
+</div>
+<div class="terminal docutils container">
+<div class="line-block">
+<div class="line">The generator has found 1 errors!</div>
+<div class="line-block">
+<div class="line">Generator error[0]:</div>
+</div>
+<div class="line">Description: Variable ‘x’ in component ‘distance_finder’ of model
+‘tutorial_3_model’ is used in an ODE, but it is not initialised.</div>
+</div>
+</div>
+<p>The error message above refers to the fact that though we’ve set the value of
+the constant <span class="math notranslate nohighlight">\(a\)</span>, we haven’t constrained the model with sufficient
+initial conditions.</p>
+<div class="dothis docutils container">
+<p><strong>3.b</strong> Set the initial value such that <span class="math notranslate nohighlight">\(x(t=0)=5\)</span> and re-process
+the model. You should see no errors now.</p>
+</div>
+<p>The <code class="code docutils literal notranslate"><span class="pre">Generator</span></code> has to re-interpret all of the maths, including the
+variables, their interaction with each other in different equations, values,
+initial conditions and units before it can output your model in your choice
+of language.  For the maths to make sense, the definitions in your model’s
+variables, maths blocks and units need to be solvable too.  There are several
+requirements that need to be satisfied in order for the code generation
+functionality to be able to work.  These are:</p>
+<ul class="simple">
+<li><p>the mathematical model definition must be appropriately constrained (not
+over- or under-constrained)</p></li>
+<li><p>initial conditions must be specified for variables which are integrated</p></li>
+<li><p>initial conditions must not be specified for variables which are the base of
+integration</p></li>
+<li><p><strong>TODO get full list of stuff here …</strong></p></li>
+</ul>
+<p>Parameters can be investigated using the same format of functions as
+elsewhere:</p>
+<ul class="simple">
+<li><p>The <code class="code docutils literal notranslate"><span class="pre">voi()</span></code> function returns a <em>pointer</em> to the <code class="code docutils literal notranslate"><span class="pre">Variable</span></code> which
+is to be used as the variable of integration (VOI).  This is specified inside
+the MathML block using the <code class="code docutils literal notranslate"><span class="pre">&lt;bvar&gt;...&lt;/bvar&gt;</span></code> tags.
+To return its <em>name</em> you can use <code class="code docutils literal notranslate"><span class="pre">generator.voi()-&gt;name()</span></code>.</p></li>
+<li><p>The <code class="code docutils literal notranslate"><span class="pre">variableCount()</span></code> function returns the number of variables which
+need to be solved for in the model.  As with elsewhere, you can access the
+variable at index <code class="code docutils literal notranslate"><span class="pre">i</span></code> using the <code class="code docutils literal notranslate"><span class="pre">variable(i)</span></code> function.  Note
+that this does <em>not</em> include:</p>
+<ul>
+<li><p><code class="code docutils literal notranslate"><span class="pre">Variable</span></code> items which are actually constants (as in the <span class="math notranslate nohighlight">\(a\)</span>
+variable in your model)</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">Variable</span></code> items which are used as the base for integration.</p></li>
+</ul>
+</li>
+<li><p>The <code class="code docutils literal notranslate"><span class="pre">stateCount()</span></code> function returns number of states in the model.
+In this context states are … <strong>??? TODO ??</strong></p></li>
+</ul>
+<p>When the generator processes your model it will determine the model’s type,
+this being one of the following:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">UNKNOWN</span></code> where …</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">ALGEBRAIC</span></code> No integration is needed</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">ODE</span></code> One or more ordinary differential equations to solve</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">INVALID</span></code> Computer says no <strong>TODO</strong></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">UNDERCONSTRAINED</span></code> Computer still says no</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">OVERCONSTRAINED</span></code> Computer says no AGAIN</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">UNSUITABLY_CONSTRAINED</span></code> OMG computer, what do you want from me</p></li>
+</ul>
+</div></blockquote>
+<p>The <code class="code docutils literal notranslate"><span class="pre">modelType()</span></code> function returns the classification as an <code class="code docutils literal notranslate"><span class="pre">enum</span></code>,
+so you’ll need to interpret it by comparing to the enum list above.  In the
+tutorials you’re given a utility function that will return the name of the enum
+for you, eg: <code class="code docutils literal notranslate"><span class="pre">getModelTypeFromEnum(generator.modelType())</span></code>.</p>
+<p>The Generator functionality refers to its different language options
+as <em>profiles</em>.  The default setting is for C, but you can change this using the
+<code class="code docutils literal notranslate"><span class="pre">setProfile</span></code> function if you need to:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Change the generated language from the default C to Python</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">GeneratorProfilePtr</span> <span class="n">profile</span> <span class="o">=</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">libcellml</span><span class="o">::</span><span class="n">GeneratorProfile</span><span class="o">&gt;</span><span class="p">(</span><span class="n">libcellml</span><span class="o">::</span><span class="n">GeneratorProfile</span><span class="o">::</span><span class="n">Profile</span><span class="o">::</span><span class="n">PYTHON</span><span class="p">);</span>
+<span class="n">generator</span><span class="p">.</span><span class="n">setProfile</span><span class="p">(</span><span class="n">profile</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Of course, your choice of generator profile (language) will affect
+<em>what</em> you need to export:</p>
+<ul class="simple">
+<li><p>If you’re using C, then you will need both the header file as well as the
+source code.</p></li>
+<li><p>If you’re using Python, you will only need the source code.</p></li>
+</ul>
+<p>For code generation into C:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Retrieve the interface or header code, and write to a file:</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">headerCode</span> <span class="o">=</span> <span class="n">generator</span><span class="p">.</span><span class="n">interfaceCode</span><span class="p">();</span>
+
+<span class="c1">// Retrieve the main source code and write to a file:</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">sourceCode</span> <span class="o">=</span> <span class="n">generator</span><span class="p">.</span><span class="n">implementationCode</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>For code generation into Python:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Retrieve the main script code only:</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">sourceCode</span> <span class="o">=</span> <span class="n">generator</span><span class="p">.</span><span class="n">implementationCode</span><span class="p">();</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>3.d</strong> Use the examples above to create your own interface code
+(that is, the *.h file contents) and source code
+(that is, the *.c file contents) from your model, and save them into
+appropriately named files.</p>
+</div>
+<p><strong>TODO</strong> <strong>Need to write run code here</strong></p>
+<div class="dothis docutils container">
+<p><strong>3.e</strong>
+Go and have a cuppa, you’re done!</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tutorial4.html" title="Tutorial 4: Modelling a gated ion channel"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial2.html" title="Tutorial 2: Debugging, error checking and validating"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, libCellML group, ABI.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

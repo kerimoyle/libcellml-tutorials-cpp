@@ -1,0 +1,142 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Generator notes &#8212; libCellML Tutorials  documentation</title>
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Built-in units" href="builtinunits.html" />
+    <link rel="prev" title="Hodgkin-Huxley model background information" href="hh_background.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="builtinunits.html" title="Built-in units"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="hh_background.html" title="Hodgkin-Huxley model background information"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="hh_background.html"
+                        title="previous chapter">Hodgkin-Huxley model background information</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="builtinunits.html"
+                        title="next chapter">Built-in units</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/generatorNotes.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="generator-notes">
+<h1>Generator notes<a class="headerlink" href="#generator-notes" title="Permalink to this headline">¶</a></h1>
+<p>Some exciting new functionality of libCellML is its ability to generate a
+runable file from a model description.  This means that you don’t need to
+link your model to a solver of any kind, you can simply generate a script
+which contains all the required behind-the-scenes mechanics required to
+run your simulation.  Let’s give it a go.</p>
+<p>The generator is instantiated in the same way as the other items:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Instantiate the generator and submit the model to it for processing</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">Generator</span> <span class="n">generator</span><span class="p">;</span>
+<span class="n">generator</span><span class="p">.</span><span class="n">processModel</span><span class="p">(</span><span class="n">model</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The Generator functionality allows us to export runable files in
+different languages, called <em>profiles</em> in libCellML.  The
+default setting is for C, but you can change this using the
+<code class="code docutils literal notranslate"><span class="pre">setProfile</span></code> function if you need to:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">libcellml</span><span class="o">::</span><span class="n">GeneratorProfilePtr</span> <span class="n">profile</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">libcellml</span><span class="o">::</span><span class="n">GeneratorProfile</span><span class="o">&gt;</span><span class="p">(</span><span class="n">libcellml</span><span class="o">::</span><span class="n">GeneratorProfile</span><span class="o">::</span><span class="n">Profile</span><span class="o">::</span><span class="n">PYTHON</span><span class="p">);</span>
+<span class="n">generator</span><span class="p">.</span><span class="n">setProfile</span><span class="p">(</span><span class="n">profile</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Of course, your choice of generator profile (language) will affect
+what you need to export.  If you’re using C, then you will need both the
+header file as well as the source code.  If you’re using Python, you will
+only need the source code.</p>
+<p>For C:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Retrieve the interface or header code, and write to a file:</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">headerCode</span> <span class="o">=</span> <span class="n">generator</span><span class="p">.</span><span class="n">interfaceCode</span><span class="p">();</span>
+
+<span class="c1">// Retrieve the main source code and write to a file:</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">sourceCode</span> <span class="o">=</span> <span class="n">generator</span><span class="p">.</span><span class="n">implementationCode</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>For Python:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Retrieve the main script code only:</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">sourceCode</span> <span class="o">=</span> <span class="n">generator</span><span class="p">.</span><span class="n">implementationCode</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="builtinunits.html" title="Built-in units"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="hh_background.html" title="Hodgkin-Huxley model background information"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, libCellML group, ABI.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

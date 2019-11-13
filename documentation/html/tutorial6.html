@@ -1,0 +1,158 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tutorial 6: Generating code TODO &#8212; libCellML Tutorials  documentation</title>
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorial 7: Creating the sodium channel" href="tutorial7.html" />
+    <link rel="prev" title="Tutorial 5: Working with multiple components" href="tutorial5.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tutorial7.html" title="Tutorial 7: Creating the sodium channel"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial5.html" title="Tutorial 5: Working with multiple components"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tutorial 6: Generating code <strong>TODO</strong></a><ul>
+<li><a class="reference internal" href="#step-1-read-the-potassium-channel-model">Step 1: Read the potassium channel model</a></li>
+<li><a class="reference internal" href="#step-2-create-a-generator-instance-and-initialise-it">Step 2: Create a Generator instance and initialise it</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial5.html"
+                        title="previous chapter">Tutorial 5: Working with multiple components</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorial7.html"
+                        title="next chapter">Tutorial 7: Creating the sodium channel</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tutorial6.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tutorial-6-generating-code-todo">
+<span id="tutorial6"></span><h1>Tutorial 6: Generating code <strong>TODO</strong><a class="headerlink" href="#tutorial-6-generating-code-todo" title="Permalink to this headline">¶</a></h1>
+<p>Getting started:  If you’re reading this it’s presumed that you’re already
+comfortable with the deserlialisation and debugging functionality
+available in the libCellML library.</p>
+<p>By the end of this tutorial you will be able to:</p>
+<ul class="simple">
+<li><p>use the Generator to create models in Python or C format</p></li>
+<li><p>use the simple solver provided to run your created model(s).</p></li>
+</ul>
+<div class="section" id="step-1-read-the-potassium-channel-model">
+<h2>Step 1: Read the potassium channel model<a class="headerlink" href="#step-1-read-the-potassium-channel-model" title="Permalink to this headline">¶</a></h2>
+<p>In Tutorial 5 you created a CellML model representing the behaviour of a gated
+potassium channel, and included a driving function to replicate a voltage clamp
+experiment.  In this tutorial we will use the CellML file you made to
+demonstrate how the Generator can be used to create the same model in either
+Python or C formats.</p>
+<p>container:: dothis</p>
+<blockquote>
+<div><p><strong>1.a</strong> Parse the Tutorial5_PotassiumChannelModel.cellml file and create a
+model from it, named “Tutorial6_PotassiumChannelModel”.  If you didn’t
+complete Tutorial 5 you can copy the file from the
+<code class="code docutils literal notranslate"><span class="pre">resources/tutorial5</span></code> folder instead.</p>
+</div></blockquote>
+<p>container:: dothis</p>
+<blockquote>
+<div><p><strong>1.b</strong> Create a Validator instance and confirm that the model you’ve
+created is valid.</p>
+</div></blockquote>
+</div>
+<div class="section" id="step-2-create-a-generator-instance-and-initialise-it">
+<h2>Step 2: Create a Generator instance and initialise it<a class="headerlink" href="#step-2-create-a-generator-instance-and-initialise-it" title="Permalink to this headline">¶</a></h2>
+<p>The Generator is accessed similarly to the Validator and Parser, and a simple
+call to the <code class="code docutils literal notranslate"><span class="pre">processModel</span></code> function will do most of the work.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">libcellml</span><span class="p">::</span><span class="n">Generator</span> <span class="n">generator</span><span class="p">;</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">processModel</span><span class="p">(</span><span class="n">model</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>container:: dothis</p>
+<blockquote>
+<div><p><strong>2.a</strong> Construct a generator as above, and use the utility function to
+check that no errors were encountered.</p>
+</div></blockquote>
+<p>TODO Currently segfaults - waiting for fix.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tutorial7.html" title="Tutorial 7: Creating the sodium channel"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial5.html" title="Tutorial 5: Working with multiple components"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, libCellML group, ABI.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

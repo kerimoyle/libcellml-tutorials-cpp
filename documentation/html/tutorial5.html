@@ -1,0 +1,473 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tutorial 5: Working with multiple components &#8212; libCellML Tutorials  documentation</title>
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorial 6: Generating code TODO" href="tutorial6.html" />
+    <link rel="prev" title="Tutorial 4: Modelling a gated ion channel" href="tutorial4.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tutorial6.html" title="Tutorial 6: Generating code TODO"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial4.html" title="Tutorial 4: Modelling a gated ion channel"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tutorial 5: Working with multiple components</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#setup">0: Setup</a></li>
+<li><a class="reference internal" href="#create-the-model">1: Create the model</a></li>
+<li><a class="reference internal" href="#include-more-components-in-the-model">2: Include more components in the model</a></li>
+<li><a class="reference internal" href="#create-a-component-for-the-n-gate">3: Create a component for the n-gate</a></li>
+<li><a class="reference internal" href="#connect-the-components-to-one-another">4: Connect the components to one another</a></li>
+<li><a class="reference internal" href="#define-the-driving-function">5 Define the driving function</a></li>
+<li><a class="reference internal" href="#serialise-and-print-the-model">6: Serialise and print the model</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial4.html"
+                        title="previous chapter">Tutorial 4: Modelling a gated ion channel</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorial6.html"
+                        title="next chapter">Tutorial 6: Generating code <strong>TODO</strong></a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tutorial5.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tutorial-5-working-with-multiple-components">
+<span id="tutorial5"></span><h1>Tutorial 5: Working with multiple components<a class="headerlink" href="#tutorial-5-working-with-multiple-components" title="Permalink to this headline">¶</a></h1>
+<p>Getting started:  If you’re reading this it’s presumed that you’re already
+comfortable with the serlialisation, manipulation, and debugging functionality
+available in the libCellML library, as well as using the API to create, debug
+and validate your model.  This tutorial will build on work done in
+<a class="reference internal" href="tutorial4.html#tutorial4"><span class="std std-ref">Tutorial 4</span></a>: if you are starting from here you can find
+the files which were created in that tutorial in the
+<code class="code docutils literal notranslate"><span class="pre">resources/tutorial4</span></code> folder.</p>
+<p>By the end of this tutorial you will be able to:</p>
+<ul class="simple">
+<li><p>create a CellML2.0 model which includes encapsulations and more than one
+component</p></li>
+<li><p>connect components to one another by mapping equivalent variables</p></li>
+</ul>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>In <a class="reference internal" href="tutorial4.html#tutorial4"><span class="std std-ref">Tutorial 4</span></a> we created a component representing an ion
+channel.  The channel is controlled by a number of gates in series, whose
+open or closed state and the transition between them is controlled by voltage:
+hence, a “voltage-controlled ion gate”.  In this tutorial we will explore how
+a channel such as that made in Tutorial 4 can include another level of
+control: the rate constants (<span class="math notranslate nohighlight">\(alpha_y\)</span> and <span class="math notranslate nohighlight">\(beta_y\)</span>) used earlier
+are now functions of voltage themselves.  We will also show how an
+<em>environment</em> component can be used to ensure that all components are modelled
+synchronously.</p>
+</div>
+<div class="section" id="setup">
+<h2>0: Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="create-the-model">
+<h2>1: Create the model<a class="headerlink" href="#create-the-model" title="Permalink to this headline">¶</a></h2>
+<p>By now you should be familiar and comfortable with using the API to create
+the model instance, and normally that’s how you’d start … but not this time.
+If you completed Tutorial 4 you will have created a model representing a
+gated ion channel, serialised the model and written it to a file.  A good
+idea for programming, modelling, and work in general is the DRY principle:
+<strong>Don’t Repeat Yourself</strong>.  With this in mind we want to be able to reuse the
+work that’s already done, and in particular, that useful ion channel that was
+created in Tutorial 4.  There are four possible options:</p>
+<ul class="simple">
+<li><p>Option 0: Write it all again.  We’re not going to do that. It’s too WET
+(Write Every Time).</p></li>
+<li><p>Option 1: Copy the code you wrote in Tutorial 4 to create the component, and
+simply add it here.  This is not a great solution, because it’s not as DRY as
+it could be, but it beats writing it all from scratch again.</p></li>
+<li><p>Option 2: Use the skills you learned in Tutorial 2 around parsing and
+deserialising a CellML model to read the model from the file which you
+created during Tutorial 4.  This option is DRY-er than Option 1, but will
+involve a tweak or two because the <code class="code docutils literal notranslate"><span class="pre">Parser</span></code> will only load the whole
+model, not just the bits we care about.</p></li>
+<li><p>Option 3: Instead of parsing and loading the entirety of the model from
+Tutorial 4, just tell libCellML to reference what it needs to.</p></li>
+</ul>
+<p>Option 3 seems to be the DRYest, and indeed this is how we will do it later on
+when the <code class="code docutils literal notranslate"><span class="pre">ImportSource</span></code> functionality is introduced.  For now though,
+we’ll just go with Option 2 since there’s only one component inside the
+Tutorial 4 model anyway.</p>
+<div class="dothis docutils container">
+<p><strong>1.a</strong> Create a <code class="code docutils literal notranslate"><span class="pre">Parser</span></code> instance and use it to deserialise the
+model from the file created in Tutorial 4 into a new model instance.
+This process was described in <cite>Tutorial 2&lt;tutorial2&gt;</cite>. You
+may like to copy that file into the working directory for this project for
+ease of access.  If you didn’t do Tutorial 4 you can copy this file from
+the resource folder instead.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>1.b</strong> Use the <code class="code docutils literal notranslate"><span class="pre">printModelToTerminal</span></code> function to check that you
+have what you expect.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>1.c</strong> Create a <code class="code docutils literal notranslate"><span class="pre">Validator</span></code> instance and check that your model is
+valid so far.</p>
+</div>
+<p>Now that we’ve loaded the model and checked that it’s working, we want to
+rename parts of it so that they make more sense going forward.  Use the
+manipulation functionality you learnt in Tutorial 3 to retrieve the following
+items from the model and rename them.  Recall that you can access the items
+contained inside a model by index as well as by name.</p>
+<div class="dothis docutils container">
+<p><strong>1.d</strong> Retrieve the component from the model and rename it to
+“PotassiumChannel”.</p>
+</div>
+</div>
+<div class="section" id="include-more-components-in-the-model">
+<h2>2: Include more components in the model<a class="headerlink" href="#include-more-components-in-the-model" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial is intended to illustrate the use of more than one component,
+and how they’re connected to each other.  Let’s get started with creating two
+more components: one to represent the environment variables which will be
+shared throughout the whole model, and one to represent details of a
+gate.</p>
+<div class="dothis docutils container">
+<p><strong>2.a</strong> Create a new component named “environment”</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.b</strong> Create two new variables with the units below, and add to the
+component.</p>
+</div>
+<ul class="simple">
+<li><p>V (millivolt)</p></li>
+<li><p>t (millisecond)</p></li>
+</ul>
+<div class="dothis docutils container">
+<p><strong>2.c</strong> Add both new components to the model.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.d</strong> Check that the model is valid so far using your validator instance.</p>
+</div>
+</div>
+<div class="section" id="create-a-component-for-the-n-gate">
+<h2>3: Create a component for the n-gate<a class="headerlink" href="#create-a-component-for-the-n-gate" title="Permalink to this headline">¶</a></h2>
+<p>The last component that we need to create is an update from our Tutorial 4
+model such that the rate constants <span class="math notranslate nohighlight">\(alpha\)</span> and <span class="math notranslate nohighlight">\(beta\)</span> become
+functions of voltage.  We have another choice.  We could either:</p>
+<ul class="simple">
+<li><p>remove all the mathematics from our existing PotassiumChannel component
+and adjust the equations which are already there to suit, or</p></li>
+<li><p>create another component to handle the voltage dependence, and pass its
+computed values to our existing component.</p></li>
+</ul>
+<p>In a continuation of the DRY principle, we’re going to go with the latter.</p>
+<div class="dothis docutils container">
+<p><strong>3.a</strong> Create a new component named “nGate”, and add five
+new variables:</p>
+</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(V\)</span> (millivolt)</p></li>
+<li><p><span class="math notranslate nohighlight">\(t\)</span> (millisecond)</p></li>
+<li><p><span class="math notranslate nohighlight">\(n\)</span> (dimensionless)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\alpha_n\)</span> (per millisecond)</p></li>
+<li><p><span class="math notranslate nohighlight">\(\beta_n\)</span> (per millisecond)</p></li>
+</ul>
+<p>You may notice that during this process you’ve created more than one
+<code class="code docutils literal notranslate"><span class="pre">VariablePtr</span></code> instance with the symbol <code class="code docutils literal notranslate"><span class="pre">V</span></code> or <code class="code docutils literal notranslate"><span class="pre">t</span></code>.  The
+CellML2 specification says that you need to have variable names which are
+unique within the scope of the component in which they’re contained.  In C++
+you can mimic this using curly brackets, <code class="code docutils literal notranslate"><span class="pre">{...}</span></code>, around your
+<code class="code docutils literal notranslate"><span class="pre">VariablePtr</span></code> definitions.</p>
+<p>Next we need to define this new dependency of the <span class="math notranslate nohighlight">\(\alpha\)</span> and
+<span class="math notranslate nohighlight">\(\beta\)</span> rate constants on the voltage.  The mathematics for this is:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\alpha_n = \frac{0.01*(V+10)}{exp(\frac{V+10}{10})-1}\\\beta_n = 0.125*exp(\frac{V}{80})\\\frac {dn} {dt} = \alpha_n*(1-n) - \beta_n*n\end{aligned}\end{align} \]</div>
+<div class="dothis docutils container">
+<p><strong>3.b</strong> Create the appropriate MathML to represent the equations above, and
+add to the nGate component.  As in the previous tutorial, you
+can copy this from the file provided in the
+<code class="code docutils literal notranslate"><span class="pre">resources/tutorial5/mathml.txt</span></code> file if you prefer.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>3.c</strong> Add the nGate component into the model, and validate it.</p>
+</div>
+<p>During step 3.c your validation should have alerted you to a set of missing
+units in the component.  These are not attached to a variable, but to a
+constant inside the MathML, but still need to be present in the parent model.</p>
+<div class="dothis docutils container">
+<p><strong>3.d</strong> Create the missing units and add to the model.  Confirm that the
+model is now valid.</p>
+</div>
+</div>
+<div class="section" id="connect-the-components-to-one-another">
+<h2>4: Connect the components to one another<a class="headerlink" href="#connect-the-components-to-one-another" title="Permalink to this headline">¶</a></h2>
+<p>In order for components to be able to relate to one another, we have to define
+two things.  Firstly, the hierarchy in which they exist - this is called the
+<em>encapsulation</em> and determines which components are able to access others. Each
+component is only visible to its direct parents, direct children, and siblings
+(those which share a direct parent).  Secondly, we need to define the way in
+which the varaibles within the component relate to those outside it.  This is
+done by creating <em>equivalent variables</em>.</p>
+<div class="dothis docutils container">
+<p><strong>4.a</strong> Create an encapsulation hierarchy for our three components.  In
+this tutorial, we need an arrangement such that:</p>
+<ul class="simple">
+<li><p>the “environment” component stands alone as a child of the model.  We don’t
+need to change anything there.</p></li>
+<li><p>the “nGate” should exist entirely inside the
+“PotassiumChannel” gate.  This hierarchy is created by adding the
+“nGate” component into the “PotassiumChannel” component,
+<em>instead</em> of adding it to the model.  Because an item can only have one
+parent, we can remove the gate component from the model (we added it in step
+3.c) simply by adding it to the channel component now.  It will have its
+parent updated, and the model’s children will be updated too.</p></li>
+</ul>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">potassiumChannel</span><span class="o">-&gt;</span><span class="n">addComponent</span><span class="p">(</span><span class="n">nGate</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>4.b</strong> Print the model to the screen to check your component hierarchy.
+It should contain the section below where a <em>child component</em> is listed.</p>
+</div>
+<div class="terminal docutils container">
+<div class="line-block">
+<div class="line">…</div>
+<div class="line-block">
+<div class="line">Component[0] has 1 child components:</div>
+<div class="line-block">
+<div class="line">Component[0] has name: ‘nGate’</div>
+<div class="line">Component[0] has 5 variables:</div>
+<div class="line">Variable[0] has name: ‘V’</div>
+<div class="line">Variable[0] has units: ‘millivolt’</div>
+<div class="line">Variable[1] has name: ‘t’</div>
+<div class="line">Variable[1] has units: ‘millisecond’</div>
+<div class="line">Variable[2] has name: ‘alpha_n’</div>
+<div class="line">Variable[2] has units: ‘per_millisecond’</div>
+<div class="line">Variable[3] has name: ‘beta_n’</div>
+<div class="line">Variable[3] has units: ‘per_millisecond’</div>
+<div class="line">Variable[4] has name: ‘n’</div>
+<div class="line">Variable[4] has units: ‘dimensionless’</div>
+</div>
+</div>
+<div class="line">…</div>
+<div class="line"><br /></div>
+</div>
+</div>
+<p>After defining how the components are arranged, we need to define which
+variables can access each other, and how.  This is done by making variables
+in different components <em>equivalent</em> to one another:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Making the firstVariable and secondVariable equivalent to each other</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">Variable</span><span class="o">::</span><span class="n">addEquivalence</span><span class="p">(</span><span class="n">firstVariable</span><span class="p">,</span> <span class="n">secondVariable</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>In our model we have defined an “environment” component which we’ll use to
+control all of the independent variables (time, voltage) during the simulation
+process.</p>
+<div class="dothis docutils container">
+<p><strong>4.c</strong> Use the addEquivalence functionality to match the time and voltage
+variables in the “environment” component with those in the other two.  Note
+that if you have used the curly brackets {} to denote a limited scope for your
+variable definitions earlier, you will need to retrieve the variables from
+their components using their names, as they don’t exist in the general scope of
+the code:</p>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Retrieving the pointers to the variables via their names and adding an equivalence</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">Variable</span><span class="o">::</span><span class="n">addEquivalence</span><span class="p">(</span><span class="n">environment</span><span class="o">-&gt;</span><span class="n">variable</span><span class="p">(</span><span class="s">&quot;t&quot;</span><span class="p">),</span> <span class="n">potassiumChannel</span><span class="o">-&gt;</span><span class="n">variable</span><span class="p">(</span><span class="s">&quot;t&quot;</span><span class="p">));</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">Variable</span><span class="o">::</span><span class="n">addEquivalence</span><span class="p">(</span><span class="n">environment</span><span class="o">-&gt;</span><span class="n">variable</span><span class="p">(</span><span class="s">&quot;t&quot;</span><span class="p">),</span> <span class="n">nGate</span><span class="o">-&gt;</span><span class="n">variable</span><span class="p">(</span><span class="s">&quot;t&quot;</span><span class="p">));</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>4.d</strong> Validate your model and print the errors to the terminal using the
+<code class="code docutils literal notranslate"><span class="pre">printErrorsToTerminal</span></code> function.  You should see an error
+similar to the one below.</p>
+</div>
+<div class="terminal docutils container">
+<p><strong>TODO</strong> ?? put error here when the validation is working ??</p>
+</div>
+<p>There are some restrictions on which variables can be matched like this.
+Variables can only be made equivalent if they are in neighbouring components;
+that is, a direct parent, direct child, or sibling component (one with the same
+parent).   We can add these two variables into the “PotassiumChannel” component
+as they are <em>sibling</em> components (their parent is the model):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">libcellml</span><span class="p">::</span><span class="n">Variable</span><span class="p">::</span><span class="n">addEquivalence</span><span class="p">(</span><span class="n">time_in_environment</span><span class="p">,</span> <span class="n">time_in_channel</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>… but we <em>cannot</em> make an equivalence between the <code class="code docutils literal notranslate"><span class="pre">t</span></code> variable in the
+<code class="code docutils literal notranslate"><span class="pre">environment</span></code> component and the <code class="code docutils literal notranslate"><span class="pre">t</span></code> variable in the <code class="code docutils literal notranslate"><span class="pre">nGate</span></code>
+component, because that relationship is too distant.  Instead, we need to use
+the <code class="code docutils literal notranslate"><span class="pre">potassiumChannel</span></code> component as a go-between: it is a sibling of the
+<code class="code docutils literal notranslate"><span class="pre">environment</span></code> as well as a direct parent of the <code class="code docutils literal notranslate"><span class="pre">nGate</span></code>.</p>
+<div class="dothis docutils container">
+<p><strong>4.e</strong> Alter the equivalence arrangement you created in step 4.d so that
+the neighbouring component rule is followed.  You will need to do this for
+the variables representing time <span class="math notranslate nohighlight">\(t\)</span> and voltage <span class="math notranslate nohighlight">\(V\)</span> between all
+three components, and the gating variable <span class="math notranslate nohighlight">\(n\)</span> between the <code class="code docutils literal notranslate"><span class="pre">nGate</span></code>
+and <code class="code docutils literal notranslate"><span class="pre">potassiumChannel</span></code> components.  Validate your model again.  You
+should see a validation message similar to that shown below.</p>
+</div>
+<div class="terminal docutils container">
+<p><strong>TODO Put error messages here when they’re working</strong></p>
+</div>
+<p>The errors above are caused by the need to specify explicitly the kind of
+equivalence relationship which is allowed for each variable.  The default
+is <code class="code docutils literal notranslate"><span class="pre">none</span></code>, which prevents any equivalent connections, hence the error
+above.</p>
+<p>Here’s how to think about equivalent variable interface types.  Imagine a
+family of components such that the mother has two children.  The interface
+types between the variables in these components needs to be specified as
+follows:</p>
+<ul class="simple">
+<li><p>Between the siblings, the <code class="code docutils literal notranslate"><span class="pre">public</span></code> interface type.  Siblings know
+everything about each other.</p></li>
+<li><p>Between the children and their mother, the <code class="code docutils literal notranslate"><span class="pre">public</span></code> interface for
+the children, but the <code class="code docutils literal notranslate"><span class="pre">private</span></code> interface for the mother.  Parents
+can know everything about their children, but children do not know everything
+about their parents.</p></li>
+<li><p>A third option is included to enable more than one kind of relationship
+to a variable, the <code class="code docutils literal notranslate"><span class="pre">public_and_private</span></code> type.  This is used where
+successive generations mean that a variable needs to be <code class="code docutils literal notranslate"><span class="pre">private</span></code> in
+one relationship and <code class="code docutils literal notranslate"><span class="pre">public</span></code> in another.  An uncle (the mother’s
+brother) and the mother have a sibling-type (ie: <code class="code docutils literal notranslate"><span class="pre">public</span></code>) interface,
+but the mother must keep a <code class="code docutils literal notranslate"><span class="pre">private</span></code> interface for her children too.</p></li>
+</ul>
+<div class="dothis docutils container">
+<p><strong>4.f</strong>  Use the <code class="code docutils literal notranslate"><span class="pre">setInterfaceType</span></code> function for each of the shared
+variables to specify their avaiable interfaces.  Re-validate your model and
+confirm that it is now free of errors.</p>
+</div>
+</div>
+<div class="section" id="define-the-driving-function">
+<h2>5 Define the driving function<a class="headerlink" href="#define-the-driving-function" title="Permalink to this headline">¶</a></h2>
+<p>In order to give the simulation something to actually simulate, we need to add
+a driving function as an input.  This simulation replicates a voltage clamp
+experiment wherein the input voltage is given a square wave and the current
+response measured, so we need to define the voltage in the
+<code class="code docutils literal notranslate"><span class="pre">environment</span></code> component as a function of time.  (At this stage we’ll use
+the MathML markup as in previous tutorials, but in a future tutorial we’ll
+introduce the idea of Resets items as an alternative approach.)  The MathML
+below shows how piecewise functions can be used to return the absolute value of
+a given <span class="math notranslate nohighlight">\(x\)</span> variable. The <code class="code docutils literal notranslate"><span class="pre">&lt;otherwise&gt;</span></code> statement is there as a
+default, and can apply to more than one section of the axis.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;piecewise&gt;</span>
+    <span class="nt">&lt;piece&gt;</span>
+        <span class="nt">&lt;apply&gt;&lt;minus/&gt;&lt;ci&gt;</span>x<span class="nt">&lt;/ci&gt;&lt;/apply&gt;</span>
+        <span class="nt">&lt;apply&gt;&lt;lt/&gt;&lt;ci&gt;</span>x<span class="nt">&lt;/ci&gt;&lt;cn&gt;</span>0<span class="nt">&lt;/cn&gt;&lt;/apply&gt;</span>
+    <span class="nt">&lt;/piece&gt;</span>
+    <span class="nt">&lt;piece&gt;</span>
+        <span class="nt">&lt;cn&gt;</span>0<span class="nt">&lt;/cn&gt;</span>
+        <span class="nt">&lt;apply&gt;&lt;eq/&gt;&lt;ci&gt;</span>x<span class="nt">&lt;/ci&gt;&lt;cn&gt;</span>0<span class="nt">&lt;/cn&gt;&lt;/apply&gt;</span>
+    <span class="nt">&lt;/piece&gt;</span>
+    <span class="nt">&lt;otherwise&gt;</span>
+        <span class="nt">&lt;ci&gt;</span>x<span class="nt">&lt;/ci&gt;</span>
+    <span class="nt">&lt;/otherwise&gt;</span>
+<span class="nt">&lt;/piecewise&gt;</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>5.a</strong> Create a MathML string representing a step change such that the
+voltage variable is set to -85 millivolts between times of 5 and 15
+milliseconds, and 0 otherwise.  Remember that you will need to specify both
+the units as well as their namespace in each constant
+<code class="code docutils literal notranslate"><span class="pre">&lt;cn</span> <span class="pre">cellml:units=&quot;yourUnitsHere&quot;&gt;</span></code>, and to specify the CellML
+namespace itself in the maths header:</p>
+</div>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;math</span> <span class="na">xmlns=</span><span class="s">&quot;http://www.w3.org/1998/Math/MathML&quot;</span>
+      <span class="na">xmlns:cellml=</span><span class="s">&quot;http://www.cellml.org/cellml/2.0#&quot;</span><span class="nt">&gt;</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>5.b</strong> Use the <code class="code docutils literal notranslate"><span class="pre">setMath</span></code> function to add your MathML string from
+5.a to the <code class="code docutils literal notranslate"><span class="pre">environment</span></code> component.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>5.c</strong> Call the validator to check that your model is free of errors.</p>
+</div>
+</div>
+<div class="section" id="serialise-and-print-the-model">
+<h2>6: Serialise and print the model<a class="headerlink" href="#serialise-and-print-the-model" title="Permalink to this headline">¶</a></h2>
+<div class="dothis docutils container">
+<p><strong>6.a</strong> As in <a class="reference internal" href="tutorial1.html#tutorial1"><span class="std std-ref">Tutorial 1</span></a>, use the <code class="code docutils literal notranslate"><span class="pre">Printer</span></code> module
+to serialise the model, and then write it to a file.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>6.b</strong> Go and have a cuppa, you’re done!</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tutorial6.html" title="Tutorial 6: Generating code TODO"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial4.html" title="Tutorial 4: Modelling a gated ion channel"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, libCellML group, ABI.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

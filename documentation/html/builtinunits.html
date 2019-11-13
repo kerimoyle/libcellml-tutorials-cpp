@@ -1,0 +1,474 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Built-in units &#8212; libCellML Tutorials  documentation</title>
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Built-in prefixes" href="prefixes.html" />
+    <link rel="prev" title="Generator notes" href="generatorNotes.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="prefixes.html" title="Built-in prefixes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="generatorNotes.html" title="Generator notes"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="generatorNotes.html"
+                        title="previous chapter">Generator notes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="prefixes.html"
+                        title="next chapter">Built-in prefixes</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/builtinunits.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="built-in-units">
+<span id="builtinunits"></span><h1>Built-in units<a class="headerlink" href="#built-in-units" title="Permalink to this headline">¶</a></h1>
+<p>The libCellML library includes a set of irreducible units, as well as a
+convenience set of their most common combinations.  These built-in units,
+and their formation from the irreducible units, are shown in the table below:
+the columns indicate the irreducible units, the values shown indicate the
+exponent, and the final column contains the multiplier (if used).</p>
+<p>Note that there are three effectively dimensionless units:</p>
+<ul class="simple">
+<li><p>the <code class="code docutils literal notranslate"><span class="pre">dimensionless</span></code> irreducible unit itself</p></li>
+<li><p>the <code class="code docutils literal notranslate"><span class="pre">radian</span></code> unit should really be <code class="code docutils literal notranslate"><span class="pre">metre</span></code> per <code class="code docutils literal notranslate"><span class="pre">metre</span></code></p></li>
+<li><p>the <code class="code docutils literal notranslate"><span class="pre">steradian</span></code> unit should really be
+<code class="code docutils literal notranslate"><span class="pre">metre</span></code> squared per <code class="code docutils literal notranslate"><span class="pre">metre</span></code> squared</p></li>
+</ul>
+<table class="colwidths-auto docutils align-right">
+<tbody>
+<tr class="row-odd"><td></td>
+<td><p>ampere</p></td>
+<td><p>candela</p></td>
+<td><p>dimensionless</p></td>
+<td><p>kelvin</p></td>
+<td><p>kilogram</p></td>
+<td><p>metre</p></td>
+<td><p>mole</p></td>
+<td><p>second</p></td>
+<td><p>multiplier</p></td>
+</tr>
+<tr class="row-even"><td><p>ampere</p></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>becquerel</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>-1</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>candela</p></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>coulomb</p></td>
+<td><p>-1</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>dimensionless</p></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>farad</p></td>
+<td><p>2</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>-1</p></td>
+<td><p>-2</p></td>
+<td></td>
+<td><p>-4</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>gram</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>0.001</p></td>
+</tr>
+<tr class="row-odd"><td><p>gray</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>2</p></td>
+<td></td>
+<td><p>-2</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>henry</p></td>
+<td><p>-2</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+<td></td>
+<td><p>-2</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>hertz</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>-1</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>joule</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+<td></td>
+<td><p>-2</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>katal</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td><p>-1</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>kelvin</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>kilogram</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>litre</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>3</p></td>
+<td></td>
+<td></td>
+<td><p>0.001</p></td>
+</tr>
+<tr class="row-odd"><td><p>lumen</p></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>lux</p></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>-2</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>metre</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>mole</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>newton</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td></td>
+<td><p>-2</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>ohm</p></td>
+<td><p>-2</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+<td></td>
+<td><p>-3</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>pascal</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td><p>-1</p></td>
+<td></td>
+<td><p>-2</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>radian</p></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>second</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>siemens</p></td>
+<td><p>2</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>-1</p></td>
+<td><p>-2</p></td>
+<td></td>
+<td><p>3</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>sievert</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>2</p></td>
+<td></td>
+<td><p>-2</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>steradian</p></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>tesla</p></td>
+<td><p>-1</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td></td>
+<td></td>
+<td><p>-2</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>volt</p></td>
+<td><p>-1</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+<td></td>
+<td><p>-3</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>watt</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+<td></td>
+<td><p>-3</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>weber</p></td>
+<td><p>-1</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+<td></td>
+<td><p>-2</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="prefixes.html" title="Built-in prefixes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="generatorNotes.html" title="Generator notes"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, libCellML group, ABI.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,281 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tutorial 1: Reading, writing, ‘rithmetic &#8212; libCellML Tutorials  documentation</title>
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorial 2: Debugging, error checking and validating" href="tutorial2.html" />
+    <link rel="prev" title="libCellML Tutorials" href="index.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tutorial2.html" title="Tutorial 2: Debugging, error checking and validating"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="libCellML Tutorials"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tutorial 1: Reading, writing, ‘rithmetic</a><ul>
+<li><a class="reference internal" href="#step-0-setup">Step 0: Setup</a></li>
+<li><a class="reference internal" href="#step-1-deserialising-a-cellml-file">Step 1: Deserialising a CellML file</a></li>
+<li><a class="reference internal" href="#step-2-investigate-the-contents-of-the-model">Step 2: Investigate the contents of the model</a></li>
+<li><a class="reference internal" href="#step-3-serialise-the-model-and-output">Step 3: Serialise the model and output</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">libCellML Tutorials</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorial2.html"
+                        title="next chapter">Tutorial 2: Debugging, error checking and validating</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tutorial1.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tutorial-1-reading-writing-rithmetic">
+<span id="tutorial1"></span><h1>Tutorial 1: Reading, writing, ‘rithmetic<a class="headerlink" href="#tutorial-1-reading-writing-rithmetic" title="Permalink to this headline">¶</a></h1>
+<p>Welcome to the introductory tutorial for the use of the libCellML library.
+Using these tutorials in sequence will walk you through the functionality and
+build your knowledge step by step. If, however, you just need to jump in and
+figure out one specific idea, you can find a tutorial related to that subject
+using the index.</p>
+<p>After completing this tutorial you will be able to:</p>
+<ul class="simple">
+<li><p>read the contents of a CellML file</p></li>
+<li><p>deserialse its contents using the Parser to create a Model structure</p></li>
+<li><p>investigate the hierarchical contents of the Model, including the
+Components, Variables, and maths</p></li>
+<li><p>serialise the model and write to another file</p></li>
+</ul>
+<p>Where you see the green indentation &gt;&gt; in this document it means that there’s
+something you need to do, and if you’re stuck at any stage you can refer to
+the completed “tutorial1_completed.cpp” file for help.</p>
+<div class="section" id="step-0-setup">
+<h2>Step 0: Setup<a class="headerlink" href="#step-0-setup" title="Permalink to this headline">¶</a></h2>
+<p>For each of the tutorials, there is template code provided for you to get
+started in each of the tutorial folders.</p>
+<div class="dothis docutils container">
+<p><strong>&gt;&gt;</strong> Navigate into the “tutorial1” folder and confirm that you’re able to compile
+and run this template against the libCellML library</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make</span>
+</pre></div>
+</div>
+<p>Running the template:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">tutorial1</span>
+</pre></div>
+</div>
+<p>… should give the output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-----------------------------------------------</span>
+<span class="n">TUTORIAL</span> <span class="mi">1</span><span class="p">:</span> <span class="n">READING</span> <span class="n">AND</span> <span class="n">WRITING</span> <span class="n">CELLML</span> <span class="n">FILES</span>
+<span class="o">-----------------------------------------------</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-1-deserialising-a-cellml-file">
+<h2>Step 1: Deserialising a CellML file<a class="headerlink" href="#step-1-deserialising-a-cellml-file" title="Permalink to this headline">¶</a></h2>
+<p>CellML is a format in which all the information is stored in a strict
+hierarchical way.  In order for this information to be transformed into a
+format which can be <em>used</em> for modelling and simulation it needs to be
+<em>deserialised</em> into the internal <code class="code docutils literal notranslate"><span class="pre">Model</span></code> format.  The hard work of
+this transformation is done by the <code class="code docutils literal notranslate"><span class="pre">Parser</span></code> object which will take
+a raw CellML string which represents a model and return its corresponding
+<code class="code docutils literal notranslate"><span class="pre">Model</span></code> item.</p>
+<div class="dothis docutils container">
+<p><strong>1.a</strong> The first step is to read the file contents as-is:</p>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">inFile</span><span class="p">(</span><span class="s">&quot;tutorial1.cellml&quot;</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">stringstream</span> <span class="n">inFileContents</span><span class="p">;</span>
+<span class="n">inFileContents</span> <span class="o">&lt;&lt;</span> <span class="n">inFile</span><span class="p">.</span><span class="n">rdbuf</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>At this stage our <code class="code docutils literal notranslate"><span class="pre">inFileContents</span></code> contains the raw CellML from the
+input file provided, <code class="code docutils literal notranslate"><span class="pre">tutorial1.cellml</span></code>.</p>
+<p><strong>Note</strong> that all the files for each tutorial are provided for you in the
+<code class="code docutils literal notranslate"><span class="pre">resources</span></code> folder: though they are designed to build from one to the
+next, you’re able to use the ready-made ones if you want to jump in at any
+point.</p>
+<div class="dothis docutils container">
+<p><strong>1.b</strong> Now we need to transform the raw CellML import into the linked
+<code class="code docutils literal notranslate"><span class="pre">Model</span></code> using the <code class="code docutils literal notranslate"><span class="pre">Parser</span></code>.  This is quite straightforward:</p>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Create a parser instance</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">Parser</span> <span class="n">parser</span><span class="p">;</span>
+
+<span class="c1">// Create a ModelPtr instance and populate it with the string contents</span>
+<span class="c1">// from the inFileContents item:</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">ModelPtr</span> <span class="n">myFirstModel</span> <span class="o">=</span> <span class="n">parser</span><span class="p">.</span><span class="n">parseModel</span><span class="p">(</span><span class="n">inFileContents</span><span class="p">.</span><span class="n">str</span><span class="p">());</span>
+</pre></div>
+</div>
+<p>Now we have a <em>deserialsied</em> CellML model which we can manipulate using the
+libCellML library.</p>
+</div>
+<div class="section" id="step-2-investigate-the-contents-of-the-model">
+<h2>Step 2: Investigate the contents of the model<a class="headerlink" href="#step-2-investigate-the-contents-of-the-model" title="Permalink to this headline">¶</a></h2>
+<p>Now that we have a model, let’s see what’s inside it.  All retrieval functions
+- where you want to read something about any item - are callable from simple
+functions naming the thing you want. For example, to find the name of the model
+we simply call its <code class="code docutils literal notranslate"><span class="pre">name()</span></code> function:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">modelName</span> <span class="o">=</span> <span class="n">myFirstModel</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">();</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">modelId</span> <span class="o">=</span> <span class="n">myFirstModel</span><span class="o">-&gt;</span><span class="n">id</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Obviously, the type of item you’re retrieving will determine how you declare
+it: names and ids are returned as strings.</p>
+<div class="dothis docutils container">
+<p><strong>2.a</strong> Find out the name and id of your model and print it to the
+terminal.</p>
+</div>
+<p>The <code class="code docutils literal notranslate"><span class="pre">Model</span></code> itself stores two kinds of objects: a set of <code class="code docutils literal notranslate"><span class="pre">Units</span></code>
+objects, and a set of <code class="code docutils literal notranslate"><span class="pre">Component</span></code> objects.  There are
+generic <code class="code docutils literal notranslate"><span class="pre">somethingCount</span></code> functions which will return the number of
+<code class="code docutils literal notranslate"><span class="pre">Something</span></code> items within that object:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="n">numberOfComponents</span> <span class="o">=</span> <span class="n">model</span><span class="o">-&gt;</span><span class="n">componentCount</span><span class="p">();</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.b</strong>
+Find out the number of <code class="code docutils literal notranslate"><span class="pre">Component</span></code> items in the model, and
+print it to the terminal.</p>
+</div>
+<p>Items like components and units (and later, variables) which are stored in sets
+can be accessed by their index as well as by their name.  At this stage, we
+don’t <em>know</em> the name of the components, so we’ll have to use their index to
+access them for printing to the terminal.  The indices begin from <code class="code docutils literal notranslate"><span class="pre">0</span></code>.</p>
+<p>Each <code class="code docutils literal notranslate"><span class="pre">Component</span></code> itself (or later, <code class="code docutils literal notranslate"><span class="pre">Units</span></code> or <code class="code docutils literal notranslate"><span class="pre">Variable</span></code>) is
+retrieved from its parent item as a pointer (that is, a <code class="code docutils literal notranslate"><span class="pre">ComponentPtr</span></code>
+type) using the same idiom as the names and ids:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Retrieving the 33rd component from myFirstModel.  Note the indexing</span>
+<span class="c1">// from zero.</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">ComponentPtr</span> <span class="n">thirtyThirdComponent</span> <span class="o">=</span> <span class="n">myFirstModel</span><span class="o">-&gt;</span><span class="n">component</span><span class="p">(</span><span class="mi">32</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.c</strong> Retrieve the first component from the model, and print its name and
+id to the terminal.</p>
+</div>
+<p><code class="code docutils literal notranslate"><span class="pre">Component</span></code> items in turn contain four kinds of items, these being:</p>
+<ul class="simple">
+<li><p>a set of <code class="code docutils literal notranslate"><span class="pre">Variable</span></code> items</p></li>
+<li><p>a <code class="code docutils literal notranslate"><span class="pre">MathML</span></code> string which controls the governing mathematical equations
+of the model behaviour,</p></li>
+<li><p>(for later) a set of <code class="code docutils literal notranslate"><span class="pre">Reset</span></code> items, and</p></li>
+<li><p>(also for later) an optional nested subset of <code class="code docutils literal notranslate"><span class="pre">Component</span></code> items too.</p></li>
+</ul>
+<p>In this tutorial we’ll only look at the variables and maths, leaving the nested
+components for Tutorial 6.</p>
+<div class="dothis docutils container">
+<p><strong>2.d</strong> Retrieve the number of variables inside your component, and print
+it to the screen.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.e</strong> Create a loop through the variables, and print the names of each
+to the screen.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.f</strong> We will look more at what the MathML string actually <em>means</em> in
+later tutorials, but for now, retrieve the MathML string from your
+component using the <code class="code docutils literal notranslate"><span class="pre">math()</span></code> function, and print it to the screen.</p>
+</div>
+</div>
+<div class="section" id="step-3-serialise-the-model-and-output">
+<h2>Step 3: Serialise the model and output<a class="headerlink" href="#step-3-serialise-the-model-and-output" title="Permalink to this headline">¶</a></h2>
+<p>Now that you’ve seen how to <em>deserialise</em> a CellML file into a model using the
+<code class="code docutils literal notranslate"><span class="pre">Parser</span></code>, it’s time to go in the other direction.  This reverse operation
+is handled by the <code class="code docutils literal notranslate"><span class="pre">Printer</span></code>, which will transform a model into a string
+for file output.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">libcellml</span><span class="o">::</span><span class="n">Printer</span> <span class="n">printer</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">serialisedModelString</span> <span class="o">=</span> <span class="n">printer</span><span class="p">.</span><span class="n">printModel</span><span class="p">(</span><span class="n">myFirstModel</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="dothis docutils container">
+<p><strong>3.a</strong> Create a printer and use it to deserialise your model</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>3.b</strong> Write that serialised string to a new <code class="code docutils literal notranslate"><span class="pre">.cellml</span></code> file.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>4</strong> Go and have a cuppa, you’re done :)</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tutorial2.html" title="Tutorial 2: Debugging, error checking and validating"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="libCellML Tutorials"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, libCellML group, ABI.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

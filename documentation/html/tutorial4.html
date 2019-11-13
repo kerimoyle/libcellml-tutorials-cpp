@@ -1,0 +1,394 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tutorial 4: Modelling a gated ion channel &#8212; libCellML Tutorials  documentation</title>
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorial 5: Working with multiple components" href="tutorial5.html" />
+    <link rel="prev" title="Tutorial 3: Creating a model using the API" href="tutorial3.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tutorial5.html" title="Tutorial 5: Working with multiple components"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial3.html" title="Tutorial 3: Creating a model using the API"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tutorial 4: Modelling a gated ion channel</a><ul>
+<li><a class="reference internal" href="#overview">Overview:</a></li>
+<li><a class="reference internal" href="#create-the-model-and-component-items">1: Create the model and component items</a></li>
+<li><a class="reference internal" href="#define-the-mathematical-behaviour">2: Define the mathematical behaviour</a></li>
+<li><a class="reference internal" href="#define-the-variables-and-their-units">3. Define the variables and their units</a></li>
+<li><a class="reference internal" href="#define-the-units-and-add-to-the-model">4. Define the units and add to the model</a></li>
+<li><a class="reference internal" href="#step-5-serialise-and-write-to-a-file">Step 5: Serialise and write to a file</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tutorial3.html"
+                        title="previous chapter">Tutorial 3: Creating a model using the API</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tutorial5.html"
+                        title="next chapter">Tutorial 5: Working with multiple components</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tutorial4.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tutorial-4-modelling-a-gated-ion-channel">
+<span id="tutorial4"></span><h1>Tutorial 4: Modelling a gated ion channel<a class="headerlink" href="#tutorial-4-modelling-a-gated-ion-channel" title="Permalink to this headline">¶</a></h1>
+<p>If you’re reading this it’s presumed that you’re already
+comfortable with the serlialisation, mainipulation, and debugging functionality
+available in the libCellML library.  If not, please see the earlier tutorials
+which introduce these issues:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="tutorial1.html#tutorial1"><span class="std std-ref">Tutorial 1: Reading, writing, and ‘rithmetic in a CellML file</span></a></p></li>
+<li><p><a class="reference internal" href="tutorial2.html#tutorial2"><span class="std std-ref">Tutorial 2: Debugging, error checking, and validation</span></a></p></li>
+<li><p><a class="reference internal" href="tutorial3.html#tutorial3"><span class="std std-ref">Tutorial 3: Creating a model using the API</span></a></p></li>
+</ul>
+<p>From this point onwards the tutorials will build on work done in the previous
+ones.  If you need to jump in at some intermediate stage
+you will find all the files created by the earlier tutorials in the
+<code class="code docutils literal notranslate"><span class="pre">resources</span></code> folder.</p>
+<div class="section" id="overview">
+<h2>Overview:<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The basic steps for model creation and output are the same as those in
+<a class="reference internal" href="tutorial3.html#tutorial3"><span class="std std-ref">Tutorial 3</span></a>, but here you’ll begin to create a model based on
+the Hodgkin Huxley model. All the biological and mathematical modelling
+background needed for this model are explained in a separate document,
+<a class="reference internal" href="hh_background.html#hh-background"><span class="std std-ref">Understanding the Hodgkin-Huxley model</span></a>.</p>
+<ol class="arabic simple">
+<li><p>Create a simple model with one component.  This will represent a gated
+ion channel, and we’ll write it in such a way that we can reuse it later.</p></li>
+<li><p>Add mathematics to the component.  This includes writing MathML code as a
+string and adding it to the component.</p></li>
+<li><p>Because the maths defined above will need variables, we’ll need to add
+these to the component as well.</p></li>
+<li><p>Because the quantities modelled have units, we will define what these are,
+and make sure that they are included in the model too.</p></li>
+</ol>
+<p>As always, the steps discussed here are mirrored by the comments in the code
+files attached.  You can choose to either create your own code from the
+structure given in the <code class="code docutils literal notranslate"><span class="pre">tutorial4.cpp</span></code> file, or to simply read the
+finished code given in the <code class="code docutils literal notranslate"><span class="pre">tutorial4_complete.cpp</span></code> file.</p>
+</div>
+<div class="section" id="create-the-model-and-component-items">
+<h2>1: Create the model and component items<a class="headerlink" href="#create-the-model-and-component-items" title="Permalink to this headline">¶</a></h2>
+<p>Following the same procedures as in previous tutorials, our first step is to
+create new model and component instances.  We haven’t encountered it yet, but
+the real power of modelling comes from our ability to use and reuse different
+items, combining them into more and more complicated situations.  In this case,
+we’re going to create a component which represents a generic gated ion channel;
+it will be reused later on to represent channels for sodium and potassium in
+neuron models, or calcium in a cardiac model.  There’s an introduction to the
+biological and mathematical theory behind this particular model in
+<a class="reference internal" href="hh_background.html#hh-background"><span class="std std-ref">Understanding the Hodgkin-Huxley model</span></a>.</p>
+<div class="dothis docutils container">
+<p><strong>1.a</strong>
+Create a model instance, and name it appropriately.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>1.b</strong>
+Create a component, name it, and add the component to the model.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>1.c</strong>
+Create a validator and use it to verify that your model has no errors.</p>
+</div>
+</div>
+<div class="section" id="define-the-mathematical-behaviour">
+<h2>2: Define the mathematical behaviour<a class="headerlink" href="#define-the-mathematical-behaviour" title="Permalink to this headline">¶</a></h2>
+<p>The next step is to define what the component actually <em>does</em>.  In this case,
+its purpose is to represent a collection of gates in series in order to model
+the channel behaviour.  Let’s start with the simple ODE below:</p>
+<div class="math notranslate nohighlight">
+\[\frac{dm}{dt} = \alpha_m (1-m) - \beta_m m\]</div>
+<p>where <span class="math notranslate nohighlight">\(m\)</span> is the fraction which is open (so <span class="math notranslate nohighlight">\((1-m)\)</span> must
+be the fraction which is closed), <span class="math notranslate nohighlight">\(\alpha_m\)</span> is the opening
+rate, <span class="math notranslate nohighlight">\(\beta_m\)</span> is the closing rate, and <span class="math notranslate nohighlight">\(t\)</span> is time.</p>
+<p>Now to add this equation into the component we created in Step 1.
+Once the maths is created, the process of adding it is very simple, and follows
+the same pattern as adding anything to anything else: there is a <cite>setMath</cite>
+command which which does the job nicely.  The more difficult part is creating
+the maths itself.  This was covered in <a class="reference internal" href="tutorial3.html#tutorial3"><span class="std std-ref">Tutorial 3</span></a> and there
+are other resources on the <a class="reference external" href="https://www.w3.org/TR/MathML2/chapter4.html#id.4.2.1.3">W3 resource pages for MathML2</a> too.</p>
+<p>Consider the equation above, converted here into MathML2 format:</p>
+<p>Left hand side: <span class="math notranslate nohighlight">\(\frac{dm}{dt}\)</span></p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;apply&gt;</span>
+    <span class="nt">&lt;diff/&gt;</span>
+    <span class="nt">&lt;bvar&gt;</span>
+        <span class="nt">&lt;ci&gt;</span>time<span class="nt">&lt;/ci&gt;</span>
+    <span class="nt">&lt;/bvar&gt;</span>
+    <span class="nt">&lt;ci&gt;</span>m<span class="nt">&lt;/ci&gt;</span>
+<span class="nt">&lt;/apply&gt;</span>
+</pre></div>
+</div>
+<p>Right hand side: <span class="math notranslate nohighlight">\(\alpha_m (1-m) ...\)</span></p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;apply&gt;</span>
+    <span class="nt">&lt;minus/&gt;</span>
+    <span class="nt">&lt;apply&gt;</span>
+        <span class="nt">&lt;times/&gt;</span>
+        <span class="nt">&lt;ci&gt;</span>alpha_m<span class="nt">&lt;/ci&gt;</span>
+        <span class="nt">&lt;apply&gt;</span>
+            <span class="nt">&lt;minus/&gt;</span>
+            <span class="nt">&lt;cn</span> <span class="na">cellml:units=</span><span class="s">&quot;dimensionless&quot;</span><span class="nt">&gt;</span>1<span class="nt">&lt;/cn&gt;</span>
+            <span class="nt">&lt;ci&gt;</span>m<span class="nt">&lt;/ci&gt;</span>
+        <span class="nt">&lt;/apply&gt;</span>
+    <span class="nt">&lt;/apply&gt;</span>
+</pre></div>
+</div>
+<p><span class="math notranslate nohighlight">\(... - \beta_m m\)</span>  <strong>NB</strong> The negative comes from the first <code class="code docutils literal notranslate"><span class="pre">minus</span></code>
+operation in the block above, indicating that the block below subtracted
+from the one above.</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span>    <span class="nt">&lt;apply&gt;</span>
+        <span class="nt">&lt;times/&gt;</span>
+        <span class="nt">&lt;ci&gt;</span>beta_m<span class="nt">&lt;/ci&gt;</span>
+        <span class="nt">&lt;ci&gt;</span>m<span class="nt">&lt;/ci&gt;</span>
+    <span class="nt">&lt;/apply&gt;</span>
+<span class="nt">&lt;/apply&gt;</span>
+</pre></div>
+</div>
+<p>All of this needs to be wrapped inside the <code class="code docutils literal notranslate"><span class="pre">&lt;math&gt;</span></code> tags, which will
+include a namespace definition, as well as the initial <code class="code docutils literal notranslate"><span class="pre">&lt;apply&gt;</span></code> and
+<code class="code docutils literal notranslate"><span class="pre">&lt;eq/&gt;</span></code> tags to assign the left and right-hand sides of the equation:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;math</span> <span class="na">xmlns=</span><span class="s">&quot;http://www.w3.org/1998/Math/MathML&quot;</span>
+        <span class="na">cellml=</span><span class="s">&quot;http://www.cellml.org/cellml/2.0#&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;apply&gt;</span>
+        <span class="nt">&lt;eq/&gt;</span>
+            ...
+    <span class="nt">&lt;/apply&gt;</span>
+<span class="nt">&lt;/math&gt;</span>
+</pre></div>
+</div>
+<div class="nb docutils container">
+<p><strong>libCellML will only take MathML2 format</strong>, and <strong>not</strong> the more recent
+MathML3 or MathML4 formats, which are targetted at presentation rather
+than content alone.</p>
+</div>
+<p>To proceed with this tutorial you can either write your own MathML string
+simply copy it from the <code class="code docutils literal notranslate"><span class="pre">resources/tutorial4/mathml.txt</span></code> file.</p>
+<div class="dothis docutils container">
+<p><strong>2.a</strong> Create the MathML string(s) representing the following equations:</p>
+</div>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\frac{dn}{dt} = \alpha_n (1-n) - \beta_n n\\i_K = g_K . n^{\gamma} . (V-E_K)\end{aligned}\end{align} \]</div>
+<p>… where <span class="math notranslate nohighlight">\(\alpha_K\)</span> and <span class="math notranslate nohighlight">\(\beta_K\)</span> are the rate constants for the
+opening and closing of the gate, <span class="math notranslate nohighlight">\(g_K\)</span> is the open channel conductance,
+<span class="math notranslate nohighlight">\(n\)</span> is the fraction of open gates, and <span class="math notranslate nohighlight">\(\gamma\)</span> is the number of
+gates which exist in series in the channel, <span class="math notranslate nohighlight">\(V\)</span> is the transmembrane
+voltage, and <span class="math notranslate nohighlight">\(i_K\)</span> is the current flow through the channel.</p>
+<p>Three functions are available for accessing and editing the math block, these
+are:</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">setMath(input)</span></code> replaces the existing Math string with the <cite>input</cite>
+string</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">appendMath(input)</span></code> adds the <cite>input</cite> string to the existing Math string</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">math()</span></code> returns the stored Math string</p></li>
+</ul>
+<div class="nb docutils container">
+<p><strong>Note</strong> that there is only one MathML block stored per component. Even if
+there is more than one equation, they’re all stored as one single
+concatenated string.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.b</strong> Use the manipulation functions listed above to add your string(s)
+to the component you created in 1.a.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>2.c</strong> Submit your model to the validator.  Expected errors at this stage
+will be similar to those below, relating to not yet defined variables and
+units:</p>
+</div>
+<div class="terminal docutils container">
+<div class="line-block">
+<div class="line">Description: MathML ci element has the child text ‘alpha_n’ which does not</div>
+<div class="line-block">
+<div class="line">correspond with any variable names present in component</div>
+<div class="line">‘HodgkinHuxleySingleIonChannel’ and is not a variable defined within a bvar</div>
+<div class="line">element.</div>
+</div>
+<div class="line">Description: Math has a cn element with a cellml:units attribute</div>
+<div class="line-block">
+<div class="line">‘per_millivolt_millisecond’ that is not a valid reference to units in</div>
+<div class="line">component ‘HodgkinHuxleySingleIonChannel’ or a standard unit.</div>
+<div class="line"><br /></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="define-the-variables-and-their-units">
+<h2>3. Define the variables and their units<a class="headerlink" href="#define-the-variables-and-their-units" title="Permalink to this headline">¶</a></h2>
+<p>Now that the mathematical behaviour is defined, the variables that have been
+used also need to be defined.  Each variable needs a name which is equal to the
+term inside the <code class="code docutils literal notranslate"><span class="pre">&lt;ci&gt;</span></code> tags in the MathML, as well as units defined in
+the model.</p>
+<div class="dothis docutils container">
+<p><strong>3.a</strong> Use the validator output or the MathML you’ve written to determine
+the variables which you’ll need to declare.  These must be created, named, and
+added to the component.  Need help? See <a class="reference internal" href="tutorial2.html#tutorial2"><span class="std std-ref">Tutorial 2</span></a>.</p>
+</div>
+<div class="nb docutils container">
+<p><strong>Note</strong> Remember that the names you give the variables in this step must be
+the same as the names used between the <code class="code docutils literal notranslate"><span class="pre">&lt;ci&gt;</span></code> tags inside your MathML
+string.</p>
+</div>
+<p>As well as a name and a parent component, each variable needs <code class="code docutils literal notranslate"><span class="pre">Units</span></code>.
+These are specified using the <code class="code docutils literal notranslate"><span class="pre">setUnits</span></code> function for a variable, just
+as you did in <a class="reference internal" href="tutorial3.html#tutorial3"><span class="std std-ref">Tutorial 3</span></a>.  The units you’ll need here are:</p>
+<ul class="simple">
+<li><p>time, <span class="math notranslate nohighlight">\(t\)</span>, has units of <code class="code docutils literal notranslate"><span class="pre">millisecond</span></code></p></li>
+<li><p>voltage, <span class="math notranslate nohighlight">\(V\)</span>, has units of <code class="code docutils literal notranslate"><span class="pre">millivolt</span></code></p></li>
+<li><p>opening rate, <span class="math notranslate nohighlight">\(\alpha_m\)</span> has units <code class="code docutils literal notranslate"><span class="pre">per_millisecond</span></code></p></li>
+<li><p>closing rate, <span class="math notranslate nohighlight">\(\beta_m\)</span> has units <code class="code docutils literal notranslate"><span class="pre">per_millisecond</span></code></p></li>
+</ul>
+<div class="dothis docutils container">
+<p><strong>3.b</strong> For each of the variables created in 3.a, use the
+<code class="code docutils literal notranslate"><span class="pre">setUnits(name)</span></code> function to add the units you’ll need.</p>
+</div>
+<p>Even though the final variable in our equations has no units, CellML2 requires
+every variable to have some defined.  For the proportion of open gates
+<span class="math notranslate nohighlight">\(m\)</span> use the units name <code class="code docutils literal notranslate"><span class="pre">dimensionless</span></code>.</p>
+<div class="dothis docutils container">
+<p><strong>3.c</strong> Submit your model to the validator.  Expected errors at this stage
+will be similar to those below.</p>
+</div>
+<div class="terminal docutils container">
+<div class="line-block">
+<div class="line">- Description: Variable ‘time’ has an invalid units reference ‘millisecond’</div>
+<div class="line-block">
+<div class="line">that does not correspond with a standard unit or units in the variable’s</div>
+<div class="line">parent component or model. See section 11.1.1.2 in the CellML specification.</div>
+</div>
+<div class="line">- Description: Math has a cn element with a cellml:units attribute ‘millivolt’</div>
+<div class="line-block">
+<div class="line">that is not a valid reference to units in component</div>
+<div class="line">‘HodgkinHuxleySingleIonChannel’ or a standard unit.</div>
+<div class="line"><br /></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="define-the-units-and-add-to-the-model">
+<h2>4. Define the units and add to the model<a class="headerlink" href="#define-the-units-and-add-to-the-model" title="Permalink to this headline">¶</a></h2>
+<p>The variables created above referenced unit names of <code class="code docutils literal notranslate"><span class="pre">millisecond</span></code>,
+<code class="code docutils literal notranslate"><span class="pre">millivolt</span></code>, <code class="code docutils literal notranslate"><span class="pre">per_millisecond</span></code>, and <code class="code docutils literal notranslate"><span class="pre">dimensionless</span></code>.  The
+<code class="code docutils literal notranslate"><span class="pre">dimensionless</span></code> units are already present, so we don’t need to take any
+other action, but the other three need to be created and added.  This was
+covered in <a class="reference internal" href="tutorial3.html#tutorial3"><span class="std std-ref">Tutorial 3</span></a> in case you need a reminder.</p>
+<div class="dothis docutils container">
+<p><strong>4.a</strong> Create the three units you need for this component, name, and define
+them.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>4.b</strong> Check the units related to constants (that is, the <code class="code docutils literal notranslate"><span class="pre">&lt;cn&gt;</span></code>
+blocks) in the maths.  These units also need to be defined in the same way
+and added to the model.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>4.c</strong> Add all the new units into the model. Adding units to the model
+allows other components (when you have them!) to use them as well.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>4.d</strong> Validate the final model configuration.  There should be no errors
+at this stage.  If you do encounter any, you can compare the code you’ve
+created to that provided in the
+<code class="code docutils literal notranslate"><span class="pre">resources/tutorial4/tutorial4_complete.cpp</span></code> file.</p>
+</div>
+</div>
+<div class="section" id="step-5-serialise-and-write-to-a-file">
+<h2>Step 5: Serialise and write to a file<a class="headerlink" href="#step-5-serialise-and-write-to-a-file" title="Permalink to this headline">¶</a></h2>
+<p>The final step is to output our created model to a CellML2.0 file.  This file
+will be used in subsequent tutorials, so be sure to name it something
+meaningful!  This step is the same as what was covered at the end of
+<a class="reference internal" href="tutorial2.html#tutorial2"><span class="std std-ref">Tutorial 2</span></a>; you can refer back to the code and/or
+instructions there if you need to.</p>
+<div class="dothis docutils container">
+<p><strong>5.a</strong> Create a Printer item and submit your model for serialisation.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>5.b</strong> Write the serialised string output from the printer to a file.</p>
+</div>
+<div class="dothis docutils container">
+<p><strong>5.c</strong> Go and have a cuppa, you’re done!</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tutorial5.html" title="Tutorial 5: Working with multiple components"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial3.html" title="Tutorial 3: Creating a model using the API"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">libCellML Tutorials  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, libCellML group, ABI.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+    </div>
+  </body>
+</html>

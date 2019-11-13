@@ -16,12 +16,12 @@
 #include <libcellml>
 #include <regex>
 
-#include "tutorial_utilities.h"
+#include "../../utilities/tutorial_utilities.h"
 
 int main()
 {
     //  0.a Create a new model instance representing the combined model and name it.
-    libcellml::ModelPtr model = std::make_shared<libcellml::Model>();
+    libcellml::ModelPtr model = libcellml::Model::create();
     model->setName("Tutorial8_HHModel");
     libcellml::Validator validator;
     libcellml::Parser parser;
@@ -226,19 +226,19 @@ int main()
     printEncapsulationStructureToTerminal(model);
 
     //  5.a Creating the environment component and adding it to the model
-    libcellml::ComponentPtr environment = std::make_shared<libcellml::Component>();
+    libcellml::ComponentPtr environment = libcellml::Component::create();
     environment->setName("environment");
     model->addComponent(environment);
 
     //  5.b Add variables to the environment component.
     {
-        libcellml::VariablePtr V = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr V = libcellml::Variable::create();
         V->setName("V");
         V->setInitialValue(-85);
         V->setUnits("mV");
         environment->addVariable(V);
 
-        libcellml::VariablePtr t = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr t = libcellml::Variable::create();
         t->setName("t");
         t->setUnits("ms");
         environment->addVariable(t);

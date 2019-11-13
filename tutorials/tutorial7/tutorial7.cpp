@@ -14,14 +14,14 @@
 #include <iostream>
 #include <libcellml>
 
-#include "tutorial_utilities.h"
+#include "../../utilities/tutorial_utilities.h"
 
 int main()
 {
     //  0 Setup stuff that is used throughout
     libcellml::Validator validator;
 
-    libcellml::ModelPtr model = std::make_shared<libcellml::Model>();
+    libcellml::ModelPtr model = libcellml::Model::create();
     model->setName("Tutorial7_SodiumChannelModel");
 
     std::string mathHeader = "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" xmlns:cellml=\"http://www.cellml.org/cellml/2.0#\">";

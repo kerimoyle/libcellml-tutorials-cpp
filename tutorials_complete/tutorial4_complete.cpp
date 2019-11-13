@@ -15,7 +15,7 @@
 
 #include <libcellml>
 
-#include "tutorial_utilities.h"
+#include "../../utilities/tutorial_utilities.h"
 
 int main()
 {
@@ -24,11 +24,11 @@ int main()
     std::cout << "-----------------------------------------------" << std::endl;
 
     //  1.a   Create the model instance
-    libcellml::ModelPtr model = std::make_shared<libcellml::Model>();
+    libcellml::ModelPtr model = libcellml::Model::create();
     model->setName("Tutorial4_FirstOrderModel");
 
     //  1.b   Create a component and add it into the model
-    libcellml::ComponentPtr component = std::make_shared<libcellml::Component>();
+    libcellml::ComponentPtr component = libcellml::Component::create();
     component->setName("IonChannel");
     model->addComponent(component);
 
@@ -120,48 +120,48 @@ int main()
     //        Note that the names given to variables must be the same as that used
     //        within the <ci> blocks in the MathML string we created in step 2.a.
 
-    libcellml::VariablePtr t = std::make_shared<libcellml::Variable>();
+    libcellml::VariablePtr t = libcellml::Variable::create();
     t->setName("t");
     t->setUnits("millisecond");
     // Note: time is our integration base variable so is not initialised
 
-    libcellml::VariablePtr V = std::make_shared<libcellml::Variable>();
+    libcellml::VariablePtr V = libcellml::Variable::create();
     V->setName("V");
     V->setUnits("millivolt");
     V->setInitialValue(0.0);
 
-    libcellml::VariablePtr alpha_n = std::make_shared<libcellml::Variable>();
+    libcellml::VariablePtr alpha_n = libcellml::Variable::create();
     alpha_n->setName("alpha_n");
     alpha_n->setUnits("per_millisecond");
     alpha_n->setInitialValue(1.0);
 
-    libcellml::VariablePtr beta_n = std::make_shared<libcellml::Variable>();
+    libcellml::VariablePtr beta_n = libcellml::Variable::create();
     beta_n->setName("beta_n");
     beta_n->setUnits("per_millisecond");
     beta_n->setInitialValue(2.0);
 
-    libcellml::VariablePtr n = std::make_shared<libcellml::Variable>();
+    libcellml::VariablePtr n = libcellml::Variable::create();
     n->setName("n");
     n->setUnits("dimensionless");
     n->setInitialValue(1.0);
 
-    libcellml::VariablePtr E_K = std::make_shared<libcellml::Variable>();
+    libcellml::VariablePtr E_K = libcellml::Variable::create();
     E_K->setName("E_K");
     E_K->setUnits("millivolt");
     E_K->setInitialValue(-85.0);
 
-    libcellml::VariablePtr i_K = std::make_shared<libcellml::Variable>();
+    libcellml::VariablePtr i_K = libcellml::Variable::create();
     i_K->setName("i_K");
     i_K->setUnits("microA_per_cm2");
     // Note that no initial value is needed for this variable as its value
     // is defined by equation2
 
-    libcellml::VariablePtr g_K = std::make_shared<libcellml::Variable>();
+    libcellml::VariablePtr g_K = libcellml::Variable::create();
     g_K->setName("g_K");
     g_K->setUnits("milliS_per_cm2");
     g_K->setInitialValue(36.0);
 
-    libcellml::VariablePtr gamma = std::make_shared<libcellml::Variable>();
+    libcellml::VariablePtr gamma = libcellml::Variable::create();
     gamma->setName("gamma");
     gamma->setUnits("dimensionless");
     gamma->setInitialValue(4.0);
@@ -192,24 +192,24 @@ int main()
     //      microA_per_cm2, and milliS_per_cm2. Note that the dimensionless
     //      units are part of those built-in already, so do not need to be
     //      defined here.
-    libcellml::UnitsPtr ms = std::make_shared<libcellml::Units>();
+    libcellml::UnitsPtr ms = libcellml::Units::create();
     ms->setName("millisecond");
     ms->addUnit("second", "milli");
 
-    libcellml::UnitsPtr mV = std::make_shared<libcellml::Units>();
+    libcellml::UnitsPtr mV = libcellml::Units::create();
     mV->setName("millivolt");
     mV->addUnit("volt", "milli");
 
-    libcellml::UnitsPtr per_ms = std::make_shared<libcellml::Units>();
+    libcellml::UnitsPtr per_ms = libcellml::Units::create();
     per_ms->setName("per_millisecond");
     per_ms->addUnit("millisecond", -1.0);
 
-    libcellml::UnitsPtr microA_per_cm2 = std::make_shared<libcellml::Units>();
+    libcellml::UnitsPtr microA_per_cm2 = libcellml::Units::create();
     microA_per_cm2->setName("microA_per_cm2");
     microA_per_cm2->addUnit("ampere", "micro");
     microA_per_cm2->addUnit("metre", "centi", -2.0);
 
-    libcellml::UnitsPtr mS_per_cm2 = std::make_shared<libcellml::Units>();
+    libcellml::UnitsPtr mS_per_cm2 = libcellml::Units::create();
     mS_per_cm2->setName("milliS_per_cm2");
     mS_per_cm2->addUnit("siemens", "milli");
     mS_per_cm2->addUnit("metre", "centi", -2.0);

@@ -14,14 +14,14 @@
 #include <iostream>
 #include <libcellml>
 
-#include "tutorial_utilities.h"
+#include "../../utilities/tutorial_utilities.h"
 
 int main()
 {
     //  0 Setup stuff that is used throughout
     libcellml::Validator validator;
 
-    libcellml::ModelPtr model = std::make_shared<libcellml::Model>();
+    libcellml::ModelPtr model = libcellml::Model::create();
     model->setName("Tutorial7_SodiumChannelModel");
 
     std::string mathHeader = "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" xmlns:cellml=\"http://www.cellml.org/cellml/2.0#\">";
@@ -32,7 +32,7 @@ int main()
     std::cout << "-----------------------------------------------" << std::endl;
 
     //  1.a Create the compont instance, name it, and add to the model
-    libcellml::ComponentPtr sodiumChannel = std::make_shared<libcellml::Component>();
+    libcellml::ComponentPtr sodiumChannel = libcellml::Component::create();
     sodiumChannel->setName("sodiumChannel");
     model->addComponent(sodiumChannel);
 
@@ -96,61 +96,61 @@ int main()
 
     //  1.c Add the variables
     {
-        libcellml::VariablePtr V = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr V = libcellml::Variable::create();
         V->setName("V");
         V->setUnits("mV");
         sodiumChannel->addVariable(V);
 
-        libcellml::VariablePtr t = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr t = libcellml::Variable::create();
         t->setName("t");
         t->setUnits("ms");
         sodiumChannel->addVariable(t);
 
-        libcellml::VariablePtr h = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr h = libcellml::Variable::create();
         h->setName("h");
         h->setUnits("dimensionless");
         sodiumChannel->addVariable(h);
 
-        libcellml::VariablePtr m = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr m = libcellml::Variable::create();
         m->setName("m");
         m->setUnits("dimensionless");
         sodiumChannel->addVariable(m);
 
-        libcellml::VariablePtr g_Na = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr g_Na = libcellml::Variable::create();
         g_Na->setName("g_Na");
         g_Na->setUnits("mS_per_cm2");
         g_Na->setInitialValue(120);
         sodiumChannel->addVariable(g_Na);
 
-        libcellml::VariablePtr E_Na = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr E_Na = libcellml::Variable::create();
         E_Na->setName("E_Na");
         E_Na->setUnits("mV");
         sodiumChannel->addVariable(E_Na);
 
-        libcellml::VariablePtr i_Na = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr i_Na = libcellml::Variable::create();
         i_Na->setName("i_Na");
         i_Na->setUnits("microA_per_cm2");
         sodiumChannel->addVariable(i_Na);
 
-        libcellml::VariablePtr Nao = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr Nao = libcellml::Variable::create();
         Nao->setName("Nao");
         Nao->setUnits("mM");
         Nao->setInitialValue(140);
         sodiumChannel->addVariable(Nao);
 
-        libcellml::VariablePtr Nai = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr Nai = libcellml::Variable::create();
         Nai->setName("Nai");
         Nai->setUnits("mM");
         Nai->setInitialValue(30);
         sodiumChannel->addVariable(Nai);
 
-        libcellml::VariablePtr RTF = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr RTF = libcellml::Variable::create();
         RTF->setName("RTF");
         RTF->setUnits("mV");
         RTF->setInitialValue(25);
         sodiumChannel->addVariable(RTF);
 
-        libcellml::VariablePtr Na_conductance = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr Na_conductance = libcellml::Variable::create();
         Na_conductance->setName("Na_conductance");
         Na_conductance->setUnits("mS_per_cm2");
         sodiumChannel->addVariable(Na_conductance);
@@ -158,29 +158,29 @@ int main()
 
     //  1.d Add the units
 
-    libcellml::UnitsPtr mV = std::make_shared<libcellml::Units>();
+    libcellml::UnitsPtr mV = libcellml::Units::create();
     mV->setName("mV");
     mV->addUnit("volt", "milli");
     model->addUnits(mV);
 
-    libcellml::UnitsPtr ms = std::make_shared<libcellml::Units>();
+    libcellml::UnitsPtr ms = libcellml::Units::create();
     ms->setName("ms");
     ms->addUnit("second", "milli");
     model->addUnits(ms);
 
-    libcellml::UnitsPtr mS_per_cm2 = std::make_shared<libcellml::Units>();
+    libcellml::UnitsPtr mS_per_cm2 = libcellml::Units::create();
     mS_per_cm2->setName("mS_per_cm2");
     mS_per_cm2->addUnit("siemens", "milli");
     mS_per_cm2->addUnit("metre", "centi", -2);
     model->addUnits(mS_per_cm2);
 
-    libcellml::UnitsPtr microA_per_cm2 = std::make_shared<libcellml::Units>();
+    libcellml::UnitsPtr microA_per_cm2 = libcellml::Units::create();
     microA_per_cm2->setName("microA_per_cm2");
     microA_per_cm2->addUnit("ampere", "micro");
     microA_per_cm2->addUnit("metre", "centi", -2);
     model->addUnits(microA_per_cm2);
 
-    libcellml::UnitsPtr mM = std::make_shared<libcellml::Units>();
+    libcellml::UnitsPtr mM = libcellml::Units::create();
     mM->setName("mM");
     mM->addUnit("mole", "milli");
     model->addUnits(mM);
@@ -193,7 +193,7 @@ int main()
     std::cout << "-----------------------------------------------" << std::endl;
 
     //  2.a Create the component and add it to the sodium channel component
-    libcellml::ComponentPtr mGate = std::make_shared<libcellml::Component>();
+    libcellml::ComponentPtr mGate = libcellml::Component::create();
     mGate->setName("mGate");
     sodiumChannel->addComponent(mGate);
 
@@ -243,27 +243,27 @@ int main()
     //      add the variables needed
 
     {
-        libcellml::VariablePtr V = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr V = libcellml::Variable::create();
         V->setName("V");
         V->setUnits("mV");
         mGate->addVariable(V);
 
-        libcellml::VariablePtr t = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr t = libcellml::Variable::create();
         t->setName("t");
         t->setUnits("ms");
         mGate->addVariable(t);
 
-        libcellml::VariablePtr alpha_m = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr alpha_m = libcellml::Variable::create();
         alpha_m->setName("alpha_m");
         alpha_m->setUnits("per_ms");
         mGate->addVariable(alpha_m);
 
-        libcellml::VariablePtr beta_m = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr beta_m = libcellml::Variable::create();
         beta_m->setName("beta_m");
         beta_m->setUnits("per_ms");
         mGate->addVariable(beta_m);
 
-        libcellml::VariablePtr m = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr m = libcellml::Variable::create();
         m->setName("m");
         m->setUnits("dimensionless");
         mGate->addVariable(m);
@@ -272,7 +272,7 @@ int main()
     //  2.d Call the validator to check the model - expect errors related to
     //      units missing from the model.  Add them in as needed.
 
-    libcellml::UnitsPtr per_mV_ms = std::make_shared<libcellml::Units>();
+    libcellml::UnitsPtr per_mV_ms = libcellml::Units::create();
     per_mV_ms->setName("per_mV_ms");
     per_mV_ms->addUnit("second", "milli", -1);
     per_mV_ms->addUnit("volt", "milli", -1);
@@ -286,7 +286,7 @@ int main()
     std::cout << "-----------------------------------------------" << std::endl;
 
     //  3.a Create the hGate component and add it to the sodium channel component
-    libcellml::ComponentPtr hGate = std::make_shared<libcellml::Component>();
+    libcellml::ComponentPtr hGate = libcellml::Component::create();
     hGate->setName("hGate");
     sodiumChannel->addComponent(hGate);
 
@@ -355,34 +355,34 @@ int main()
 
     //  3.c Adding the variables
     {
-        libcellml::VariablePtr V = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr V = libcellml::Variable::create();
         V->setName("V");
         V->setUnits("mV");
         hGate->addVariable(V);
 
-        libcellml::VariablePtr t = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr t = libcellml::Variable::create();
         t->setName("t");
         t->setUnits("ms");
         hGate->addVariable(t);
 
-        libcellml::VariablePtr alpha_h = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr alpha_h = libcellml::Variable::create();
         alpha_h->setName("alpha_h");
         alpha_h->setUnits("per_ms");
         hGate->addVariable(alpha_h);
 
-        libcellml::VariablePtr beta_h = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr beta_h = libcellml::Variable::create();
         beta_h->setName("beta_h");
         beta_h->setUnits("per_ms");
         hGate->addVariable(beta_h);
 
-        libcellml::VariablePtr h = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr h = libcellml::Variable::create();
         h->setName("h");
         h->setUnits("dimensionless");
         hGate->addVariable(h);
     } // ends local scope for hGate variables
 
     //  3.d Add the missing units
-    libcellml::UnitsPtr per_ms = std::make_shared<libcellml::Units>();
+    libcellml::UnitsPtr per_ms = libcellml::Units::create();
     per_ms->setName("per_ms");
     per_ms->addUnit("second", "milli", -1);
     model->addUnits(per_ms);
@@ -395,17 +395,17 @@ int main()
     std::cout << "-----------------------------------------------" << std::endl;
 
     //  4.a Creating the new environment component
-    libcellml::ComponentPtr environment = std::make_shared<libcellml::Component>();
+    libcellml::ComponentPtr environment = libcellml::Component::create();
     environment->setName("environment");
 
     //  4.b Add variables to the component.  
     {
-        libcellml::VariablePtr V = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr V = libcellml::Variable::create();
         V->setName("V");
         V->setUnits("mV");
         environment->addVariable(V);
 
-        libcellml::VariablePtr t = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr t = libcellml::Variable::create();
         t->setName("t");
         t->setUnits("ms");
         environment->addVariable(t);

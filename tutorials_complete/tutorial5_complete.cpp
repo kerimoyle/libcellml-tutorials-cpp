@@ -19,7 +19,7 @@
 #include <iostream>
 #include <libcellml>
 
-#include "tutorial_utilities.h"
+#include "../../utilities/tutorial_utilities.h"
 
 int main()
 {
@@ -58,19 +58,19 @@ int main()
     std::cout << "-----------------------------------------------" << std::endl;
 
     //  2.a Creating the new environment component
-    libcellml::ComponentPtr environment = std::make_shared<libcellml::Component>();
+    libcellml::ComponentPtr environment = libcellml::Component::create();
     environment->setName("environment");
 
     //  2.b Add variables to the component.  Use brackets to define the scope of
     //      these variables. This means that we can use variables with the same
     //      symbol elsewhere.
     {
-        libcellml::VariablePtr V = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr V = libcellml::Variable::create();
         V->setName("V");
         V->setUnits("millivolt");
         environment->addVariable(V);
 
-        libcellml::VariablePtr t = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr t = libcellml::Variable::create();
         t->setName("t");
         t->setUnits("millisecond");
         environment->addVariable(t);
@@ -88,30 +88,30 @@ int main()
     std::cout << "-----------------------------------------------" << std::endl;
 
     //  3.a Creating the n-gate component and the variables it contains
-    libcellml::ComponentPtr nGate = std::make_shared<libcellml::Component>();
+    libcellml::ComponentPtr nGate = libcellml::Component::create();
     nGate->setName("nGate");
     {
-        libcellml::VariablePtr V = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr V = libcellml::Variable::create();
         V->setName("V");
         V->setUnits("millivolt");
         nGate->addVariable(V);
 
-        libcellml::VariablePtr t = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr t = libcellml::Variable::create();
         t->setName("t");
         t->setUnits("millisecond");
         nGate->addVariable(t);
 
-        libcellml::VariablePtr alpha_n = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr alpha_n = libcellml::Variable::create();
         alpha_n->setName("alpha_n");
         alpha_n->setUnits("per_millisecond");
         nGate->addVariable(alpha_n);
 
-        libcellml::VariablePtr beta_n = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr beta_n = libcellml::Variable::create();
         beta_n->setName("beta_n");
         beta_n->setUnits("per_millisecond");
         nGate->addVariable(beta_n);
 
-        libcellml::VariablePtr n = std::make_shared<libcellml::Variable>();
+        libcellml::VariablePtr n = libcellml::Variable::create();
         n->setName("n");
         n->setUnits("dimensionless");
         nGate->addVariable(n);
@@ -211,7 +211,7 @@ int main()
     //printErrorsToTerminal(validator);
 
     //  3.d Add the missing units (connected to the constant in equation 1) and recheck the validation
-    libcellml::UnitsPtr per_mVms = std::make_shared<libcellml::Units>();
+    libcellml::UnitsPtr per_mVms = libcellml::Units::create();
     per_mVms->setName("per_millivolt_millisecond");
     per_mVms->addUnit("volt", "milli", -1);
     per_mVms->addUnit("second", "milli", -1);

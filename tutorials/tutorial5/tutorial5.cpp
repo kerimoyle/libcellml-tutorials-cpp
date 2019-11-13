@@ -19,7 +19,7 @@
 #include <iostream>
 #include <libcellml>
 
-#include "tutorial_utilities.h"
+#include "../../utilities/tutorial_utilities.h"
 
 int main()
 {

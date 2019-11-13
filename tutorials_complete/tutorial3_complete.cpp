@@ -20,7 +20,7 @@
 
 #include <libcellml>
 
-#include "tutorial_utilities.h"
+#include "../../utilities/tutorial_utilities.h"
 
 int main()
 {
@@ -34,7 +34,7 @@ int main()
     //  1.a   Allocate the ModelPtr
     //  TODO Need some more specific info on how to think about smart pointers
     //  here
-    libcellml::ModelPtr model = std::make_shared<libcellml::Model>();
+    libcellml::ModelPtr model = libcellml::Model::create();
     model->setName("tutorial_3_model");
     model->setId("tutorial_3_model_id");
 
@@ -44,7 +44,7 @@ int main()
 
     //  1.b   Create a component to use as an integrator, set its attributes and
     //        add it to the model
-    libcellml::ComponentPtr component = std::make_shared<libcellml::Component>();
+    libcellml::ComponentPtr component = libcellml::Component::create();
     component->setName("distance_finder");
     model->addComponent(component);
 
@@ -89,8 +89,8 @@ int main()
     printErrorsToTerminal(validator);
 
     //  1.g   Create some variables and add them to the component
-    libcellml::VariablePtr time = std::make_shared<libcellml::Variable>();
-    libcellml::VariablePtr distance = std::make_shared<libcellml::Variable>();
+    libcellml::VariablePtr time = libcellml::Variable::create();
+    libcellml::VariablePtr distance = libcellml::Variable::create();
 
     time->setName("t");
     distance->setName("x");
@@ -129,7 +129,7 @@ int main()
     //        units. There is a list of built-in units and their definitions
     //        available in section 19.s of the CellML2 specification.
 
-    libcellml::UnitsPtr millisecond = std::make_shared<libcellml::Units>();
+    libcellml::UnitsPtr millisecond = libcellml::Units::create();
     millisecond->setName("millisecond");
     millisecond->addUnit(
         "second",
@@ -139,7 +139,7 @@ int main()
     // integer value of -3, corresponding to the power of 10 by
     // which the base is multiplied.
 
-    libcellml::UnitsPtr league = std::make_shared<libcellml::Units>();
+    libcellml::UnitsPtr league = libcellml::Units::create();
     league->setName("league");
     league->addUnit(
         "metre", 3, 1.0,
@@ -178,7 +178,7 @@ int main()
     component->appendMath(mathFooter);
 
     //  2.e Create and define the constant "a" to have a value of 1
-    libcellml::VariablePtr a = std::make_shared<libcellml::Variable>();
+    libcellml::VariablePtr a = libcellml::Variable::create();
     a->setName("a");
     a->setUnits("dimensionless");
     a->setInitialValue(1.0);

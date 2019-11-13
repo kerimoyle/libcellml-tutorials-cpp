@@ -22,7 +22,7 @@ default setting is for C, but you can change this using the
 
 .. code-block:: cpp
 
-    libcellml::GeneratorProfilePtr profile = std::make_shared<libcellml::GeneratorProfile>(libcellml::GeneratorProfile::Profile::PYTHON);
+    libcellml::GeneratorProfilePtr profile = libcellml::GeneratorProfile>(libcellml::GeneratorProfile::Profile::PYTHON);
     generator.setProfile(profile);
 
 Of course, your choice of generator profile (language) will affect

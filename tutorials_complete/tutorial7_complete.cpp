@@ -488,7 +488,7 @@ int main()
 
     libcellml::Printer printer;
     std::string serialisedModelString = printer.printModel(model);
-    std::string outFileName = "Tutorial7_SodiumChannelModel.cellml";
+    std::string outFileName = "tutorial7_SodiumChannelModel.cellml";
     std::ofstream outFile(outFileName);
     outFile << serialisedModelString;
     outFile.close();

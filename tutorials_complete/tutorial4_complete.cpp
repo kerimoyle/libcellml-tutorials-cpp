@@ -231,7 +231,7 @@ int main()
 
     libcellml::Printer printer;
     std::string serialisedModelString = printer.printModel(model);
-    std::string outFileName = "Tutorial4_IonChannelModel.cellml";
+    std::string outFileName = "tutorial4_IonChannelModel.cellml";
     std::ofstream outFile(outFileName);
     outFile << serialisedModelString;
     outFile.close();

@@ -29,7 +29,7 @@ int main()
 
     //  1.a Read the model created in Tutorial 4.  Note that if you didn't
     //      do that tutorial you can simply copy the CellML file
-    //      from Resources/Tutorial4_IonChannelModel.cellml
+    //      from resources/tutorial4_IonChannelModel.cellml
 
 
     //  1.b Print the parsed model to the terminal and check its contents

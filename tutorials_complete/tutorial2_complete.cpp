@@ -31,7 +31,7 @@ int main() {
   // ---------------------------------------------------------------------------
   //  STEP 1:   Create a CellML Model from the contents of a CellML file
   //
-  std::string inFileName = "tutorial2.cellml";
+  std::string inFileName = "../../resources/tutorial2.cellml";
   std::ifstream inFile(inFileName);
   std::stringstream inFileContents;
   inFileContents << inFile.rdbuf();

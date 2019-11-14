@@ -31,7 +31,7 @@ int main()
     //      do that tutorial you can simply copy the CellML file
     //      from Resources/Tutorial4_IonChannelModel.cellml
 
-    std::string inFileName = "Tutorial4_IonChannelModel.cellml";
+    std::string inFileName = "../../resources/tutorial4_IonChannelModel.cellml";
     std::ifstream inFile(inFileName);
     std::stringstream inFileContents;
     inFileContents << inFile.rdbuf();
@@ -321,7 +321,7 @@ int main()
 
     libcellml::Printer printer;
     std::string serialisedModelString = printer.printModel(model);
-    std::string outFileName = "Tutorial5_PotassiumChannelModel.cellml";
+    std::string outFileName = "tutorial5_PotassiumChannelModel.cellml";
     std::ofstream outFile(outFileName);
     outFile << serialisedModelString;
     outFile.close();

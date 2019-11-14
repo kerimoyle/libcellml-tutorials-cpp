@@ -25,9 +25,9 @@ int main()
 
     //  1.a Read the model created in Tutorial 5.  Note that if you didn't
     //      do that tutorial you can simply copy the CellML file
-    //      from Resources/Tutorial5_PotassiumChannelModel.cellml
+    //      from resources/tutorial5_PotassiumChannelModel.cellml
 
-    std::string inFileName = "Tutorial5_PotassiumChannelModel.cellml";
+    std::string inFileName = "../../resources/tutorial5_PotassiumChannelModel.cellml";
     std::ifstream inFile(inFileName);
     std::stringstream inFileContents;
     inFileContents << inFile.rdbuf();

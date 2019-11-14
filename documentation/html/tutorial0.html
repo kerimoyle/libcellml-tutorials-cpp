@@ -200,20 +200,13 @@ and create a directory for the tutorials.</p>
 </div>
 <div class="dothis docutils container">
 <p><strong>3.b</strong> Change into the new <code class="code docutils literal notranslate"><span class="pre">tutorials</span></code> directory and clone the
-flavour of tutorials that you’re interested in.</p>
+flavour of tutorials that you’re interested in.  Here we’ll take the C++
+tutorials.</p>
 </div>
-<p>For C++:
-.. code-block:: console</p>
-<blockquote>
-<div><p>cd tutorials
-git clone <a class="reference external" href="https://github.com/kerimoyle/libcellml-tutorials-cpp.git">https://github.com/kerimoyle/libcellml-tutorials-cpp.git</a></p>
-</div></blockquote>
-<p>For Python:
-.. code-block:: console</p>
-<blockquote>
-<div><p>cd tutorials
-git clone <a class="reference external" href="https://github.com/kerimoyle/libcellml-tutorials-python.git">https://github.com/kerimoyle/libcellml-tutorials-python.git</a></p>
-</div></blockquote>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd tutorials</span>
+<span class="go">git clone https://github.com/kerimoyle/libcellml-tutorials-cpp.git</span>
+</pre></div>
+</div>
 <p>Your folder structure should now look like what’s shown below.  Note that
 whichever flavour of tutorial you have cloned does not alter the structure,
 only the folder name inside your <code class="code docutils literal notranslate"><span class="pre">tutorials</span></code> folder:</p>
@@ -268,9 +261,7 @@ create the Makefile.</p>
 <span class="go">cmake .</span>
 </pre></div>
 </div>
-<div class="dothis docutils container">
-<p><strong>4.b</strong>  If this is correct you should see an output ending similar to this:</p>
-</div>
+<p>If this is correct you should see an output ending similar to this:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">-- Configuring done</span>
 <span class="go">-- Generating done</span>
 <span class="go">-- Build files have been written to: /Users/YourName/MyLibCellMLDirectory/tutorials/libcellml-tutorials-cpp/tutorials/tutorial0</span>
@@ -278,14 +269,14 @@ create the Makefile.</p>
 </div>
 <p>If this isn’t what you see then please see the Troubleshooting section TODO</p>
 <div class="dothis docutils container">
-<p><strong>4.c</strong> Now build the <code class="code docutils literal notranslate"><span class="pre">tutorial0</span></code> example</p>
+<p><strong>4.b</strong> Now build the <code class="code docutils literal notranslate"><span class="pre">tutorial0</span></code> example</p>
 </div>
 <p>..code-block:: console</p>
 <blockquote>
 <div><p>make -j</p>
 </div></blockquote>
 <div class="dothis docutils container">
-<p><strong>4.d</strong> Finally, run the program to give the following output:</p>
+<p><strong>4.c</strong> Finally, run the program to give the following output:</p>
 </div>
 <p>..code-block:: console</p>
 <blockquote>
@@ -298,7 +289,7 @@ create the Makefile.</p>
 </pre></div>
 </div>
 <div class="dothis docutils container">
-<p><strong>4.e</strong> Go and have a cuppa, you’re done!</p>
+<p><strong>4.d</strong> Go and have a cuppa, you’re done!</p>
 </div>
 </div>
 </div>

@@ -51,7 +51,7 @@
 <li><a class="reference internal" href="#include-more-components-in-the-model">2: Include more components in the model</a></li>
 <li><a class="reference internal" href="#create-a-component-for-the-n-gate">3: Create a component for the n-gate</a></li>
 <li><a class="reference internal" href="#connect-the-components-to-one-another">4: Connect the components to one another</a></li>
-<li><a class="reference internal" href="#define-the-driving-function">5 Define the driving function</a></li>
+<li><a class="reference internal" href="#define-the-driving-function">5: Define the driving function</a></li>
 <li><a class="reference internal" href="#serialise-and-print-the-model">6: Serialise and print the model</a></li>
 </ul>
 </li>
@@ -110,13 +110,14 @@ channel.  The channel is controlled by a number of gates in series, whose
 open or closed state and the transition between them is controlled by voltage:
 hence, a “voltage-controlled ion gate”.  In this tutorial we will explore how
 a channel such as that made in Tutorial 4 can include another level of
-control: the rate constants (<span class="math notranslate nohighlight">\(alpha_y\)</span> and <span class="math notranslate nohighlight">\(beta_y\)</span>) used earlier
+control: the rate constants (<span class="math notranslate nohighlight">\(\alpha_y\)</span> and <span class="math notranslate nohighlight">\(\beta_y\)</span>) used earlier
 are now functions of voltage themselves.  We will also show how an
 <em>environment</em> component can be used to ensure that all components are modelled
 synchronously.</p>
 </div>
 <div class="section" id="setup">
 <h2>0: Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<p><strong>TODO</strong></p>
 </div>
 <div class="section" id="create-the-model">
 <h2>1: Create the model<a class="headerlink" href="#create-the-model" title="Permalink to this headline">¶</a></h2>
@@ -199,9 +200,10 @@ component.</p>
 </div>
 <div class="section" id="create-a-component-for-the-n-gate">
 <h2>3: Create a component for the n-gate<a class="headerlink" href="#create-a-component-for-the-n-gate" title="Permalink to this headline">¶</a></h2>
-<p>The last component that we need to create is an update from our Tutorial 4
-model such that the rate constants <span class="math notranslate nohighlight">\(alpha\)</span> and <span class="math notranslate nohighlight">\(beta\)</span> become
-functions of voltage.  We have another choice.  We could either:</p>
+<p>The last component that we need to create is an update from the one we
+created in <a class="reference internal" href="tutorial4.html#tutorial4"><span class="std std-ref">Tutorial 4</span></a> such that the rate constants
+<span class="math notranslate nohighlight">\(alpha\)</span> and <span class="math notranslate nohighlight">\(beta\)</span> become functions of voltage.  We have another
+choice.  We could either:</p>
 <ul class="simple">
 <li><p>remove all the mathematics from our existing PotassiumChannel component
 and adjust the equations which are already there to suit, or</p></li>
@@ -278,29 +280,22 @@ parent updated, and the model’s children will be updated too.</p></li>
 <p><strong>4.b</strong> Print the model to the screen to check your component hierarchy.
 It should contain the section below where a <em>child component</em> is listed.</p>
 </div>
-<div class="terminal docutils container">
-<div class="line-block">
-<div class="line">…</div>
-<div class="line-block">
-<div class="line">Component[0] has 1 child components:</div>
-<div class="line-block">
-<div class="line">Component[0] has name: ‘nGate’</div>
-<div class="line">Component[0] has 5 variables:</div>
-<div class="line">Variable[0] has name: ‘V’</div>
-<div class="line">Variable[0] has units: ‘millivolt’</div>
-<div class="line">Variable[1] has name: ‘t’</div>
-<div class="line">Variable[1] has units: ‘millisecond’</div>
-<div class="line">Variable[2] has name: ‘alpha_n’</div>
-<div class="line">Variable[2] has units: ‘per_millisecond’</div>
-<div class="line">Variable[3] has name: ‘beta_n’</div>
-<div class="line">Variable[3] has units: ‘per_millisecond’</div>
-<div class="line">Variable[4] has name: ‘n’</div>
-<div class="line">Variable[4] has units: ‘dimensionless’</div>
-</div>
-</div>
-<div class="line">…</div>
-<div class="line"><br /></div>
-</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">...</span>
+<span class="go">   Component[0] has 1 child components:</span>
+<span class="go">       Component[0] has name: &#39;nGate&#39;</span>
+<span class="go">       Component[0] has 5 variables:</span>
+<span class="go">       Variable[0] has name: &#39;V&#39;</span>
+<span class="go">       Variable[0] has units: &#39;millivolt&#39;</span>
+<span class="go">       Variable[1] has name: &#39;t&#39;</span>
+<span class="go">       Variable[1] has units: &#39;millisecond&#39;</span>
+<span class="go">       Variable[2] has name: &#39;alpha_n&#39;</span>
+<span class="go">       Variable[2] has units: &#39;per_millisecond&#39;</span>
+<span class="go">       Variable[3] has name: &#39;beta_n&#39;</span>
+<span class="go">       Variable[3] has units: &#39;per_millisecond&#39;</span>
+<span class="go">       Variable[4] has name: &#39;n&#39;</span>
+<span class="go">       Variable[4] has units: &#39;dimensionless&#39;</span>
+<span class="go">...</span>
+</pre></div>
 </div>
 <p>After defining how the components are arranged, we need to define which
 variables can access each other, and how.  This is done by making variables
@@ -330,15 +325,15 @@ the code:</p>
 <code class="code docutils literal notranslate"><span class="pre">printErrorsToTerminal</span></code> function.  You should see an error
 similar to the one below.</p>
 </div>
-<div class="terminal docutils container">
-<p><strong>TODO</strong> ?? put error here when the validation is working ??</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">**TODO ?? put error here when the validation is working **</span>
+</pre></div>
 </div>
 <p>There are some restrictions on which variables can be matched like this.
 Variables can only be made equivalent if they are in neighbouring components;
 that is, a direct parent, direct child, or sibling component (one with the same
 parent).   We can add these two variables into the “PotassiumChannel” component
 as they are <em>sibling</em> components (their parent is the model):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">libcellml</span><span class="p">::</span><span class="n">Variable</span><span class="p">::</span><span class="n">addEquivalence</span><span class="p">(</span><span class="n">time_in_environment</span><span class="p">,</span> <span class="n">time_in_channel</span><span class="p">);</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">libcellml</span><span class="o">::</span><span class="n">Variable</span><span class="o">::</span><span class="n">addEquivalence</span><span class="p">(</span><span class="n">time_in_environment</span><span class="p">,</span> <span class="n">time_in_channel</span><span class="p">);</span>
 </pre></div>
 </div>
 <p>… but we <em>cannot</em> make an equivalence between the <code class="code docutils literal notranslate"><span class="pre">t</span></code> variable in the
@@ -354,8 +349,8 @@ three components, and the gating variable <span class="math notranslate nohighli
 and <code class="code docutils literal notranslate"><span class="pre">potassiumChannel</span></code> components.  Validate your model again.  You
 should see a validation message similar to that shown below.</p>
 </div>
-<div class="terminal docutils container">
-<p><strong>TODO Put error messages here when they’re working</strong></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">**TODO Put error messages here when they&#39;re working**</span>
+</pre></div>
 </div>
 <p>The errors above are caused by the need to specify explicitly the kind of
 equivalence relationship which is allowed for each variable.  The default
@@ -386,7 +381,7 @@ confirm that it is now free of errors.</p>
 </div>
 </div>
 <div class="section" id="define-the-driving-function">
-<h2>5 Define the driving function<a class="headerlink" href="#define-the-driving-function" title="Permalink to this headline">¶</a></h2>
+<h2>5: Define the driving function<a class="headerlink" href="#define-the-driving-function" title="Permalink to this headline">¶</a></h2>
 <p>In order to give the simulation something to actually simulate, we need to add
 a driving function as an input.  This simulation replicates a voltage clamp
 experiment wherein the input voltage is given a square wave and the current
@@ -435,7 +430,7 @@ namespace itself in the maths header:</p>
 <div class="section" id="serialise-and-print-the-model">
 <h2>6: Serialise and print the model<a class="headerlink" href="#serialise-and-print-the-model" title="Permalink to this headline">¶</a></h2>
 <div class="dothis docutils container">
-<p><strong>6.a</strong> As in <a class="reference internal" href="tutorial1.html#tutorial1"><span class="std std-ref">Tutorial 1</span></a>, use the <code class="code docutils literal notranslate"><span class="pre">Printer</span></code> module
+<p><strong>6.a</strong> As in <a class="reference internal" href="tutorial1.html#tutorial1"><span class="std std-ref">Tutorial 1</span></a>, use a <code class="code docutils literal notranslate"><span class="pre">Printer</span></code>
 to serialise the model, and then write it to a file.</p>
 </div>
 <div class="dothis docutils container">

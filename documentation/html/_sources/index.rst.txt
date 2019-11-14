@@ -1,10 +1,11 @@
 .. _home:
 
-===================
-libCellML Tutorials
-===================
+==========================
+libCellML Tutorials in C++
+==========================
 
-Welcome to the tutorials for libCellML.  These are arranged into three sections
+Welcome to the tutorials for libCellML in C++.  These are arranged into three
+sections
 as follows.  The first section (0-3) contains introductory tutorials which
 demonstrate the functionality of the libCellML library on trivial applications.
 The second section (4-8) are designed to be worked through in sequence, with
@@ -22,17 +23,19 @@ any which you haven't made yourself from the Resources folder provided.
 There is skeleton code inside each directory to get you started, and completed
 code inside the Completed folder for each tutorial too.
 
+----------------------
 Introductory tutorials
 ----------------------
 
 .. toctree::
    :maxdepth: 1
 
-   test_installation
+   tutorial0
    tutorial1
    tutorial2
    tutorial3
 
+-------------------
 Modelling tutorials
 -------------------
 
@@ -45,6 +48,7 @@ Modelling tutorials
    tutorial7
    tutorial8
 
+--------------------------
 References and information
 --------------------------
 

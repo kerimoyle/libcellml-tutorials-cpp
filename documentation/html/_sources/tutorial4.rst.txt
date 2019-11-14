@@ -1,8 +1,8 @@
 ..  _tutorial4:
 
------------------------------------------
+=========================================
 Tutorial 4: Modelling a gated ion channel
------------------------------------------
+=========================================
 
 If you're reading this it's presumed that you're already
 comfortable with the serlialisation, mainipulation, and debugging functionality
@@ -19,8 +19,9 @@ ones.  If you need to jump in at some intermediate stage
 you will find all the files created by the earlier tutorials in the
 :code:`resources` folder.
 
-Overview:
----------
+--------
+Overview
+--------
 
 The basic steps for model creation and output are the same as those in
 :ref:`Tutorial 3<tutorial3>`, but here you'll begin to create a model based on
@@ -42,6 +43,7 @@ files attached.  You can choose to either create your own code from the
 structure given in the :code:`tutorial4.cpp` file, or to simply read the
 finished code given in the :code:`tutorial4_complete.cpp` file.
 
+---------------------------------------
 1: Create the model and component items
 ---------------------------------------
 Following the same procedures as in previous tutorials, our first step is to
@@ -69,6 +71,7 @@ biological and mathematical theory behind this particular model in
     **1.c**
     Create a validator and use it to verify that your model has no errors.
 
+------------------------------------
 2: Define the mathematical behaviour
 ------------------------------------
 The next step is to define what the component actually *does*.  In this case,
@@ -196,17 +199,17 @@ are:
     will be similar to those below, relating to not yet defined variables and
     units:
 
-.. container:: terminal
+.. code-block:: console
 
-    | Description: MathML ci element has the child text 'alpha_n' which does not
-    |    correspond with any variable names present in component
-    |    'HodgkinHuxleySingleIonChannel' and is not a variable defined within a bvar
-    |    element.
-    | Description: Math has a cn element with a cellml:units attribute
-    |    'per_millivolt_millisecond' that is not a valid reference to units in
-    |    component 'HodgkinHuxleySingleIonChannel' or a standard unit.
-    |
+    Description: MathML ci element has the child text 'alpha_n' which does not
+        correspond with any variable names present in component
+        'HodgkinHuxleySingleIonChannel' and is not a variable defined within a bvar
+        element.
+    Description: Math has a cn element with a cellml:units attribute
+        'per_millivolt_millisecond' that is not a valid reference to units in
+        component 'HodgkinHuxleySingleIonChannel' or a standard unit.
 
+---------------------------------------
 3. Define the variables and their units
 ---------------------------------------
 Now that the mathematical behaviour is defined, the variables that have been
@@ -249,20 +252,18 @@ every variable to have some defined.  For the proportion of open gates
     **3.c** Submit your model to the validator.  Expected errors at this stage
     will be similar to those below.
 
-.. container:: terminal
+.. code-block:: console
 
-    | - Description: Variable 'time' has an invalid units reference 'millisecond'
-    |   that does not correspond with a standard unit or units in the variable's
-    |   parent component or model. See section 11.1.1.2 in the CellML specification.
-    | - Description: Math has a cn element with a cellml:units attribute 'millivolt'
-    |   that is not a valid reference to units in component
-    |   'HodgkinHuxleySingleIonChannel' or a standard unit.
-    |
+    - Description: Variable 'time' has an invalid units reference 'millisecond'
+        that does not correspond with a standard unit or units in the variable's
+        parent component or model. See section 11.1.1.2 in the CellML specification.
+    - Description: Math has a cn element with a cellml:units attribute 'millivolt'
+        that is not a valid reference to units in component
+        'HodgkinHuxleySingleIonChannel' or a standard unit.
 
-
+----------------------------------------
 4. Define the units and add to the model
 ----------------------------------------
-
 The variables created above referenced unit names of :code:`millisecond`,
 :code:`millivolt`, :code:`per_millisecond`, and :code:`dimensionless`.  The
 :code:`dimensionless` units are already present, so we don't need to take any
@@ -292,9 +293,9 @@ covered in :ref:`Tutorial 3<tutorial3>` in case you need a reminder.
     created to that provided in the
     :code:`resources/tutorial4/tutorial4_complete.cpp` file.
 
-Step 5: Serialise and write to a file
--------------------------------------
-
+--------------------------------
+5: Serialise and write to a file
+--------------------------------
 The final step is to output our created model to a CellML2.0 file.  This file
 will be used in subsequent tutorials, so be sure to name it something
 meaningful!  This step is the same as what was covered at the end of
@@ -303,7 +304,7 @@ instructions there if you need to.
 
 .. container:: dothis
 
-    **5.a** Create a Printer item and submit your model for serialisation.
+    **5.a** Create a :code:`Printer` item and submit your model for serialisation.
 
 .. container:: dothis
 

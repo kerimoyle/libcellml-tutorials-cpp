@@ -45,12 +45,12 @@
   <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Tutorial 4: Modelling a gated ion channel</a><ul>
-<li><a class="reference internal" href="#overview">Overview:</a></li>
+<li><a class="reference internal" href="#overview">Overview</a></li>
 <li><a class="reference internal" href="#create-the-model-and-component-items">1: Create the model and component items</a></li>
 <li><a class="reference internal" href="#define-the-mathematical-behaviour">2: Define the mathematical behaviour</a></li>
 <li><a class="reference internal" href="#define-the-variables-and-their-units">3. Define the variables and their units</a></li>
 <li><a class="reference internal" href="#define-the-units-and-add-to-the-model">4. Define the units and add to the model</a></li>
-<li><a class="reference internal" href="#step-5-serialise-and-write-to-a-file">Step 5: Serialise and write to a file</a></li>
+<li><a class="reference internal" href="#serialise-and-write-to-a-file">5: Serialise and write to a file</a></li>
 </ul>
 </li>
 </ul>
@@ -102,7 +102,7 @@ ones.  If you need to jump in at some intermediate stage
 you will find all the files created by the earlier tutorials in the
 <code class="code docutils literal notranslate"><span class="pre">resources</span></code> folder.</p>
 <div class="section" id="overview">
-<h2>Overview:<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>The basic steps for model creation and output are the same as those in
 <a class="reference internal" href="tutorial3.html#tutorial3"><span class="std std-ref">Tutorial 3</span></a>, but here you’ll begin to create a model based on
 the Hodgkin Huxley model. All the biological and mathematical modelling
@@ -250,21 +250,14 @@ to the component you created in 1.a.</p>
 will be similar to those below, relating to not yet defined variables and
 units:</p>
 </div>
-<div class="terminal docutils container">
-<div class="line-block">
-<div class="line">Description: MathML ci element has the child text ‘alpha_n’ which does not</div>
-<div class="line-block">
-<div class="line">correspond with any variable names present in component</div>
-<div class="line">‘HodgkinHuxleySingleIonChannel’ and is not a variable defined within a bvar</div>
-<div class="line">element.</div>
-</div>
-<div class="line">Description: Math has a cn element with a cellml:units attribute</div>
-<div class="line-block">
-<div class="line">‘per_millivolt_millisecond’ that is not a valid reference to units in</div>
-<div class="line">component ‘HodgkinHuxleySingleIonChannel’ or a standard unit.</div>
-<div class="line"><br /></div>
-</div>
-</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Description: MathML ci element has the child text &#39;alpha_n&#39; which does not</span>
+<span class="go">    correspond with any variable names present in component</span>
+<span class="go">    &#39;HodgkinHuxleySingleIonChannel&#39; and is not a variable defined within a bvar</span>
+<span class="go">    element.</span>
+<span class="go">Description: Math has a cn element with a cellml:units attribute</span>
+<span class="go">    &#39;per_millivolt_millisecond&#39; that is not a valid reference to units in</span>
+<span class="go">    component &#39;HodgkinHuxleySingleIonChannel&#39; or a standard unit.</span>
+</pre></div>
 </div>
 </div>
 <div class="section" id="define-the-variables-and-their-units">
@@ -303,20 +296,13 @@ every variable to have some defined.  For the proportion of open gates
 <p><strong>3.c</strong> Submit your model to the validator.  Expected errors at this stage
 will be similar to those below.</p>
 </div>
-<div class="terminal docutils container">
-<div class="line-block">
-<div class="line">- Description: Variable ‘time’ has an invalid units reference ‘millisecond’</div>
-<div class="line-block">
-<div class="line">that does not correspond with a standard unit or units in the variable’s</div>
-<div class="line">parent component or model. See section 11.1.1.2 in the CellML specification.</div>
-</div>
-<div class="line">- Description: Math has a cn element with a cellml:units attribute ‘millivolt’</div>
-<div class="line-block">
-<div class="line">that is not a valid reference to units in component</div>
-<div class="line">‘HodgkinHuxleySingleIonChannel’ or a standard unit.</div>
-<div class="line"><br /></div>
-</div>
-</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">- Description: Variable &#39;time&#39; has an invalid units reference &#39;millisecond&#39;</span>
+<span class="go">    that does not correspond with a standard unit or units in the variable&#39;s</span>
+<span class="go">    parent component or model. See section 11.1.1.2 in the CellML specification.</span>
+<span class="go">- Description: Math has a cn element with a cellml:units attribute &#39;millivolt&#39;</span>
+<span class="go">    that is not a valid reference to units in component</span>
+<span class="go">    &#39;HodgkinHuxleySingleIonChannel&#39; or a standard unit.</span>
+</pre></div>
 </div>
 </div>
 <div class="section" id="define-the-units-and-add-to-the-model">
@@ -346,15 +332,15 @@ created to that provided in the
 <code class="code docutils literal notranslate"><span class="pre">resources/tutorial4/tutorial4_complete.cpp</span></code> file.</p>
 </div>
 </div>
-<div class="section" id="step-5-serialise-and-write-to-a-file">
-<h2>Step 5: Serialise and write to a file<a class="headerlink" href="#step-5-serialise-and-write-to-a-file" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="serialise-and-write-to-a-file">
+<h2>5: Serialise and write to a file<a class="headerlink" href="#serialise-and-write-to-a-file" title="Permalink to this headline">¶</a></h2>
 <p>The final step is to output our created model to a CellML2.0 file.  This file
 will be used in subsequent tutorials, so be sure to name it something
 meaningful!  This step is the same as what was covered at the end of
 <a class="reference internal" href="tutorial2.html#tutorial2"><span class="std std-ref">Tutorial 2</span></a>; you can refer back to the code and/or
 instructions there if you need to.</p>
 <div class="dothis docutils container">
-<p><strong>5.a</strong> Create a Printer item and submit your model for serialisation.</p>
+<p><strong>5.a</strong> Create a <code class="code docutils literal notranslate"><span class="pre">Printer</span></code> item and submit your model for serialisation.</p>
 </div>
 <div class="dothis docutils container">
 <p><strong>5.b</strong> Write the serialised string output from the printer to a file.</p>

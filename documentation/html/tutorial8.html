@@ -46,12 +46,14 @@
   <ul>
 <li><a class="reference internal" href="#">Tutorial 8: Encapsulating components and working with parents</a><ul>
 <li><a class="reference internal" href="#background">Background</a></li>
-<li><a class="reference internal" href="#set-the-stage">0: Set the stage</a></li>
+<li><a class="reference internal" href="#setup">0: Setup</a></li>
 <li><a class="reference internal" href="#read-the-membrane-component">1: Read the membrane component</a></li>
 <li><a class="reference internal" href="#read-the-sodium-channel-component">2: Read the sodium channel component</a></li>
-<li><a class="reference internal" href="#import-the-potassium-channel-component">3: Import the potassium channel component</a></li>
+<li><a class="reference internal" href="#import-the-potassium-channel-component">3: Import the potassium channel component</a><ul>
 <li><a class="reference internal" href="#read-the-current-leakage-component">4: Read the current leakage component</a></li>
 <li><a class="reference internal" href="#create-the-environment-component">5: Create the environment component</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#connect-the-equivalent-variables">6: Connect the equivalent variables</a></li>
 <li><a class="reference internal" href="#define-the-driving-function">7: Define the driving function</a></li>
 <li><a class="reference internal" href="#output-the-model">8: Output the model</a></li>
@@ -107,8 +109,8 @@ units.</p></li>
 <h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
 <p>TODO Add the references to the cable equation and leakage stuff here …</p>
 </div>
-<div class="section" id="set-the-stage">
-<h2>0: Set the stage<a class="headerlink" href="#set-the-stage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="setup">
+<h2>0: Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
 <p>We’ll start by creating the utilities that we’ll use later on.</p>
 <div class="dothis docutils container">
 <p><strong>0.a</strong> As previously, create:</p>
@@ -175,25 +177,18 @@ expect to see errors related to missing units: we have imported a component
 containing maths and variables, both of which reference units that we haven’t
 yet included in the combined model:</p>
 </div>
-<div class="terminal docutils container">
-<div class="line-block">
-<div class="line">The validator has found 13 errors!</div>
-<div class="line">Validator error[0]:</div>
-<div class="line-block">
-<div class="line-block">
-<div class="line">Description: Variable ‘V’ has an invalid units reference ‘mV’ that does not correspond with a standard unit or units in the variable’s parent component or model.</div>
-<div class="line">See section 11.1.1.2 in the CellML specification.</div>
-<div class="line"><br /></div>
-</div>
-<div class="line">…</div>
-<div class="line"><br /></div>
-</div>
-<div class="line">Validator error[8]:</div>
-<div class="line-block">
-<div class="line">Description: Math has a cn element with a cellml:units attribute ‘microA_per_cm2’ that is not a valid reference to units in the model ‘Tutorial8_HHModel’ or a standard unit.</div>
-<div class="line"><br /></div>
-</div>
-</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">The validator has found 13 errors!</span>
+<span class="go">    Validator error[0]:</span>
+<span class="go">        Description: Variable &#39;V&#39; has an invalid units reference &#39;mV&#39; that does not correspond</span>
+<span class="go">        with a standard unit or units in the variable&#39;s parent component or model.</span>
+<span class="go">        See section 11.1.1.2 in the CellML specification.</span>
+
+<span class="go">...</span>
+
+<span class="go">    Validator error[8]:</span>
+<span class="go">        Description: Math has a cn element with a cellml:units attribute &#39;microA_per_cm2&#39;</span>
+<span class="go">        that is not a valid reference to units in the model &#39;Tutorial8_HHModel&#39; or a standard unit.</span>
+</pre></div>
 </div>
 <div class="dothis docutils container">
 <p><strong>1.d</strong> Use a loop to import all of the units from the the potassium
@@ -222,21 +217,12 @@ Print the combined model to the terminal using the condensed function
 components encapsulated by the <code class="code docutils literal notranslate"><span class="pre">sodiumChannel</span></code> component - the <code class="code docutils literal notranslate"><span class="pre">mGate</span></code>
 and <code class="code docutils literal notranslate"><span class="pre">hGate</span></code> components - are imported as well.</p>
 </div>
-<div class="terminal docutils container">
-<div class="line-block">
-<div class="line">Model ‘Tutorial8_HHModel’ has 1 components</div>
-<div class="line-block">
-<div class="line">- Component ‘membrane’ has 1 child components</div>
-<div class="line-block">
-<div class="line">- Component ‘sodiumChannel’ has 2 child components</div>
-<div class="line-block">
-<div class="line">- Component ‘mGate’ has 0 child components</div>
-<div class="line">- Component ‘hGate’ has 0 child components</div>
-<div class="line"><br /></div>
-</div>
-</div>
-</div>
-</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Model &#39;Tutorial8_HHModel&#39; has 1 components</span>
+<span class="go">    - Component &#39;membrane&#39; has 1 child components</span>
+<span class="go">        - Component &#39;sodiumChannel&#39; has 2 child components</span>
+<span class="go">        - Component &#39;mGate&#39; has 0 child components</span>
+<span class="go">        - Component &#39;hGate&#39; has 0 child components</span>
+</pre></div>
 </div>
 <div class="dothis docutils container">
 <p><strong>2.c</strong> Call the validator to check the combined model so far.  At this
@@ -266,8 +252,8 @@ with the same name exists in the model before importing it.</p>
 related to units, but you will still need to address the illegal connections
 between variables in the newly-moved sodiumChannel component and the old
 environment component in the sodiumChannelModel.</p>
-<div class="terminal docutils container">
-<p><strong>PUT ERRORS HERE WHEN VALIDATOR IS WORKING</strong></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">**PUT ERRORS HERE WHEN VALIDATOR IS WORKING**</span>
+</pre></div>
 </div>
 <p>Recall the idiom you used in <a class="reference internal" href="tutorial5.html#tutorial5"><span class="std std-ref">Tutorial 5</span></a> to <em>create</em> the
 connections between equivalent variables:</p>
@@ -370,15 +356,13 @@ component when you’re done:</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">potassiumChannel</span><span class="o">-&gt;</span><span class="n">component</span><span class="p">(</span><span class="s">&quot;nGate&quot;</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">setMath</span><span class="p">(</span><span class="n">nGateMaths</span><span class="p">);</span>
 </pre></div>
 </div>
-<div class="terminal docutils container">
-<div class="line-block">
-<div class="line">Switched units ‘millivolt’ for units ‘mV’</div>
-<div class="line">Switched units ‘millisecond’ for units ‘ms’</div>
-<div class="line">Switched units ‘per_millisecond’ for units ‘per_ms’</div>
-<div class="line">Switched units ‘per_millivolt_millisecond’ for units ‘per_mV_ms’</div>
-<div class="line">Switched units ‘milliS_per_cm2’ for units ‘mS_per_cm2’</div>
-<div class="line"><br /></div>
-</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">| Switched units &#39;millivolt&#39; for units &#39;mV&#39;</span>
+<span class="go">| Switched units &#39;millisecond&#39; for units &#39;ms&#39;</span>
+<span class="go">| Switched units &#39;per_millisecond&#39; for units &#39;per_ms&#39;</span>
+<span class="go">| Switched units &#39;per_millivolt_millisecond&#39; for units &#39;per_mV_ms&#39;</span>
+<span class="go">| Switched units &#39;milliS_per_cm2&#39; for units &#39;mS_per_cm2&#39;</span>
+<span class="go">|</span>
+</pre></div>
 </div>
 <div class="dothis docutils container">
 <p><strong>3.f</strong> As you did in step 2.e, disconnect the variable equivalences which
@@ -386,9 +370,8 @@ link the imported component to the old environment in the
 <code class="code docutils literal notranslate"><span class="pre">potassiumChannelModel</span></code>, and validate that the combined model
 is now free of errors.</p>
 </div>
-</div>
 <div class="section" id="read-the-current-leakage-component">
-<h2>4: Read the current leakage component<a class="headerlink" href="#read-the-current-leakage-component" title="Permalink to this headline">¶</a></h2>
+<h3>4: Read the current leakage component<a class="headerlink" href="#read-the-current-leakage-component" title="Permalink to this headline">¶</a></h3>
 <div class="dothis docutils container">
 <p><strong>4.a</strong> If you know the tune, sing along!  Import the leakage component
 from the model in
@@ -399,27 +382,18 @@ errors.</p>
 </div>
 </div>
 <div class="section" id="create-the-environment-component">
-<h2>5: Create the environment component<a class="headerlink" href="#create-the-environment-component" title="Permalink to this headline">¶</a></h2>
+<h3>5: Create the environment component<a class="headerlink" href="#create-the-environment-component" title="Permalink to this headline">¶</a></h3>
 <p>Now your model should have the encapsulation structure shown below.  You can
 check this in the same way as you did in step 2.b.</p>
-<div class="terminal docutils container">
-<div class="line-block">
-<div class="line">Model ‘Tutorial8_HHModel’ has 1 components</div>
-<div class="line">- Component ‘membrane’ has 3 child components</div>
-<div class="line-block">
-<div class="line">- Component ‘sodiumChannel’ has 2 child components</div>
-<div class="line-block">
-<div class="line">- Component ‘mGate’ has 0 child components</div>
-<div class="line">- Component ‘hGate’ has 0 child components</div>
-</div>
-<div class="line">- Component ‘potassiumChannel’ has 1 child components</div>
-<div class="line-block">
-<div class="line">- Component ‘nGate’ has 0 child components</div>
-</div>
-<div class="line">- Component ‘leakageCurrent’ has 0 child components</div>
-<div class="line"><br /></div>
-</div>
-</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Model &#39;Tutorial8_HHModel&#39; has 1 components</span>
+<span class="go">    - Component &#39;membrane&#39; has 3 child components</span>
+<span class="go">    - Component &#39;sodiumChannel&#39; has 2 child components</span>
+<span class="go">        - Component &#39;mGate&#39; has 0 child components</span>
+<span class="go">        - Component &#39;hGate&#39; has 0 child components</span>
+<span class="go">    - Component &#39;potassiumChannel&#39; has 1 child components</span>
+<span class="go">        - Component &#39;nGate&#39; has 0 child components</span>
+<span class="go">    - Component &#39;leakageCurrent&#39; has 0 child components</span>
+</pre></div>
 </div>
 <p>The final component you need to add is an <code class="code docutils literal notranslate"><span class="pre">environment</span></code> component for
 this combined model.  This contains the time <span class="math notranslate nohighlight">\(t\)</span> of
@@ -429,6 +403,7 @@ the simulation as well as the membrane voltage <span class="math notranslate noh
 and add it to your combined model as a top-level component.</p>
 <p><strong>5.b</strong> Include the local environment variables that you’ll need, including
 their units, and validate that your model is free of errors.</p>
+</div>
 </div>
 </div>
 <div class="section" id="connect-the-equivalent-variables">

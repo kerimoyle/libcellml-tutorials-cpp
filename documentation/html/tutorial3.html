@@ -125,32 +125,27 @@ template against the libCellML library successfully:</p>
 </pre></div>
 </div>
 <p>… should give the output:</p>
-<div class="terminal docutils container">
-<div class="line-block">
-<div class="line">———————————————–</div>
-<div class="line-block">
-<div class="line">TUTORIAL 3: CREATE A MODEL USING THE API</div>
-</div>
-<div class="line">———————————————–</div>
-<div class="line"><br /></div>
-</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">-----------------------------------------------</span>
+<span class="go">    TUTORIAL 3: CREATE A MODEL USING THE API</span>
+<span class="go">-----------------------------------------------</span>
+</pre></div>
 </div>
 </div>
 <div class="section" id="set-up-the-governing-equations">
 <h2>1: Set up the governing equations<a class="headerlink" href="#set-up-the-governing-equations" title="Permalink to this headline">¶</a></h2>
-<p>TODO Need something here about when to use shared pointers and when to use
-concrete instances?</p>
+<p><strong>TODO Need something here about when to use shared pointers and when to use
+concrete instances?</strong></p>
 <p>Just as you did in <a class="reference internal" href="tutorial2.html#tutorial2"><span class="std std-ref">Tutorial 2</span></a>, we need to start by setting
 up a <code class="code docutils literal notranslate"><span class="pre">ModelPtr</span></code> model instance, and creating a component inside it.</p>
 <div class="dothis docutils container">
 <p><strong>1.a</strong>
-Allocate a shared pointer for a new Model instance.
+Create a new <code class="code docutils literal notranslate"><span class="pre">ModelPtr</span></code> instance.
 Set the name and id attributes of the model you created, and print them to
 the terminal to check them.</p>
 </div>
 <div class="dothis docutils container">
 <p><strong>1.b</strong>
-Allocate a shared pointer for a new Component instance.  Name it and add it
+Create a new <code class="code docutils literal notranslate"><span class="pre">ComponentPtr</span></code> instance.  Name it and add it
 to the model you created above.</p>
 </div>
 <p>Now for the real bit.  In order to actually model anything, we need to include
@@ -251,8 +246,7 @@ throughout your code as needed later:</p>
 </pre></div>
 </div>
 <div class="dothis docutils container">
-<p><strong>1.d</strong>
-Copy the opening and closing math strings above into your code.</p>
+<p><strong>1.d</strong> Copy the opening and closing math strings above into your code.</p>
 </div>
 <p>Our last step in defining the mathematics is to link it into the component. The
 functions available to manipulate maths are:</p>
@@ -279,30 +273,23 @@ model at this point.  Use the utility function
 terminal.</p>
 </div>
 <p>You should see an output similar to that shown below:</p>
-<div class="terminal docutils container">
-<div class="line-block">
-<div class="line">The validator has found 5 errors!</div>
-<div class="line">Validator error[0]:</div>
-<div class="line-block">
-<div class="line">Description: MathML ci element has the child text ‘t’ which does not correspond with any variable names present in component ‘distance_finder’.</div>
-</div>
-<div class="line">Validator error[1]:</div>
-<div class="line-block">
-<div class="line">Description: MathML ci element has the child text ‘x’ which does not correspond with any variable names present in component ‘distance_finder’.</div>
-</div>
-<div class="line">Validator error[2]:</div>
-<div class="line-block">
-<div class="line">Description: MathML ci element has the child text ‘a’ which does not correspond with any variable names present in component ‘distance_finder’.</div>
-</div>
-<div class="line">Validator error[3]:</div>
-<div class="line-block">
-<div class="line">Description: MathML ci element has the child text ‘x’ which does not correspond with any variable names present in component ‘distance_finder’.</div>
-</div>
-<div class="line">Validator error[4]:</div>
-<div class="line-block">
-<div class="line">Description: MathML ci element has the child text ‘b’ which does not correspond with any variable names present in component ‘distance_finder’.</div>
-</div>
-</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">The validator has found 5 errors!</span>
+<span class="go">    Validator error[0]:</span>
+<span class="go">        Description: MathML ci element has the child text &#39;t&#39; which does not correspond</span>
+<span class="go">        with any variable names present in component &#39;distance_finder&#39;.</span>
+<span class="go">    Validator error[1]:</span>
+<span class="go">        Description: MathML ci element has the child text &#39;x&#39; which does not correspond</span>
+<span class="go">        with any variable names present in component &#39;distance_finder&#39;.</span>
+<span class="go">    Validator error[2]:</span>
+<span class="go">        Description: MathML ci element has the child text &#39;a&#39; which does not correspond</span>
+<span class="go">        with any variable names present in component &#39;distance_finder&#39;.</span>
+<span class="go">    Validator error[3]:</span>
+<span class="go">        Description: MathML ci element has the child text &#39;x&#39; which does not correspond</span>
+<span class="go">        with any variable names present in component &#39;distance_finder&#39;.</span>
+<span class="go">    Validator error[4]:</span>
+<span class="go">        Description: MathML ci element has the child text &#39;b&#39; which does not correspond</span>
+<span class="go">        with any variable names present in component &#39;distance_finder&#39;.</span>
+</pre></div>
 </div>
 <p>Running the validator will alert you variables in the MathML that don’t (yet)
 exist in your component.  This was explained in <a class="reference internal" href="tutorial2.html#tutorial2"><span class="std std-ref">Tutorial 2</span></a>.</p>
@@ -413,7 +400,7 @@ result</div>
 follow the same basic steps as other entities: declare it, name it, define
 it, and then add it in.  For example:</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Declaring, naming, and defining the &quot;millisecond&quot; unit pointer</span>
-<span class="n">libcellml</span><span class="o">::</span><span class="n">UnitsPtr</span> <span class="n">ms</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">libcellml</span><span class="o">::</span><span class="n">Units</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">UnitsPtr</span> <span class="n">ms</span> <span class="o">=</span> <span class="n">libcellml</span><span class="o">::</span><span class="n">Units</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
 <span class="n">ms</span><span class="o">-&gt;</span><span class="n">setName</span><span class="p">(</span><span class="s">&quot;millisecond&quot;</span><span class="p">);</span>
 
 <span class="c1">// The manner of specification here is agnostic: all three definitions are identical.</span>
@@ -425,8 +412,8 @@ it, and then add it in.  For example:</p>
 </pre></div>
 </div>
 <div class="dothis docutils container">
-<p><strong>2.a</strong> Use the example above to create, name and define two units:
-milliseconds and leagues (a league is 5556 metres).</p>
+<p><strong>2.a</strong> Use the example above to create, name and define two units
+representing milliseconds and leagues (a league is 5556 metres).</p>
 </div>
 <div class="nb docutils container">
 <p><strong>Note:</strong></p>
@@ -460,14 +447,14 @@ While this is not common (all of the seven physical attriubutes are already
 included), for those rare occasions where you might need to model something
 not physically based, you’re able to define your own.  Here’s an example.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Create a custom irreducible unit named &quot;banana&quot;</span>
-<span class="n">libcellml</span><span class="o">::</span><span class="n">UnitsPtr</span> <span class="n">uBanana</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">libcellml</span><span class="o">::</span><span class="n">Units</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">UnitsPtr</span> <span class="n">uBanana</span> <span class="o">=</span> <span class="n">libcellml</span><span class="o">::</span><span class="n">Units</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
 <span class="n">uBanana</span><span class="o">-&gt;</span><span class="n">setName</span><span class="p">(</span><span class="s">&quot;banana&quot;</span><span class="p">);</span>
 
 <span class="c1">// Note that when a UnitsPtr is defined with a name only, it is effectively</span>
 <span class="c1">// irreducible.</span>
 
 <span class="c1">// Create a new compound unit based on the &quot;banana&quot; unit above</span>
-<span class="n">libcellml</span><span class="o">::</span><span class="n">UnitsPtr</span> <span class="n">uBunchOfBananas</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">libcellml</span><span class="o">::</span><span class="n">Units</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">UnitsPtr</span> <span class="n">uBunchOfBananas</span> <span class="o">=</span> <span class="n">libcellml</span><span class="o">::</span><span class="n">Units</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
 <span class="n">u2</span><span class="o">-&gt;</span><span class="n">setName</span><span class="p">(</span><span class="s">&quot;bunch_of_bananas&quot;</span><span class="p">);</span>
 <span class="n">u2</span><span class="o">-&gt;</span><span class="n">addUnit</span><span class="p">(</span><span class="s">&quot;banana&quot;</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">);</span>  <span class="c1">// include bananas^5 in the bunch_of_bananas unit</span>
 </pre></div>
@@ -477,18 +464,14 @@ not physically based, you’re able to define your own.  Here’s an example.</p
 call the validator to check your model for errors.  You should see an
 output similar to that shown below.</p>
 </div>
-<div class="terminal docutils container">
-<div class="line-block">
-<div class="line">The validator has found 2 errors!</div>
-<div class="line-block">
-<div class="line">Validator error[0]:</div>
-</div>
-<div class="line">Description: MathML ci element has the child text ‘a’ which does not correspond with any variable names present in component ‘distance_finder’.</div>
-<div class="line-block">
-<div class="line">Validator error[1]:</div>
-</div>
-<div class="line">Description: MathML ci element has the child text ‘b’ which does not correspond with any variable names present in component ‘distance_finder’.</div>
-</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">The validator has found 2 errors!</span>
+<span class="go">    Validator error[0]:</span>
+<span class="go">        Description: MathML ci element has the child text &#39;a&#39; which does not correspond</span>
+<span class="go">        with any variable names present in component &#39;distance_finder&#39;.</span>
+<span class="go">    Validator error[1]:</span>
+<span class="go">        Description: MathML ci element has the child text &#39;b&#39; which does not correspond</span>
+<span class="go">        with any variable names present in component &#39;distance_finder&#39;.</span>
+</pre></div>
 </div>
 <p>These are referring to the two constants <span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span> that were
 included in the MathML block which have not yet been defined.  At this point
@@ -531,9 +514,9 @@ directly.  Check that the model is now free of validation errors.</p>
 <div class="section" id="use-code-generation-to-change-the-output-langauge">
 <h2>3: Use code generation to change the output langauge<a class="headerlink" href="#use-code-generation-to-change-the-output-langauge" title="Permalink to this headline">¶</a></h2>
 <p>Some exciting new functionality of libCellML is its ability to generate a
-runable file from a model description.  This means that if you already have
-a solver in either C or Python, you can simply translate your model from here
-into that language.  Let’s give it a go.</p>
+model file in another language from a CellML model.  This is handy if you
+already have a solver in either C or Python, as now you can solve CellML
+models too.</p>
 <p>The generator is instantiated in the same way as the other items:</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Instantiate the generator and submit the model to it for processing</span>
 <span class="n">libcellml</span><span class="o">::</span><span class="n">Generator</span> <span class="n">generator</span><span class="p">;</span>
@@ -546,15 +529,11 @@ to process your model.  Call the utility function
 <code class="code docutils literal notranslate"><span class="pre">printErrorsToTerminal</span></code> for your generator to check it.  You should
 see an output similar to that shown below.</p>
 </div>
-<div class="terminal docutils container">
-<div class="line-block">
-<div class="line">The generator has found 1 errors!</div>
-<div class="line-block">
-<div class="line">Generator error[0]:</div>
-</div>
-<div class="line">Description: Variable ‘x’ in component ‘distance_finder’ of model
-‘tutorial_3_model’ is used in an ODE, but it is not initialised.</div>
-</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">The generator has found 1 errors!</span>
+<span class="go">    Generator error[0]:</span>
+<span class="go">        Description: Variable &#39;x&#39; in component &#39;distance_finder&#39; of model</span>
+<span class="go">        &#39;tutorial_3_model&#39; is used in an ODE, but it is not initialised.</span>
+</pre></div>
 </div>
 <p>The error message above refers to the fact that though we’ve set the value of
 the constant <span class="math notranslate nohighlight">\(a\)</span>, we haven’t constrained the model with sufficient
@@ -606,9 +585,10 @@ this being one of the following:</p>
 <li><p><code class="code docutils literal notranslate"><span class="pre">ALGEBRAIC</span></code> No integration is needed</p></li>
 <li><p><code class="code docutils literal notranslate"><span class="pre">ODE</span></code> One or more ordinary differential equations to solve</p></li>
 <li><p><code class="code docutils literal notranslate"><span class="pre">INVALID</span></code> Computer says no <strong>TODO</strong></p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">UNDERCONSTRAINED</span></code> Computer still says no</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">OVERCONSTRAINED</span></code> Computer says no AGAIN</p></li>
-<li><p><code class="code docutils literal notranslate"><span class="pre">UNSUITABLY_CONSTRAINED</span></code> OMG computer, what do you want from me</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">UNDERCONSTRAINED</span></code> Computer still says no <strong>TODO</strong></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">OVERCONSTRAINED</span></code> Computer says no AGAIN <strong>TODO</strong></p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">UNSUITABLY_CONSTRAINED</span></code> OMG computer, what do you want from
+me <strong>TODO</strong></p></li>
 </ul>
 </div></blockquote>
 <p>The <code class="code docutils literal notranslate"><span class="pre">modelType()</span></code> function returns the classification as an <code class="code docutils literal notranslate"><span class="pre">enum</span></code>,
@@ -619,8 +599,7 @@ for you, eg: <code class="code docutils literal notranslate"><span class="pre">g
 as <em>profiles</em>.  The default setting is for C, but you can change this using the
 <code class="code docutils literal notranslate"><span class="pre">setProfile</span></code> function if you need to:</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Change the generated language from the default C to Python</span>
-<span class="n">libcellml</span><span class="o">::</span><span class="n">GeneratorProfilePtr</span> <span class="n">profile</span> <span class="o">=</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">libcellml</span><span class="o">::</span><span class="n">GeneratorProfile</span><span class="o">&gt;</span><span class="p">(</span><span class="n">libcellml</span><span class="o">::</span><span class="n">GeneratorProfile</span><span class="o">::</span><span class="n">Profile</span><span class="o">::</span><span class="n">PYTHON</span><span class="p">);</span>
+<span class="n">libcellml</span><span class="o">::</span><span class="n">GeneratorProfilePtr</span> <span class="n">profile</span> <span class="o">=</span> <span class="n">libcellml</span><span class="o">::</span><span class="n">GeneratorProfile</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">libcellml</span><span class="o">::</span><span class="n">GeneratorProfile</span><span class="o">::</span><span class="n">Profile</span><span class="o">::</span><span class="n">PYTHON</span><span class="p">);</span>
 <span class="n">generator</span><span class="p">.</span><span class="n">setProfile</span><span class="p">(</span><span class="n">profile</span><span class="p">);</span>
 </pre></div>
 </div>

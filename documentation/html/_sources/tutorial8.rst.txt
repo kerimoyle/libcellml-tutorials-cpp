@@ -1,8 +1,8 @@
 .. _tutorial8:
 
----------------------------------------------------------------------
+=============================================================
 Tutorial 8: Encapsulating components and working with parents
----------------------------------------------------------------------
+=============================================================
 
 Getting started:  If you're reading this it's presumed that you're already
 comfortable with the deserlialisation and debugging functionality
@@ -16,14 +16,15 @@ By the end of this tutorial you will be able to:
 - appreciate the consistency needed throughout the imports to avoid renaming
   units.
 
+----------
 Background
 ----------
 
 TODO Add the references to the cable equation and leakage stuff here ...
 
-
-0: Set the stage
-----------------
+--------
+0: Setup
+--------
 
 We'll start by creating the utilities that we'll use later on.
 
@@ -35,9 +36,9 @@ We'll start by creating the utilities that we'll use later on.
     - a :code:`Validator` instance for debugging purposes
     - a :code:`ModelPtr` model to attach everything into
 
+------------------------------
 1: Read the membrane component
 ------------------------------
-
 .. container:: dothis
 
     **1.a** Just as you did in :ref:`Tutorial 6<tutorial6>` for the potassium
@@ -100,18 +101,20 @@ by simply printing the combined model to the screen.
     containing maths and variables, both of which reference units that we haven't
     yet included in the combined model:
 
-.. container:: terminal
+.. code-block:: console
 
-    | The validator has found 13 errors!
-    | Validator error[0]:
-    |   Description: Variable 'V' has an invalid units reference 'mV' that does not correspond with a standard unit or units in the variable's parent component or model.
-    |   See section 11.1.1.2 in the CellML specification.
-    |
-    |  ...
-    |
-    | Validator error[8]:
-    |   Description: Math has a cn element with a cellml:units attribute 'microA_per_cm2' that is not a valid reference to units in the model 'Tutorial8_HHModel' or a standard unit.
-    |
+    The validator has found 13 errors!
+        Validator error[0]:
+            Description: Variable 'V' has an invalid units reference 'mV' that does not correspond
+            with a standard unit or units in the variable's parent component or model.
+            See section 11.1.1.2 in the CellML specification.
+
+    ...
+
+        Validator error[8]:
+            Description: Math has a cn element with a cellml:units attribute 'microA_per_cm2'
+            that is not a valid reference to units in the model 'Tutorial8_HHModel' or a standard unit.
+
 
 .. container:: dothis
 
@@ -123,9 +126,9 @@ by simply printing the combined model to the screen.
     **1.e** Validate the combined model once more and check that it is now free
     of errors.
 
+------------------------------------
 2: Read the sodium channel component
------------------------------------------
-
+------------------------------------
 In :ref:`Tutorial 7<tutorial7>` you created a component to represent the
 behaviour of a gated sodium gate and stored it inside a model.
 
@@ -145,14 +148,13 @@ behaviour of a gated sodium gate and stored it inside a model.
     components encapsulated by the :code:`sodiumChannel` component - the :code:`mGate`
     and :code:`hGate` components - are imported as well.
 
-.. container:: terminal
+.. code-block:: console
 
-    | Model 'Tutorial8_HHModel' has 1 components
-    |  - Component 'membrane' has 1 child components
-    |     - Component 'sodiumChannel' has 2 child components
-    |        - Component 'mGate' has 0 child components
-    |        - Component 'hGate' has 0 child components
-    |
+    Model 'Tutorial8_HHModel' has 1 components
+        - Component 'membrane' has 1 child components
+            - Component 'sodiumChannel' has 2 child components
+            - Component 'mGate' has 0 child components
+            - Component 'hGate' has 0 child components
 
 .. container:: dothis
 
@@ -185,7 +187,7 @@ related to units, but you will still need to address the illegal connections
 between variables in the newly-moved sodiumChannel component and the old
 environment component in the sodiumChannelModel.
 
-.. container:: terminal
+.. code-block:: console
 
     **PUT ERRORS HERE WHEN VALIDATOR IS WORKING**
 
@@ -220,8 +222,9 @@ variables:
 
     **2.f** Validate the combined model to see that it is now free of errors.
 
+-----------------------------------------
 3: Import the potassium channel component
-----------------------------------------------
+-----------------------------------------
 Now we simply need to repeat the same process for our potassium channel
 component and add it to the combined model.
 
@@ -307,7 +310,7 @@ the unit names.  The function can be used like this:
 
     potassiumChannel->component("nGate")->setMath(nGateMaths);
 
-.. container:: terminal
+.. code-block:: console
 
     | Switched units 'millivolt' for units 'mV'
     | Switched units 'millisecond' for units 'ms'
@@ -341,17 +344,17 @@ the unit names.  The function can be used like this:
 Now your model should have the encapsulation structure shown below.  You can
 check this in the same way as you did in step 2.b.
 
-.. container:: terminal
+.. code-block:: console
 
-    | Model 'Tutorial8_HHModel' has 1 components
-    | - Component 'membrane' has 3 child components
-    |  - Component 'sodiumChannel' has 2 child components
-    |      - Component 'mGate' has 0 child components
-    |      - Component 'hGate' has 0 child components
-    |  - Component 'potassiumChannel' has 1 child components
-    |      - Component 'nGate' has 0 child components
-    |  - Component 'leakageCurrent' has 0 child components
-    |
+    Model 'Tutorial8_HHModel' has 1 components
+        - Component 'membrane' has 3 child components
+        - Component 'sodiumChannel' has 2 child components
+            - Component 'mGate' has 0 child components
+            - Component 'hGate' has 0 child components
+        - Component 'potassiumChannel' has 1 child components
+            - Component 'nGate' has 0 child components
+        - Component 'leakageCurrent' has 0 child components
+
 
 The final component you need to add is an :code:`environment` component for
 this combined model.  This contains the time :math:`t` of
@@ -365,9 +368,9 @@ the simulation as well as the membrane voltage :math:`V`.
     **5.b** Include the local environment variables that you'll need, including
     their units, and validate that your model is free of errors.
 
+-----------------------------------
 6: Connect the equivalent variables
 -----------------------------------
-
 The encapsulation structure for this model has several tiers, as shown in the
 diagram below:
 
@@ -410,6 +413,7 @@ which are shared with an adjacent component.
 
     **6.c** Validate that the final model is free of errors.
 
+------------------------------
 7: Define the driving function
 ------------------------------
 In contrast to earlier tutorials, this simulation will not be a voltage clamp
@@ -441,9 +445,9 @@ add a definition for this stimulus current.
     std::string membraneMathML = membrane->math();
     insertIntoMathMLString(membraneMathML, stimulusEquation);
 
+-------------------
 8: Output the model
 -------------------
-
 Finally you're ready to write the model ready for simulation.  You know the
 drill.
 

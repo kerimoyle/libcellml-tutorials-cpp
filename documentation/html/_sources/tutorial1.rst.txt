@@ -1,8 +1,8 @@
 ..  _tutorial1:
 
-----------------------------------------
+========================================
 Tutorial 1: Reading, writing, 'rithmetic
-----------------------------------------
+========================================
 
 Welcome to the introductory tutorial for the use of the libCellML library.
 Using these tutorials in sequence will walk you through the functionality and
@@ -20,43 +20,51 @@ After completing this tutorial you will be able to:
 
 Where you see the green indentation >> in this document it means that there's
 something you need to do, and if you're stuck at any stage you can refer to
-the completed "tutorial1_completed.cpp" file for help.
+the completed :code:`tutorials_complete/tutorial1_completed.cpp` file for help.
 
-Step 0: Setup
--------------
+--------
+0: Setup
+--------
 
 For each of the tutorials, there is template code provided for you to get
 started in each of the tutorial folders.
 
 .. container:: dothis
 
-    **>>** Navigate into the "tutorial1" folder and confirm that you're able to compile
-    and run this template against the libCellML library
+    **>>** Navigate into the :code:`tutorials/tutorial1` folder and confirm
+    that you're able to compile and run this template against the libCellML
+    library.  Note that you will only need to run the :code:`cmake .` command
+    once, in order to create the :code:`Makefile`.
 
-.. code::
+.. code-block:: console
 
-    make
+    cmake .
+    make -j
 
-Running the template::
+Running the template:
+
+.. code-block:: console
 
     ./tutorial1
 
-... should give the output::
+... should give the output:
+
+.. code-block:: console
 
     -----------------------------------------------
-    TUTORIAL 1: READING AND WRITING CELLML FILES
+      TUTORIAL 1: READING AND WRITING CELLML FILES
     -----------------------------------------------
 
-Step 1: Deserialising a CellML file
 -----------------------------------
-
-CellML is a format in which all the information is stored in a strict
+1: Deserialising a CellML file
+-----------------------------------
+CellML2 is a format in which all the information is stored in a strict
 hierarchical way.  In order for this information to be transformed into a
 format which can be *used* for modelling and simulation it needs to be
 *deserialised* into the internal :code:`Model` format.  The hard work of
 this transformation is done by the :code:`Parser` object which will take
 a raw CellML string which represents a model and return its corresponding
-:code:`Model` item.
+:code:`Model` item.  **TODO put link to CellML specs here**
 
 .. container:: dothis
 
@@ -64,7 +72,7 @@ a raw CellML string which represents a model and return its corresponding
 
 .. code-block:: cpp
 
-    std::ifstream inFile("tutorial1.cellml");
+    std::ifstream inFile("../../resources/tutorial1.cellml");
     std::stringstream inFileContents;
     inFileContents << inFile.rdbuf();
 
@@ -93,9 +101,9 @@ point.
 Now we have a *deserialsied* CellML model which we can manipulate using the
 libCellML library.
 
-Step 2: Investigate the contents of the model
----------------------------------------------
-
+----------------------------------------
+2: Investigate the contents of the model
+----------------------------------------
 Now that we have a model, let's see what's inside it.  All retrieval functions
 - where you want to read something about any item - are callable from simple
 functions naming the thing you want. For example, to find the name of the model
@@ -176,7 +184,8 @@ components for Tutorial 6.
     later tutorials, but for now, retrieve the MathML string from your
     component using the :code:`math()` function, and print it to the screen.
 
-Step 3: Serialise the model and output
+--------------------------------------
+3: Serialise the model and output
 --------------------------------------
 Now that you've seen how to *deserialise* a CellML file into a model using the
 :code:`Parser`, it's time to go in the other direction.  This reverse operation

@@ -1,8 +1,8 @@
 .. _tutorial5:
 
---------------------------------------------
+============================================
 Tutorial 5: Working with multiple components
---------------------------------------------
+============================================
 
 Getting started:  If you're reading this it's presumed that you're already
 comfortable with the serlialisation, manipulation, and debugging functionality
@@ -18,6 +18,7 @@ By the end of this tutorial you will be able to:
   component
 - connect components to one another by mapping equivalent variables
 
+--------
 Overview
 --------
 In :ref:`Tutorial 4<tutorial4>` we created a component representing an ion
@@ -25,16 +26,17 @@ channel.  The channel is controlled by a number of gates in series, whose
 open or closed state and the transition between them is controlled by voltage:
 hence, a "voltage-controlled ion gate".  In this tutorial we will explore how
 a channel such as that made in Tutorial 4 can include another level of
-control: the rate constants (:math:`alpha_y` and :math:`beta_y`) used earlier
+control: the rate constants (:math:`\alpha_y` and :math:`\beta_y`) used earlier
 are now functions of voltage themselves.  We will also show how an
 *environment* component can be used to ensure that all components are modelled
 synchronously.
 
+--------
 0: Setup
 --------
+**TODO**
 
-
-
+-------------------
 1: Create the model
 -------------------
 By now you should be familiar and comfortable with using the API to create
@@ -94,6 +96,7 @@ contained inside a model by index as well as by name.
     **1.d** Retrieve the component from the model and rename it to
     "PotassiumChannel".
 
+---------------------------------------
 2: Include more components in the model
 ---------------------------------------
 This tutorial is intended to illustrate the use of more than one component,
@@ -122,11 +125,13 @@ gate.
 
     **2.d** Check that the model is valid so far using your validator instance.
 
+------------------------------------
 3: Create a component for the n-gate
 ------------------------------------
-The last component that we need to create is an update from our Tutorial 4
-model such that the rate constants :math:`alpha` and :math:`beta` become
-functions of voltage.  We have another choice.  We could either:
+The last component that we need to create is an update from the one we
+created in :ref:`Tutorial 4<tutorial4>` such that the rate constants
+:math:`alpha` and :math:`beta` become functions of voltage.  We have another
+choice.  We could either:
 
 - remove all the mathematics from our existing PotassiumChannel component
   and adjust the equations which are already there to suit, or
@@ -184,6 +189,7 @@ constant inside the MathML, but still need to be present in the parent model.
     **3.d** Create the missing units and add to the model.  Confirm that the
     model is now valid.
 
+----------------------------------------
 4: Connect the components to one another
 ----------------------------------------
 In order for components to be able to relate to one another, we have to define
@@ -219,24 +225,23 @@ done by creating *equivalent variables*.
     **4.b** Print the model to the screen to check your component hierarchy.
     It should contain the section below where a *child component* is listed.
 
-.. container:: terminal
+.. code-block:: console
 
-    | ...
-    |    Component[0] has 1 child components:
-    |        Component[0] has name: 'nGate'
-    |        Component[0] has 5 variables:
-    |        Variable[0] has name: 'V'
-    |        Variable[0] has units: 'millivolt'
-    |        Variable[1] has name: 't'
-    |        Variable[1] has units: 'millisecond'
-    |        Variable[2] has name: 'alpha_n'
-    |        Variable[2] has units: 'per_millisecond'
-    |        Variable[3] has name: 'beta_n'
-    |        Variable[3] has units: 'per_millisecond'
-    |        Variable[4] has name: 'n'
-    |        Variable[4] has units: 'dimensionless'
-    | ...
-    |
+     ...
+        Component[0] has 1 child components:
+            Component[0] has name: 'nGate'
+            Component[0] has 5 variables:
+            Variable[0] has name: 'V'
+            Variable[0] has units: 'millivolt'
+            Variable[1] has name: 't'
+            Variable[1] has units: 'millisecond'
+            Variable[2] has name: 'alpha_n'
+            Variable[2] has units: 'per_millisecond'
+            Variable[3] has name: 'beta_n'
+            Variable[3] has units: 'per_millisecond'
+            Variable[4] has name: 'n'
+            Variable[4] has units: 'dimensionless'
+     ...
 
 After defining how the components are arranged, we need to define which
 variables can access each other, and how.  This is done by making variables
@@ -272,15 +277,17 @@ process.
     :code:`printErrorsToTerminal` function.  You should see an error
     similar to the one below.
 
-.. container:: terminal
+.. code-block:: console
 
-    **TODO** ?? put error here when the validation is working ??
+    **TODO ?? put error here when the validation is working **
 
 There are some restrictions on which variables can be matched like this.
 Variables can only be made equivalent if they are in neighbouring components;
 that is, a direct parent, direct child, or sibling component (one with the same
 parent).   We can add these two variables into the "PotassiumChannel" component
-as they are *sibling* components (their parent is the model)::
+as they are *sibling* components (their parent is the model):
+
+.. code-block:: cpp
 
     libcellml::Variable::addEquivalence(time_in_environment, time_in_channel);
 
@@ -299,7 +306,7 @@ the :code:`potassiumChannel` component as a go-between: it is a sibling of the
     and :code:`potassiumChannel` components.  Validate your model again.  You
     should see a validation message similar to that shown below.
 
-.. container:: terminal
+.. code-block:: console
 
     **TODO Put error messages here when they're working**
 
@@ -332,9 +339,9 @@ follows:
     variables to specify their avaiable interfaces.  Re-validate your model and
     confirm that it is now free of errors.
 
-5 Define the driving function
 ------------------------------
-
+5: Define the driving function
+------------------------------
 In order to give the simulation something to actually simulate, we need to add
 a driving function as an input.  This simulation replicates a voltage clamp
 experiment wherein the input voltage is given a square wave and the current
@@ -385,12 +392,13 @@ default, and can apply to more than one section of the axis.
 
     **5.c** Call the validator to check that your model is free of errors.
 
+--------------------------------
 6: Serialise and print the model
--------------------------------------
+--------------------------------
 
 .. container:: dothis
 
-    **6.a** As in :ref:`Tutorial 1<tutorial1>`, use the :code:`Printer` module
+    **6.a** As in :ref:`Tutorial 1<tutorial1>`, use a :code:`Printer`
     to serialise the model, and then write it to a file.
 
 .. container:: dothis

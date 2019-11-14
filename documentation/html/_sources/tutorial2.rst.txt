@@ -1,9 +1,8 @@
 ..  _tutorial2:
 
-----------------------------------------------------
+====================================================
 Tutorial 2: Debugging, error checking and validating
-----------------------------------------------------
-
+====================================================
 In this tutorial you'll explore how the :code:`Validator` object can be put to
 use as you create and interact with your models to help you debug and find
 issues ahead of submitting it for simulation.  You'll be taking a CellML2.0
@@ -29,24 +28,30 @@ Step 0: Setup
 -------------
 
 Navigate into the :code:`tutorial2` folder and check that you can build the
-template against the libCellML library successfully::
+template against the libCellML library successfully:
 
+.. code-block:: console
+
+    cmake .
     make
 
-Running the template::
+Running the template:
+
+.. code-block:: console
 
     ./tutorial2
 
 ... should give the output:
 
-.. container:: terminal
+.. code-block:: console
 
-    | -----------------------------------------------
-    |   TUTORIAL 2: ERROR CHECKING AND VALIDATION
-    | -----------------------------------------------
+    -----------------------------------------------
+       TUTORIAL 2: ERROR CHECKING AND VALIDATION
+    -----------------------------------------------
 
-Step 1: Create a Model from the contents of a CellML file
----------------------------------------------------------
+----------------------------------------------------
+1: Create a Model from the contents of a CellML file
+----------------------------------------------------
 
 .. container:: dothis
 
@@ -54,10 +59,9 @@ Step 1: Create a Model from the contents of a CellML file
     As you did in Tutorial 1, use the :code:`Parser` to create a model
     from the "Tutorial2.cellml" file provided.
 
-
-Step 2: Print the contents of the file to the screen
-----------------------------------------------------
-
+-----------------------------------------------
+2: Print the contents of the file to the screen
+-----------------------------------------------
 Instead of duplicating the work you did throughout the middle steps of Tutorial
 1, we've provided you with a set of utility functions in the
 :code:`utility/tutorial_utilities.[cpp,h]` files which will help with some of
@@ -95,7 +99,7 @@ a record of any errors is stored inside the validator.  To figure out what's
 going on, you need to retrieve the pointers to these :code:`Error` objects.
 
 As in Tutorial 1, we can call a :code:`count` function (in the case of a
-validator, this is the :code:`errorCount()` function to determine whether any
+validator, this is the :code:`errorCount()` function) to determine whether any
 errors have been raised.
 
 .. container:: dothis
@@ -106,8 +110,8 @@ errors have been raised.
 
 Now we need to create an iterative loop to retrieve all (and there should be a
 few in this particular model!) from the validator.  Again following the same
-retrieval idiom as in Tutorial 1 for items in sets, we can access the errors
-using an index:
+retrieval idiom as in :ref:`Tutorial 1<tutorial1>` for items in sets, we can
+access the errors using an index:
 
 .. code-block:: cpp
 
@@ -116,7 +120,7 @@ using an index:
 Inside an :code:`Error` structure are two fields which are really useful.
 These are the :code:`description` (which does what you'd think) and the
 :code:`specificationHeading`, which points you to the section in the CellML2.0
-specification document for reference.
+specification document for reference.  **TODO Put specs link here**
 
 .. container:: dothis
 
@@ -143,15 +147,15 @@ specification document for reference.
                     << " in the CellML specification." << std::endl;
     }
 
-Step 3: Fix the errors that were reported
------------------------------------------
-
+------------------------------------
+3: Fix the errors that were reported
+------------------------------------
 As you go through these tutorials you should be able to compile and run your
 code at any stage.  If you haven't been doing so already, then do it now, and
 take a look at what you've printed.  This section works through each of the
 errors found and shows you how to fix them.
 
-.. container:: terminal
+.. code-block:: console
 
     Validator error[0]:
         Description: CellML identifiers must not begin with a European numeric character [0-9].
@@ -186,20 +190,20 @@ the variable name:
 
 On to the next error.
 
-.. container:: terminal
+.. code-block:: console
 
-    | Validator error[2]:
-    |    Description: Variable 'b' has an invalid units reference 'i_am_not_a_unit'
-    |    that does not correspond with a standard unit or units in the variable's
-    |    parent component or model.
-    |    See section 11.1.1.2 in the CellML specification.
+    Validator error[2]:
+        Description: Variable 'b' has an invalid units reference 'i_am_not_a_unit'
+        that does not correspond with a standard unit or units in the variable's
+        parent component or model.
+        See section 11.1.1.2 in the CellML specification.
 
 Variables must have a unit defined.  These can be either something from
 the built-in list within libCellML (which you can read in the
 specifications document), or something you define yourself.  We'll look at
-user defined units in Tutorial 3, but for now it's enough to see that the
-units which are associated with variable :code:`b` are not valid.  We'll change
-it to be :code:`"dimensionless"` instead.
+user-defined units in :ref:`Tutorial 3<tutorial3>`, but for now it's enough
+to see that the units which are associated with variable :code:`b` are not
+valid.  We'll change those to be :code:`"dimensionless"` instead.
 
 .. container:: nb
 
@@ -220,7 +224,7 @@ it to be :code:`"dimensionless"` instead.
 
 -----
 
-.. container:: terminal
+.. code-block:: console
 
     Validator error[3]:
         Description: Variable 'c' has an invalid initial value
@@ -249,7 +253,7 @@ must be a valid variable name in the same component, or a real number.
 
 -----
 
-.. container:: terminal
+.. code-block:: console
 
     Validator error[4]:
         Description: CellML identifiers must contain one or more basic Latin
@@ -271,7 +275,7 @@ allowed.  Simply assigning units to the variable will fix both errors.
 
 -----
 
-.. container:: terminal
+.. code-block:: console
 
     Description: MathML ci element has the child text 'a' which does not
         correspond with any variable names present in component
@@ -290,34 +294,35 @@ instead.
     Fix up this last error, and check for yourself that your corrected
     model is now error-free.
 
-Step 4: Have a look at the corrected model
-------------------------------------------
-
+-------------------------------------
+4: Have a look at the corrected model
+-------------------------------------
 Let's have a look at our corrected model by calling that same utility function
 which we used earlier to print it to the screen.  You should see something like
 this:
 
-.. container:: terminal
+.. code-block:: console
 
-    |    The model name is: 'tutorial_2_model'
-    |    The model id is: 'tutorial 2 id has spaces'
-    |    The model defines 0 custom units:
-    |    The model has 1 components:
-    |        Component[0] has name: 'i_am_a_component'
-    |        Component[0] has id: 'my_component_id'
-    |        Component[0] has 4 variables:
-    |            Variable[0] has name: 'a'
-    |            Variable[0] has units: 'dimensionless'
-    |            Variable[1] has name: 'b'
-    |            Variable[1] has units: 'dimensionless'
-    |            Variable[2] has name: 'c'
-    |            Variable[2] has initial_value: '20'
-    |            Variable[2] has units: 'dimensionless'
-    |            Variable[3] has name: 'd'
-    |            Variable[3] has units: 'dimensionless'
+    The model name is: 'tutorial_2_model'
+    The model id is: 'tutorial 2 id has spaces'
+    The model defines 0 custom units:
+    The model has 1 components:
+        Component[0] has name: 'i_am_a_component'
+        Component[0] has id: 'my_component_id'
+        Component[0] has 4 variables:
+            Variable[0] has name: 'a'
+            Variable[0] has units: 'dimensionless'
+            Variable[1] has name: 'b'
+            Variable[1] has units: 'dimensionless'
+            Variable[2] has name: 'c'
+            Variable[2] has initial_value: '20'
+            Variable[2] has units: 'dimensionless'
+            Variable[3] has name: 'd'
+            Variable[3] has units: 'dimensionless'
 
-Step 5: Serialise and output the model to a file
-------------------------------------------------
+-------------------------------------------
+5: Serialise and output the model to a file
+-------------------------------------------
 
 .. container:: dothis
 

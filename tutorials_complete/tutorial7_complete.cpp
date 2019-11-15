@@ -233,7 +233,7 @@ int main()
                 </apply>\
             </apply>";
 
-        std::string equation1 =
+        std::string equation2 =
             "<apply><eq/>\
                 <ci>beta_m</ci>\
                 <apply><times/>\

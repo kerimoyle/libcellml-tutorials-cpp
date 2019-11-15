@@ -61,6 +61,7 @@ int main()
                 <ci>Na_conductance</ci>\
                 <apply>\
                     <times/>\
+                    <ci>g_Na</ci>\
                     <apply>\
                         <power/>\
                         <ci>m</ci>\
@@ -72,6 +73,7 @@ int main()
                     </apply>\
                 </apply>\
             </apply>";
+
         std::string equation3 =
             "<apply>\
                 <eq/>\
@@ -233,8 +235,47 @@ int main()
                 </apply>\
             </apply>";
 
+        std::string equation2 =
+            "<apply><eq/>\
+                <ci>beta_m</ci>\
+                <apply><times/>\
+                    <cn cellml:units=\"per_ms\">4</cn>\
+                    <apply><exp/>\
+                        <apply><divide/>\
+                            <ci>V</ci>\
+                            <cn cellml:units=\"mV\">18</cn>\
+                        </apply>\
+                    </apply>\
+                </apply>\
+            </apply>";
+
+        std::string equation3 =
+            "<apply><eq/>\
+                <apply><diff/>\
+                    <bvar>\
+                        <ci>t</ci>\
+                    </bvar>\
+                    <ci>m</ci>\
+                </apply>\
+                <apply><minus/>\
+                    <apply><times/>\
+                        <ci>alpha_m</ci>\
+                        <apply><minus/>\
+                            <cn cellml:units=\"dimensionless\">1</cn>\
+                            <ci>m</ci>\
+                        </apply>\
+                    </apply>\
+                    <apply><times/>\
+                        <ci>m</ci>\
+                        <ci>beta_m</ci>\
+                    </apply>\
+                </apply>\
+            </apply>";
+
         mGate->setMath(mathHeader);
         mGate->appendMath(equation1);
+        mGate->appendMath(equation2);
+        mGate->appendMath(equation3);
         mGate->appendMath(mathFooter);
 
     } // end scope of maths for mGate component
@@ -266,6 +307,7 @@ int main()
         libcellml::VariablePtr m = libcellml::Variable::create();
         m->setName("m");
         m->setUnits("dimensionless");
+        m->setInitialValue(0.05);
         mGate->addVariable(m);
     } // ends local scope for mGate component
 
@@ -378,6 +420,7 @@ int main()
         libcellml::VariablePtr h = libcellml::Variable::create();
         h->setName("h");
         h->setUnits("dimensionless");
+        h->setInitialValue(1.0);
         hGate->addVariable(h);
     } // ends local scope for hGate variables
 
@@ -398,7 +441,7 @@ int main()
     libcellml::ComponentPtr environment = libcellml::Component::create();
     environment->setName("environment");
 
-    //  4.b Add variables to the component.  
+    //  4.b Add variables to the component.
     {
         libcellml::VariablePtr V = libcellml::Variable::create();
         V->setName("V");
@@ -437,7 +480,7 @@ int main()
     sodiumChannel->variable("V")->setInterfaceType("public_and_private");
     mGate->variable("V")->setInterfaceType("public");
     hGate->variable("V")->setInterfaceType("public");
-    
+
     libcellml::Variable::addEquivalence(sodiumChannel->variable("m"), mGate->variable("m"));
     sodiumChannel->variable("m")->setInterfaceType("private");
     mGate->variable("m")->setInterfaceType("public");
@@ -476,15 +519,15 @@ int main()
         environment->setMath(mathHeader);
         environment->appendMath(voltageClampMaths);
         environment->appendMath(mathFooter);
-
     }
+
     //  6.b Validate the final model
     validator.validateModel(model);
     printErrorsToTerminal(validator);
 
-    std::cout << "-----------------------------------------------" << std::endl;
-    std::cout << "    STEP 7: Serialse and print the model " << std::endl;
-    std::cout << "-----------------------------------------------" << std::endl;
+    // std::cout << "-----------------------------------------------" << std::endl;
+    // std::cout << "    STEP 7: Serialse and print the model " << std::endl;
+    // std::cout << "-----------------------------------------------" << std::endl;
 
     libcellml::Printer printer;
     std::string serialisedModelString = printer.printModel(model);
@@ -496,4 +539,22 @@ int main()
     std::cout << "The created '" << model->name()
               << "' model has been printed to: " << outFileName << std::endl;
 
+    // std::cout << "-----------------------------------------------" << std::endl;
+    // std::cout << "    STEP 7: Generate and output the model " << std::endl;
+    // std::cout << "-----------------------------------------------" << std::endl;
+
+    libcellml::Generator generator;
+    generator.processModel(model);
+    printErrorsToTerminal(generator);
+
+    outFile("tutorial7_SodiumChannelModel.h");
+    outFile << generator.interfaceCode();
+    outFile.close();
+
+    outFile.open("tutorial7_SodiumChannelModel.c");
+    outFile << generator.implementationCode();
+    outFile.close();
+
+    std::cout << "The generated code has been output into tutorial7_SodiumChannelModel.c ";
+    std::cout << "and tutorial7_SodiumChannelModel.h." << std::endl;
 }

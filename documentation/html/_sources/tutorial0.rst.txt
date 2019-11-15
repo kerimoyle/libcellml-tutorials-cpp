@@ -148,19 +148,13 @@ Your directory structure should now look like:
 .. container:: dothis
 
     **3.b** Change into the new :code:`tutorials` directory and clone the
-    flavour of tutorials that you're interested in.
+    flavour of tutorials that you're interested in.  Here we'll take the C++
+    tutorials.
 
-For C++:
 .. code-block:: console
 
     cd tutorials
     git clone https://github.com/kerimoyle/libcellml-tutorials-cpp.git
-
-For Python:
-.. code-block:: console
-
-    cd tutorials
-    git clone https://github.com/kerimoyle/libcellml-tutorials-python.git
 
 Your folder structure should now look like what's shown below.  Note that
 whichever flavour of tutorial you have cloned does not alter the structure,
@@ -221,9 +215,7 @@ Tutorial 0.
     cd tutorials/tutorial0
     cmake .
 
-.. container:: dothis
-
-    **4.b**  If this is correct you should see an output ending similar to this:
+If this is correct you should see an output ending similar to this:
 
 .. code-block:: console
 
@@ -235,7 +227,7 @@ If this isn't what you see then please see the Troubleshooting section TODO
 
 .. container:: dothis
 
-    **4.c** Now build the :code:`tutorial0` example
+    **4.b** Now build the :code:`tutorial0` example
 
 ..code-block:: console
 
@@ -243,7 +235,7 @@ If this isn't what you see then please see the Troubleshooting section TODO
 
 .. container:: dothis
 
-    **4.d** Finally, run the program to give the following output:
+    **4.c** Finally, run the program to give the following output:
 
 ..code-block:: console
 
@@ -258,5 +250,5 @@ If this isn't what you see then please see the Troubleshooting section TODO
 
 .. container:: dothis
 
-    **4.e** Go and have a cuppa, you're done!
+    **4.d** Go and have a cuppa, you're done!
 

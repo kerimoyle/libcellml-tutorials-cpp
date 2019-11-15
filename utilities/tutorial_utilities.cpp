@@ -55,7 +55,7 @@ void printComponentToTerminal(const libcellml::ComponentPtr &component, size_t c
                       << std::endl;
         }
         std::cout << spacer << "  Variable[" << v << "] has units: '"
-                  << component->variable(v)->units() << "'" << std::endl;
+                  << component->variable(v)->units()->name() << "'" << std::endl;
     }
 
     // 2.c   Print the maths within the component
@@ -168,8 +168,8 @@ void switchUnitsInMaths(std::string &maths, std::string in, std::string out)
     //  these quotation marks on either side of the in and out strings for safety.
 
     std::string::size_type n = 0;
-    std::string in_with_quotes = "\\\"" + in + "\\\"";
-    std::string out_with_quotes = "\\\"" + out + "\\\"";
+    std::string in_with_quotes = "\"" + in + "\"";
+    std::string out_with_quotes = "\"" + out + "\"";
 
     while ((n = maths.find(in_with_quotes, n)) != std::string::npos) {
         maths.replace(n, in_with_quotes.size(), out_with_quotes);

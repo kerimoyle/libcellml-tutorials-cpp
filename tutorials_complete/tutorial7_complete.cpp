@@ -233,8 +233,47 @@ int main()
                 </apply>\
             </apply>";
 
+        std::string equation1 =
+            "<apply><eq/>\
+                <ci>beta_m</ci>\
+                <apply><times/>\
+                    <cn cellml:units=\"per_ms\">4</cn>\
+                    <apply><exp/>\
+                        <apply><divide/>\
+                            <ci>V</ci>\
+                            <cn cellml:units=\"mV\">18</cn>\
+                        </apply>\
+                    </apply>\
+                </apply>\
+            </apply>";
+
+        std::string equation3 = \
+            "<apply><eq/>\
+                <apply><diff/>\
+                    <bvar>\
+                        <ci>t</ci>\
+                    </bvar>\
+                    <ci>m</ci>\
+                </apply>\
+                <apply><minus/>\
+                    <apply><times/>\
+                        <ci>alpha_m</ci>\
+                        <apply><minus/>\
+                            <cn cellml:units=\"dimensionless\">1</cn>\
+                            <ci>m</ci>\
+                        </apply>\
+                    </apply>\
+                    <apply><times/>\
+                        <ci>m</ci>\
+                        <ci>beta_m</ci>\
+                    </apply>\
+                </apply>\
+            </apply>";
+
         mGate->setMath(mathHeader);
         mGate->appendMath(equation1);
+        mGate->appendMath(equation2);
+        mGate->appendMath(equation3);
         mGate->appendMath(mathFooter);
 
     } // end scope of maths for mGate component
@@ -266,6 +305,7 @@ int main()
         libcellml::VariablePtr m = libcellml::Variable::create();
         m->setName("m");
         m->setUnits("dimensionless");
+        m->setInitialValue(0.05);
         mGate->addVariable(m);
     } // ends local scope for mGate component
 
@@ -378,6 +418,7 @@ int main()
         libcellml::VariablePtr h = libcellml::Variable::create();
         h->setName("h");
         h->setUnits("dimensionless");
+        h->setInitialValue(1.0);
         hGate->addVariable(h);
     } // ends local scope for hGate variables
 
@@ -495,5 +536,7 @@ int main()
 
     std::cout << "The created '" << model->name()
               << "' model has been printed to: " << outFileName << std::endl;
+
+    
 
 }

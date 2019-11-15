@@ -61,6 +61,7 @@ int main()
                 <ci>Na_conductance</ci>\
                 <apply>\
                     <times/>\
+                    <ci>g_Na</ci>\
                     <apply>\
                         <power/>\
                         <ci>m</ci>\
@@ -72,6 +73,7 @@ int main()
                     </apply>\
                 </apply>\
             </apply>";
+
         std::string equation3 =
             "<apply>\
                 <eq/>\
@@ -247,7 +249,7 @@ int main()
                 </apply>\
             </apply>";
 
-        std::string equation3 = \
+        std::string equation3 =
             "<apply><eq/>\
                 <apply><diff/>\
                     <bvar>\
@@ -439,7 +441,7 @@ int main()
     libcellml::ComponentPtr environment = libcellml::Component::create();
     environment->setName("environment");
 
-    //  4.b Add variables to the component.  
+    //  4.b Add variables to the component.
     {
         libcellml::VariablePtr V = libcellml::Variable::create();
         V->setName("V");
@@ -478,7 +480,7 @@ int main()
     sodiumChannel->variable("V")->setInterfaceType("public_and_private");
     mGate->variable("V")->setInterfaceType("public");
     hGate->variable("V")->setInterfaceType("public");
-    
+
     libcellml::Variable::addEquivalence(sodiumChannel->variable("m"), mGate->variable("m"));
     sodiumChannel->variable("m")->setInterfaceType("private");
     mGate->variable("m")->setInterfaceType("public");
@@ -517,15 +519,15 @@ int main()
         environment->setMath(mathHeader);
         environment->appendMath(voltageClampMaths);
         environment->appendMath(mathFooter);
-
     }
+
     //  6.b Validate the final model
     validator.validateModel(model);
     printErrorsToTerminal(validator);
 
-    std::cout << "-----------------------------------------------" << std::endl;
-    std::cout << "    STEP 7: Serialse and print the model " << std::endl;
-    std::cout << "-----------------------------------------------" << std::endl;
+    // std::cout << "-----------------------------------------------" << std::endl;
+    // std::cout << "    STEP 7: Serialse and print the model " << std::endl;
+    // std::cout << "-----------------------------------------------" << std::endl;
 
     libcellml::Printer printer;
     std::string serialisedModelString = printer.printModel(model);
@@ -537,6 +539,22 @@ int main()
     std::cout << "The created '" << model->name()
               << "' model has been printed to: " << outFileName << std::endl;
 
-    
+    // std::cout << "-----------------------------------------------" << std::endl;
+    // std::cout << "    STEP 7: Generate and output the model " << std::endl;
+    // std::cout << "-----------------------------------------------" << std::endl;
 
+    libcellml::Generator generator;
+    generator.processModel(model);
+    printErrorsToTerminal(generator);
+
+    outFile("tutorial7_SodiumChannelModel.h");
+    outFile << generator.interfaceCode();
+    outFile.close();
+
+    outFile.open("tutorial7_SodiumChannelModel.c");
+    outFile << generator.implementationCode();
+    outFile.close();
+
+    std::cout << "The generated code has been output into tutorial7_SodiumChannelModel.c ";
+    std::cout << "and tutorial7_SodiumChannelModel.h." << std::endl;
 }

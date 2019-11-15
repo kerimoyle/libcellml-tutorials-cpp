@@ -547,7 +547,7 @@ int main()
     generator.processModel(model);
     printErrorsToTerminal(generator);
 
-    outFile("tutorial7_SodiumChannelModel.h");
+    outFile.open("tutorial7_SodiumChannelModel.h");
     outFile << generator.interfaceCode();
     outFile.close();
 

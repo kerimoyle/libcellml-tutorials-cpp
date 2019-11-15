@@ -46,7 +46,7 @@ int main()
     //      to the combined model.  Note that the membrane component's parent
     //      must be cleared before adding it to the model.
     libcellml::ComponentPtr membrane = membraneModel->component("membrane");
-    membrane->clearParent();
+    membrane->removeParent();
     model->addComponent(membrane);
 
     //  1.c Validate the combined model.  We expect to see errors from:
@@ -85,7 +85,7 @@ int main()
     //      to the one created at the beginning, and check the structure of the 
     //      encapsulation using the utility function printEncapsulationStructureToTerminal(model)
     libcellml::ComponentPtr sodiumChannel = sodiumChannelModel->component("sodiumChannel");
-    sodiumChannel->clearParent();
+    sodiumChannel->removeParent();
     membrane->addComponent(sodiumChannel);
     printEncapsulationStructureToTerminal(model);
 
@@ -136,7 +136,7 @@ int main()
     //  3.b Extract the potassiumChannel component from the parsed model and add it
     //      to the combined model, and check the contents
     libcellml::ComponentPtr potassiumChannel = potassiumChannelModel->component("potassiumChannel");
-    potassiumChannel->clearParent();
+    potassiumChannel->removeParent();
     membrane->addComponent(potassiumChannel);
 
     //  3.c Validate the combined model.
@@ -212,7 +212,7 @@ int main()
     //  4.b Extract the leakageCurrent component from the parsed model and add it
     //      to the combined model, and check the contents
     libcellml::ComponentPtr leakageCurrent = leakageCurrentModel->component("leakageCurrent");
-    leakageCurrent->clearParent();
+    leakageCurrent->removeParent();
     membrane->addComponent(leakageCurrent);
 
     //  4.c Validate the combined model.
